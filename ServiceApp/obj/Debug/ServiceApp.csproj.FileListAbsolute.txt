@@ -1,0 +1,2 @@
+C:\Users\Kristijan\Desktop\RepoProjekat\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projekat\ServiceApp\bin\Debug\ServiceApp.exe.config
