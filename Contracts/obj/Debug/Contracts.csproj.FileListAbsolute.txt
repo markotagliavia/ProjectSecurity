@@ -1,0 +1,5 @@
+C:\Users\Marko\Source\Repos\ProjectSecurity\Contracts\bin\Debug\Contracts.dll
+C:\Users\Marko\Source\Repos\ProjectSecurity\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Marko\Source\Repos\ProjectSecurity\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\Contracts\obj\Debug\Contracts.dll
+C:\Users\Marko\Source\Repos\ProjectSecurity\Contracts\obj\Debug\Contracts.pdb

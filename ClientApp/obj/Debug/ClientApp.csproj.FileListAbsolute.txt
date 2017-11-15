@@ -1,0 +1,16 @@
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\bin\Debug\ClientApp.exe.config
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\bin\Debug\ClientApp.exe
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\bin\Debug\ClientApp.pdb
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\bin\Debug\Contracts.dll
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\bin\Debug\Contracts.pdb
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\MainWindow.g.cs
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\App.g.cs
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp_MarkupCompile.cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp_MarkupCompile.lref
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\MainWindow.baml
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.g.resources
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.Properties.Resources.resources
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.exe
+C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.pdb

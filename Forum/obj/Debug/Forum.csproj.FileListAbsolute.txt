@@ -1,3 +1,18 @@
 C:\Users\Marko\Documents\Visual Studio 2015\Projects\Forum\Forum\bin\Debug\Forum.exe.config
 C:\Users\Tijana\Desktop\Projekat\Forum\bin\Debug\Forum.exe.config
 C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\bin\Debug\Forum.exe.config
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\bin\Debug\Forum.exe
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\bin\Debug\Forum.pdb
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\MainWindow.g.cs
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\App.g.cs
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum_MarkupCompile.cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum_MarkupCompile.lref
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\MainWindow.baml
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.g.resources
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.Properties.Resources.resources
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.csproj.GenerateResource.Cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.exe
+C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.pdb

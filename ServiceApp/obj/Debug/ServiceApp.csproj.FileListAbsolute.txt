@@ -1,2 +1,10 @@
 C:\Users\Kristijan\Desktop\RepoProjekat\ServiceApp\bin\Debug\ServiceApp.exe.config
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projekat\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Marko\Source\Repos\ProjectSecurity\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Marko\Source\Repos\ProjectSecurity\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\Marko\Source\Repos\ProjectSecurity\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\Marko\Source\Repos\ProjectSecurity\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\Marko\Source\Repos\ProjectSecurity\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\Marko\Source\Repos\ProjectSecurity\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\Marko\Source\Repos\ProjectSecurity\ServiceApp\obj\Debug\ServiceApp.pdb

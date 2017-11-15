@@ -1,0 +1,5 @@
+C:\Users\Marko\Source\Repos\ProjectSecurity\SecurityManager\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Source\Repos\ProjectSecurity\SecurityManager\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Source\Repos\ProjectSecurity\SecurityManager\obj\Debug\SecurityManager.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Source\Repos\ProjectSecurity\SecurityManager\obj\Debug\SecurityManager.dll
+C:\Users\Marko\Source\Repos\ProjectSecurity\SecurityManager\obj\Debug\SecurityManager.pdb
