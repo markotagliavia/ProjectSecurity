@@ -5,8 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Forum"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="Forum" Height="600" Width="800" ResizeMode="NoResize">
+    <Grid Background="#FF816A6A">
+
+        <!--> **************Menu************ <-->
+        <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Width="792">
+            <MenuItem Header="Options">
+                <MenuItem Header="Block user" HorizontalAlignment="Left" Width="190"/>
+                <MenuItem Header="Unblock user" HorizontalAlignment="Left" Width="190"/>
+                <Separator HorizontalAlignment="Left" Width="190"/>
+                <MenuItem Header="Change password" HorizontalAlignment="Left" Width="190"/>
+                <MenuItem Header="Reset password" HorizontalAlignment="Left" Width="190"/>
+                <Separator HorizontalAlignment="Left" Width="190"/>
+                <MenuItem Header="Log out" HorizontalAlignment="Left" Width="190"/>
+            </MenuItem>
+            <MenuItem Header="Rooms" >
+                <!-->ItemsSource="{Binding GraphMenuItems}" ovo je atribut za iznad kada napravimo kolekciju<-->
+                <!-->
+                        <MenuItem.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
+                        <TextBlock Text="{Binding Header}" />
+                    </HierarchicalDataTemplate>
+                </MenuItem.ItemTemplate><-->
+            </MenuItem>
+        </Menu>
+        <!--> **************End of Menu************ <-->
+
+
+
+
+        <!-->****************Messages part**********<-->
+        <Label x:Name="labelLoggedUsers" Content="Logged users: " HorizontalAlignment="Left" Margin="2,25,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="88"/>
+        <ListBox x:Name="loggedUsersListBox" HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="120" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+        <ScrollViewer x:Name="allMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,51,0,187">
+            <TextBox x:Name="ChatBox" Background="#FFE2A1A1" IsEnabled="False"/>
+        </ScrollViewer>
+        <ScrollViewer x:Name="entryMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,397,0,87">
+            <TextBox x:Name="entryMessageTextbox" Background="#FFE2A1A1"/>
+        </ScrollViewer>
+        <!-->****************End of Messages part**********<-->
+
+
+
+        <!-->****************Button cntrl**********<-->
+        <Button x:Name="enterMsgButton" Content="Enter message" HorizontalAlignment="Left" Margin="632,518,0,0" VerticalAlignment="Top" Width="132" Height="30"/>
+        <Button x:Name="logOutButton" Content="Log out" HorizontalAlignment="Left" Margin="10,518,0,0" VerticalAlignment="Top" Width="110" Height="30"/>
+        <!-->****************End of Button cntrl part**********<-->
     </Grid>
 </Window>
