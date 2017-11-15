@@ -16,3 +16,19 @@ C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.Properties.Res
 C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.csproj.GenerateResource.Cache
 C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.exe
 C:\Users\Marko\Source\Repos\ProjectSecurity\Forum\obj\Debug\Forum.pdb
+D:\E3 zimski\blok2\repo\Forum\bin\Debug\Forum.exe.config
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.exe
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.pdb
+D:\E3 zimski\blok2\repo\Forum\bin\Debug\Forum.exe
+D:\E3 zimski\blok2\repo\Forum\bin\Debug\Forum.pdb
+D:\E3 zimski\blok2\repo\Forum\bin\Debug\SecurityManager.dll
+D:\E3 zimski\blok2\repo\Forum\bin\Debug\SecurityManager.pdb
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.csprojResolveAssemblyReference.cache
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\MainWindow.g.cs
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\App.g.cs
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum_MarkupCompile.cache
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum_MarkupCompile.lref
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\MainWindow.baml
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.g.resources
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.Properties.Resources.resources
+D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.csproj.GenerateResource.Cache

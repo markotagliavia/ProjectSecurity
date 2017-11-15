@@ -56,6 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="NewUserWindow.xaml.cs">
+      <DependentUpon>NewUserWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WCFClient.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -69,6 +72,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewUserWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -101,6 +108,10 @@
     <ProjectReference Include="..\Contracts\Contracts.csproj">
       <Project>{F9455C09-FDC2-46C1-96CF-0213324059FB}</Project>
       <Name>Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Forum\Forum.csproj">
+      <Project>{1a443abc-418a-422e-b290-d1115517d985}</Project>
+      <Name>Forum</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

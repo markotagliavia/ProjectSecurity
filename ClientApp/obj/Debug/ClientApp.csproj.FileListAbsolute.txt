@@ -14,3 +14,25 @@ C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.Proper
 C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
 C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.exe
 C:\Users\Marko\Source\Repos\ProjectSecurity\ClientApp\obj\Debug\ClientApp.pdb
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\ClientApp.csprojResolveAssemblyReference.cache
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\MainWindow.g.cs
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\NewUserWindow.g.cs
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\App.g.cs
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\ClientApp_MarkupCompile.cache
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\ClientApp_MarkupCompile.lref
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\ClientApp.exe
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\ClientApp.pdb
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\ClientApp.exe.config
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\ClientApp.exe
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\ClientApp.pdb
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\Contracts.dll
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\Contracts.pdb
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\MainWindow.baml
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\NewUserWindow.baml
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\ClientApp.g.resources
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\ClientApp.Properties.Resources.resources
+D:\E3 zimski\blok2\repo\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\Forum.exe
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\SecurityManager.dll
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\Forum.pdb
+D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\SecurityManager.pdb

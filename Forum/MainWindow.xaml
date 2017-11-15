@@ -5,17 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Forum"
         mc:Ignorable="d"
-        Title="Forum" Height="600" Width="800" ResizeMode="NoResize">
-    <Grid Background="#FF816A6A">
+        Title="Forum" Height="600" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid Background="Gray">
 
         <!--> **************Menu************ <-->
         <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Width="792">
             <MenuItem Header="Options">
+                <MenuItem Header="New room" HorizontalAlignment="Left" Width="190"/>
                 <MenuItem Header="Block user" HorizontalAlignment="Left" Width="190"/>
                 <MenuItem Header="Unblock user" HorizontalAlignment="Left" Width="190"/>
                 <Separator HorizontalAlignment="Left" Width="190"/>
                 <MenuItem Header="Change password" HorizontalAlignment="Left" Width="190"/>
                 <MenuItem Header="Reset password" HorizontalAlignment="Left" Width="190"/>
+                <MenuItem Header="Change privilegies" HorizontalAlignment="Left" Width="190"/>
                 <Separator HorizontalAlignment="Left" Width="190"/>
                 <MenuItem Header="Log out" HorizontalAlignment="Left" Width="190"/>
             </MenuItem>
