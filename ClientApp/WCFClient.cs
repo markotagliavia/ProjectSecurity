@@ -24,6 +24,7 @@ namespace ClientApp
             {
                   factory.ChangePassword(oldPassowrd, newPassword);
                   Console.WriteLine("ChangePassword executed");
+                Console.WriteLine("asdasdasdasdads");
             }
             catch (Exception e)
             {
