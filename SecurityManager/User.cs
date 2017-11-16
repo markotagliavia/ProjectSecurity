@@ -15,8 +15,6 @@ namespace SecurityManager
 
         private bool logged;
 
-        private string username;
-
         private string firstName;
 
         private string lastName;
@@ -34,12 +32,11 @@ namespace SecurityManager
         private ObservableCollection<User> blocked;
 
 
-        public User(string username,string firstname, string lastname, DateTime birthDate, string email, string password, Roles role, bool gender)
+        public User(string firstname, string lastname, DateTime birthDate, string email, string password, Roles role, bool gender)
         {
             this.Logged = false;
             this.secureCode = 0; //TO DO
             this.code = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
-            this.username = username;
             this.firstName = firstName;
             this.LastName = lastName;
             this.gender = gender;
@@ -60,19 +57,6 @@ namespace SecurityManager
             set
             {
                 code = value;
-            }
-        }
-
-        public string Username
-        {
-            get
-            {
-                return username;
-            }
-
-            set
-            {
-                username = value;
             }
         }
 

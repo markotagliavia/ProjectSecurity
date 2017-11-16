@@ -32,3 +32,5 @@ D:\E3 zimski\blok2\repo\Forum\obj\Debug\MainWindow.baml
 D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.g.resources
 D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.Properties.Resources.resources
 D:\E3 zimski\blok2\repo\Forum\obj\Debug\Forum.csproj.GenerateResource.Cache
+C:\Users\Tijana\Desktop\Projekat\Forum\obj\Debug\Forum.exe
+C:\Users\Tijana\Desktop\Projekat\Forum\obj\Debug\Forum.pdb
