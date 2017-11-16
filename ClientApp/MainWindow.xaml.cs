@@ -90,10 +90,34 @@ namespace ClientApp
             {
                 SystemSounds.Asterisk.Play();
 
+
+                //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unese
+                /*
+                 *  int i = proxy.LogIn(user, pass);  
+                 *  if(i == 0)
+                 *  {
+                 *      //prvi put se loguje i mora da se unese i kod
+                 *      var r = new VerificationKey(proxy, user);
+                 *      r.Show();
+                 *      this.Close();
+                 *      //dalje u verificationKey.cs uraditi proveru na taj response
+                 *  }
+                 *  else if(i == -1)
+                 *  {
+                 *      //Greska , ne postoji korisnik sa unetom kombinacijom user/pass
+                 *      //hendlati ovde
+                 *  }
+                 *  else if(i == 1)
+                 *  {
+                 *      //uspesan login
+                 *      //Send data to server
+                 *       var s = new GroupChat(proxy);    //Forum starting if data is ok
+                 *       SystemSounds.Asterisk.Play();
+                 *       s.Show();
+                 *       this.Close();
+                 *  }
+                 */
                 proxy.LogIn(user,pass,"code");// OVDE TREBA KOD
-
-
-
                 //Send data to server
                 var s = new GroupChat(proxy);    //Forum starting if data is ok
                 SystemSounds.Asterisk.Play();
@@ -115,6 +139,33 @@ namespace ClientApp
                     MessageBox.Show("Please fill all fields!");
                     return;
                 }
+
+                //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unese
+                /*
+                 *  int i = proxy.LogIn(user, pass);  
+                 *  if(i == 0)
+                 *  {
+                 *      //prvi put se loguje i mora da se unese i kod
+                 *      var r = new VerificationKey(proxy, user);
+                 *      r.Show();
+                 *      this.Close();
+                 *      //dalje u verificationKey.cs uraditi proveru na taj response
+                 *  }
+                 *  else if(i == -1)
+                 *  {
+                 *      //Greska , ne postoji korisnik sa unetom kombinacijom user/pass
+                 *      //hendlati ovde
+                 *  }
+                 *  else if(i == 1)
+                 *  {
+                 *      //uspesan login
+                 *      //Send data to server
+                 *       var s = new GroupChat(proxy);    //Forum starting if data is ok
+                 *       SystemSounds.Asterisk.Play();
+                 *       s.Show();
+                 *       this.Close();
+                 *  }
+                 */
 
                 //Send input data to server
                 var s = new GroupChat(proxy);    //Forum starting if data is ok

@@ -62,6 +62,9 @@
     <Compile Include="NewUserWindow.xaml.cs">
       <DependentUpon>NewUserWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VerificationKey.xaml.cs">
+      <DependentUpon>VerificationKey.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WCFClient.cs" />
     <Page Include="GroupChat.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -80,6 +83,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="NewUserWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VerificationKey.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -18,3 +18,9 @@ C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\bin\Debug\Contracts
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\obj\Debug\Contracts.dll
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\obj\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\repo\Contracts\bin\Debug\Contracts.dll
+C:\Users\Marko\Desktop\repo\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\repo\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\repo\Contracts\obj\Debug\Contracts.csproj.CoreCompileInputs.cache
+C:\Users\Marko\Desktop\repo\Contracts\obj\Debug\Contracts.dll
+C:\Users\Marko\Desktop\repo\Contracts\obj\Debug\Contracts.pdb
