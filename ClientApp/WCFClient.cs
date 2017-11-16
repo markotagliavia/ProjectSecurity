@@ -20,22 +20,54 @@ namespace ClientApp
 
         public void AddAdmin(string email)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.AddAdmin(email);
+                Console.WriteLine("AddAdmin executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to AddAdmin(). {0}", e.Message);
+            }
         }
 
         public void BlockGroupChat(string blockEmai)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.BlockGroupChat(blockEmai);
+                Console.WriteLine("BlockGroupChat executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to BlockGroupChat(). {0}", e.Message);
+            }
         }
 
         public void BlockUser(string requestEmail, string blockEmail)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.BlockUser(requestEmail, blockEmail);
+                Console.WriteLine("BlockUser executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to BlockUser(). {0}", e.Message);
+            }
         }
 
         public void BlockUserFromRoom(string blockEmail, string roomName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.BlockUserFromRoom(blockEmail, roomName);
+                Console.WriteLine("BlockUserFromRoom executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to BlockUserFromRoom(). {0}", e.Message);
+            }
         }
 
         public void ChangePassword(string oldPassowrd, string newPassword)
@@ -54,17 +86,41 @@ namespace ClientApp
 
         public void CreatePrivateChat(string firstEmail, string secondEmail)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.CreatePrivateChat(firstEmail, secondEmail);
+                Console.WriteLine("CreatePrivateChat executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to CreatePrivateChat(). {0}", e.Message);
+            }
         }
 
         public void CreateRoom(string roomName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.CreateRoom(roomName);
+                Console.WriteLine("CreateRoom executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to CreateRoom(). {0}", e.Message);
+            }
         }
 
         public void DeleteAdmin(string email)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.DeleteAdmin(email);
+                Console.WriteLine("DeleteAdmin executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to DeleteAdmin(). {0}", e.Message);
+            }
         }
 
         public void LogIn(string email, string password, string code)
@@ -108,17 +164,41 @@ namespace ClientApp
 
         public void RemoveBlockGroupChat(string unblockEmail)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.RemoveBlockGroupChat(unblockEmail);
+                Console.WriteLine("RemoveBlockGroupChat executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to RemoveBlockGroupChat(). {0}", e.Message);
+            }
         }
 
         public void RemoveBlockUser(string requestEmail, string unblockEmail)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.RemoveBlockUser(requestEmail, unblockEmail);
+                Console.WriteLine("RemoveBlockUser executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to RemoveBlockUser(). {0}", e.Message);
+            }
         }
 
         public void RemoveBlockUserFromRoom(string unblockEmail, string roomName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                factory.RemoveBlockUserFromRoom(unblockEmail, roomName);
+                Console.WriteLine("RemoveBlockUserFromRoom executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to RemoveBlockUserFromRoom(). {0}", e.Message);
+            }
         }
 
         public void ResetPassword(string email)
