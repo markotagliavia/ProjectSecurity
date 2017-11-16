@@ -10,6 +10,7 @@ namespace Contracts
     [ServiceContract]
     public interface IService
     {
+
         [OperationContract]
         void Registration(string name, string sname, DateTime date, string gender, string email, string password);
 

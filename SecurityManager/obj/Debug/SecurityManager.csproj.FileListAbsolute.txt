@@ -24,3 +24,8 @@ C:\Users\krist\Desktop\SBESRepo\SecurityManager\obj\Debug\SecurityManager.csproj
 C:\Users\krist\Desktop\SBESRepo\SecurityManager\obj\Debug\SecurityManager.csproj.CoreCompileInputs.cache
 C:\Users\krist\Desktop\SBESRepo\SecurityManager\obj\Debug\SecurityManager.dll
 C:\Users\krist\Desktop\SBESRepo\SecurityManager\obj\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\pp\SecurityManager\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\pp\SecurityManager\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\pp\SecurityManager\obj\Debug\SecurityManager.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\pp\SecurityManager\obj\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\pp\SecurityManager\obj\Debug\SecurityManager.pdb

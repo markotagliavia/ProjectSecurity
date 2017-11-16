@@ -20,3 +20,10 @@ C:\Users\krist\Desktop\SBESRepo\ForumModels\obj\Debug\ForumModels.csprojResolveA
 C:\Users\krist\Desktop\SBESRepo\ForumModels\obj\Debug\ForumModels.csproj.CoreCompileInputs.cache
 C:\Users\krist\Desktop\SBESRepo\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\krist\Desktop\SBESRepo\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\pp\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\pp\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\pp\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\pp\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\pp\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\pp\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\pp\ForumModels\obj\Debug\ForumModels.pdb

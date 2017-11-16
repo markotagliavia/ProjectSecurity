@@ -4,6 +4,7 @@ using SecurityManager;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -162,6 +163,8 @@ namespace ServiceApp
             }
         }
 
+
+
         public void Registration(string name, string sname, DateTime date, string gender, string email, string password)
         {
             User user = Thread.CurrentPrincipal as User;
@@ -169,7 +172,35 @@ namespace ServiceApp
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.Registration.ToString()))
             {
-                //TODO fje
+
+                if(!File.Exists("Users"))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(File.Open("Users", FileMode.Create)))
+                    {
+                        writer.Write(name);
+                        writer.Write(sname);
+                        writer.Write(date.ToBinary());
+                        writer.Write(gender);
+                        writer.Write(email);
+                        writer.Write(password);
+
+                    }
+
+                }
+                else
+                {
+                    using (BinaryWriter writer = new BinaryWriter(File.Open("Users", FileMode.Append)))
+                    {
+                        writer.Write(name);
+                        writer.Write(sname);
+                        writer.Write(date.ToBinary());
+                        writer.Write(gender);
+                        writer.Write(email);
+                        writer.Write(password);
+
+                    }
+
+                }        
             }
             else
             {
