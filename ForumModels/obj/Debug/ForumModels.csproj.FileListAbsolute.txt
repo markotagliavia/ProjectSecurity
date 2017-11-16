@@ -1,0 +1,7 @@
+C:\Users\Tijana\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Tijana\Desktop\Projekat\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Tijana\Desktop\Projekat\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Tijana\Desktop\Projekat\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Tijana\Desktop\Projekat\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Tijana\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Tijana\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.pdb

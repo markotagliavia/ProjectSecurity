@@ -56,6 +56,14 @@
       <Project>{f9455c09-fdc2-46c1-96cf-0213324059fb}</Project>
       <Name>Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ForumModels\ForumModels.csproj">
+      <Project>{7360691B-B8EC-4D18-BFAC-60CA345725B9}</Project>
+      <Name>ForumModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SecurityManager\SecurityManager.csproj">
+      <Project>{35D5E70E-6849-4BA7-A6C9-417C596F6BC3}</Project>
+      <Name>SecurityManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

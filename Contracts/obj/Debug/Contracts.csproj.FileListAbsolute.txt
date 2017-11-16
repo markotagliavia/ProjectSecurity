@@ -8,3 +8,8 @@ D:\E3 zimski\blok2\repo\Contracts\bin\Debug\Contracts.pdb
 D:\E3 zimski\blok2\repo\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
 D:\E3 zimski\blok2\repo\Contracts\obj\Debug\Contracts.dll
 D:\E3 zimski\blok2\repo\Contracts\obj\Debug\Contracts.pdb
+C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\Contracts.dll
+C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Tijana\Desktop\Projekat\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Tijana\Desktop\Projekat\Contracts\obj\Debug\Contracts.dll
+C:\Users\Tijana\Desktop\Projekat\Contracts\obj\Debug\Contracts.pdb

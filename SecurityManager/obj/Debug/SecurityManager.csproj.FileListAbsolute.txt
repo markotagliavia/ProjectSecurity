@@ -8,3 +8,8 @@ D:\E3 zimski\blok2\repo\SecurityManager\bin\Debug\SecurityManager.pdb
 D:\E3 zimski\blok2\repo\SecurityManager\obj\Debug\SecurityManager.csprojResolveAssemblyReference.cache
 D:\E3 zimski\blok2\repo\SecurityManager\obj\Debug\SecurityManager.dll
 D:\E3 zimski\blok2\repo\SecurityManager\obj\Debug\SecurityManager.pdb
+C:\Users\Tijana\Desktop\Projekat\SecurityManager\bin\Debug\SecurityManager.dll
+C:\Users\Tijana\Desktop\Projekat\SecurityManager\bin\Debug\SecurityManager.pdb
+C:\Users\Tijana\Desktop\Projekat\SecurityManager\obj\Debug\SecurityManager.csprojResolveAssemblyReference.cache
+C:\Users\Tijana\Desktop\Projekat\SecurityManager\obj\Debug\SecurityManager.dll
+C:\Users\Tijana\Desktop\Projekat\SecurityManager\obj\Debug\SecurityManager.pdb

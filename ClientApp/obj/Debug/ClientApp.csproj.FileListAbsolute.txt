@@ -36,3 +36,23 @@ D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\Forum.exe
 D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\SecurityManager.dll
 D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\Forum.pdb
 D:\E3 zimski\blok2\repo\ClientApp\bin\Debug\SecurityManager.pdb
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\ClientApp.exe.config
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\ClientApp.exe
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\ClientApp.pdb
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\Contracts.dll
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\Forum.exe
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\Contracts.pdb
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\Forum.pdb
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp.csprojResolveAssemblyReference.cache
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\MainWindow.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\NewUserWindow.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\App.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp_MarkupCompile.cache
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp_MarkupCompile.lref
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\MainWindow.baml
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\NewUserWindow.baml
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp.g.resources
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp.Properties.Resources.resources
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp.exe
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp.pdb

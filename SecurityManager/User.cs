@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SecurityManager
 {
-    public class User
+    public class User : IPrincipal
     {
+        private GenericIdentity identity;
+
         private Guid code;
 
         private bool gender;
@@ -45,6 +48,8 @@ namespace SecurityManager
             this.Role = role;
             this.birthDate = birthDate;
             this.Blocked = new ObservableCollection<User>();
+
+            this.identity = new GenericIdentity(email);
         }
 
         public Guid Code
@@ -188,6 +193,51 @@ namespace SecurityManager
             {
                 blocked = value;
             }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return identity.Name;
+            }
+
+        }
+
+        public string AuthenticationType
+        {
+            get
+            {
+                return identity.AuthenticationType;
+            }
+        }
+
+        public bool IsAuthenticated
+        {
+            get
+            {
+                return identity.IsAuthenticated;
+            }
+        }
+
+        public IIdentity Identity
+        {
+            get { return this.identity; }
+        }
+
+        public bool IsInRole(string perms)
+        {
+            bool IsAuthz = false;
+            foreach (string p in RolesConfiguration.GetPermissions(Role.ToString()))
+            {
+                if (p.Equals(perms))
+                {
+                    IsAuthz = true;
+                    break;
+                }
+            }
+
+            return IsAuthz;
         }
     }
 }
