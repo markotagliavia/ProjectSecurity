@@ -215,7 +215,8 @@ namespace ClientApp
                 !repass.Contains(" ") && !repass.Contains("\t") && name.Length >= 2 && lastName.Length >= 2 && !String.IsNullOrWhiteSpace(dateTextBox.Text))
             {
                 //Valid data. Send it to server
-                proxy.Registration(name, lastName, birthDate, gender, user, pass);
+                //kriptovati sifru
+                proxy.Registration(name, lastName, birthDate, gender, user, Sha256encrypt(pass));
 
                 this.Close();
             }
@@ -407,6 +408,14 @@ namespace ClientApp
                 dateTextBox.BorderBrush = new SolidColorBrush(Colors.Green);
                 dateTextBox.ToolTip = "XX.XX.XXXX.";
             }
+        }
+
+        public string Sha256encrypt(string phrase)
+        {
+            UTF8Encoding encoder = new UTF8Encoding();
+            System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
         }
     }
 }

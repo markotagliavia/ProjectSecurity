@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SecurityManager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
@@ -31,13 +32,8 @@ namespace ClientApp
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:9999/ServiceApp";
 
-            using (proxy = new WCFClient(binding, new EndpointAddress(new Uri(address))))
-            {
-               
-
-           
-            }
-
+            this.proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
+            Console.ReadLine();
         }
 
         /// <summary>
@@ -92,32 +88,32 @@ namespace ClientApp
 
 
                 //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unese
-                /*
-                 *  int i = proxy.LogIn(user, pass);  
-                 *  if(i == 0)
-                 *  {
-                 *      //prvi put se loguje i mora da se unese i kod
-                 *      var r = new VerificationKey(proxy, user);
-                 *      r.Show();
-                 *      this.Close();
-                 *      //dalje u verificationKey.cs uraditi proveru na taj response
-                 *  }
-                 *  else if(i == -1)
-                 *  {
-                 *      //Greska , ne postoji korisnik sa unetom kombinacijom user/pass
-                 *      //hendlati ovde
-                 *  }
-                 *  else if(i == 1)
-                 *  {
-                 *      //uspesan login
-                 *      //Send data to server
-                 *       var s = new GroupChat(proxy);    //Forum starting if data is ok
-                 *       SystemSounds.Asterisk.Play();
-                 *       s.Show();
-                 *       this.Close();
-                 *  }
-                 */
-                proxy.LogIn(user,pass,"code");// OVDE TREBA KOD
+
+                int i = proxy.LogIn(user, pass);
+                 if (i == 0)
+                 {
+                         //prvi put se loguje i mora da se unese i kod
+                    var r = new VerificationKey(proxy, user);
+                    r.Show();
+                    this.Close();
+                         //dalje u verificationKey.cs uraditi proveru na taj response
+                 }
+                 else if (i == -1)
+                 {
+                          //Greska , ne postoji korisnik sa unetom kombinacijom user/pass
+                          //hendlati ovde
+                 }
+                 else if (i == 1)
+                 {
+                         //uspesan login
+                         //Send data to server
+                    /*var s = new GroupChat(proxy);    //Forum starting if data is ok
+                    SystemSounds.Asterisk.Play();
+                    *s.Show();
+                    *this.Close();*/
+                  }
+
+                proxy.LogIn(user,pass);// OVDE TREBA KOD
                 //Send data to server
                 var s = new GroupChat(proxy);    //Forum starting if data is ok
                 SystemSounds.Asterisk.Play();
@@ -140,34 +136,31 @@ namespace ClientApp
                     return;
                 }
 
-                //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unese
-                /*
-                 *  int i = proxy.LogIn(user, pass);  
-                 *  if(i == 0)
-                 *  {
-                 *      //prvi put se loguje i mora da se unese i kod
-                 *      var r = new VerificationKey(proxy, user);
-                 *      r.Show();
-                 *      this.Close();
-                 *      //dalje u verificationKey.cs uraditi proveru na taj response
-                 *  }
-                 *  else if(i == -1)
-                 *  {
-                 *      //Greska , ne postoji korisnik sa unetom kombinacijom user/pass
-                 *      //hendlati ovde
-                 *  }
-                 *  else if(i == 1)
-                 *  {
-                 *      //uspesan login
-                 *      //Send data to server
-                 *       var s = new GroupChat(proxy);    //Forum starting if data is ok
-                 *       SystemSounds.Asterisk.Play();
-                 *       s.Show();
-                 *       this.Close();
-                 *  }
-                 */
-
+                //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unes
                 //Send input data to server
+                int i = proxy.LogIn(user, pass);
+                if (i == 0)
+                {
+                    //prvi put se loguje i mora da se unese i kod
+                    var r = new VerificationKey(proxy, user);
+                    r.Show();
+                    this.Close();
+                    //dalje u verificationKey.cs uraditi proveru na taj response
+                }
+                else if (i == -1)
+                {
+                    //Greska , ne postoji korisnik sa unetom kombinacijom user/pass
+                    //hendlati ovde
+                }
+                else if (i == 1)
+                {
+                    //uspesan login
+                    //Send data to server
+                    /*var s = new GroupChat(proxy);    //Forum starting if data is ok
+                    SystemSounds.Asterisk.Play();
+                    *s.Show();
+                    *this.Close();*/
+                }
                 var s = new GroupChat(proxy);    //Forum starting if data is ok
                 SystemSounds.Asterisk.Play();
                 s.Show();

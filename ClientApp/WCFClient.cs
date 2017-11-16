@@ -123,17 +123,20 @@ namespace ClientApp
             }
         }
 
-        public void LogIn(string email, string password, string code)
+        public int LogIn(string email, string password)
         {
+            int i = 0;
             try
             {
-                factory.LogIn(email, password, code);
+                i = factory.LogIn(email, password);
                 Console.WriteLine("LogIn executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to LogIn(). {0}", e.Message);
             }
+
+            return i;
         }
 
         public void LogOut(string email)
@@ -213,5 +216,23 @@ namespace ClientApp
                 Console.WriteLine("Error while trying to ResetPassword(). {0}", e.Message);
             }
         }
+
+        public bool SendVerificationKey(string key)
+        {
+            bool ok = false;
+            try
+            {
+                ok = factory.SendVerificationKey(key);
+                Console.WriteLine("SendVerificationKey executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to SendVerificationKey(). {0}", e.Message);
+            }
+
+            return ok;
+        }
+
+       
     }
 }

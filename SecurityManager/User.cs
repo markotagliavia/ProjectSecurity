@@ -30,7 +30,7 @@ namespace SecurityManager
 
         private Roles role;
 
-        private int secureCode;
+        private Guid secureCode;
 
         private ObservableCollection<User> blocked;
 
@@ -40,7 +40,7 @@ namespace SecurityManager
         public User(string firstname, string lastname, DateTime birthDate, string email, string password, Roles role, bool gender)
         {
             this.Logged = false;
-            this.secureCode = 0; //TO DO
+           
             this.code = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
             this.firstName = firstname;
             this.LastName = lastName;
@@ -159,7 +159,7 @@ namespace SecurityManager
             }
         }
 
-        public int SecureCode
+        public Guid SecureCode
         {
             get
             {

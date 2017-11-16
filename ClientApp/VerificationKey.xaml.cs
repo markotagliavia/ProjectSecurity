@@ -40,18 +40,18 @@ namespace ClientApp
             string verificationKey = verificationKeyTextBox.Text;
 
             //send data to server
-            //int i = proxy.SendVerificationKey(verificationKey, email);
-            //if(i == 1)
-            //{
-            //  //key is ok
+            bool i = proxy.SendVerificationKey(verificationKey);
+            if(i == true)
+            {
+                //key is ok
             //  var s = new GroupChat(proxy, email);
             //  s.Show();
             //  this.Close();
-            //}
-            //else
-            //{
+            }
+            else
+            {
             //  //key is not ok, try again
-            //}
+            }
         }
 
         /// <summary>

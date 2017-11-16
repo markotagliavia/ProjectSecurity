@@ -21,7 +21,7 @@ namespace Contracts
         void ResetPassword(string email);
 
         [OperationContract]
-        void LogIn(string email, string password, string code);
+        int LogIn(string email, string password);
 
         [OperationContract]
         void LogOut(string email);
@@ -55,6 +55,9 @@ namespace Contracts
 
         [OperationContract]
         void CreateRoom(string roomName);
+
+        [OperationContract]
+        bool SendVerificationKey(string key);
 
     }
 }
