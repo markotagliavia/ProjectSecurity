@@ -12,6 +12,8 @@
 /Contracts/obj
 /ClientApp/obj
 /Forum/obj
-/ForumModels/Properties/AssemblyInfo.cs
-/ForumModels/obj/Debug
-/ForumModels/bin/Debug
+/ServiceApp/bin
+/SecurityManager/bin
+/Contracts/bin
+/ClientApp/bin
+/Forum/bin

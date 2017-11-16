@@ -11,8 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 
 namespace ClientApp
 {
@@ -177,10 +176,29 @@ namespace ClientApp
             string user = textBox1.Text;
             string pass = passwordBox1.Password;
             string repass = passwordBox2.Password;
+            string name = nameTextbox.Text;
+            string lastName = lastNameTextbox.Text;
+            string gender = ((bool)radioButtonMale.IsChecked) ? "Male" : "Female";
+            DateTime birthDate = DateTime.Now;
+            if (!String.IsNullOrWhiteSpace(dateTextBox.Text))
+            {
+                try
+                {
+                    if (DateTime.Parse(dateTextBox.Text) != null)
+                    {
+                        birthDate = DateTime.Parse(dateTextBox.Text);
+                    }
+                }
+                catch (Exception ex) { }
+            }
 
             passwordBox1.Focus();
             passwordBox2.Focus();
+            nameTextbox.Focus();
+            lastNameTextbox.Focus();
+            dateTextBox.Focus();
             button2.Focus();
+
 
             var regexItem = new Regex(@"^[a-zA-Z0-9@.]+$");
             int countMonkey = textBox1.Text.Where(c => c == '@').Count();
@@ -189,10 +207,10 @@ namespace ClientApp
             if (pass.Equals(repass) && !user.Equals("admin") && user.Length >= 5 && pass.Length >= 5 &&
                 !user.Contains(" ") && !user.Contains("\t") && regexItem.IsMatch(user) &&
                 !pass.Contains(" ") && !pass.Contains("\t") &&
-                !repass.Contains(" ") && !repass.Contains("\t"))
+                !repass.Contains(" ") && !repass.Contains("\t") && name.Length >= 2 && lastName.Length >= 2 && !String.IsNullOrWhiteSpace(dateTextBox.Text))
             {
                 //Valid data. Send it to server
-                              
+
                 this.Close();
             }
             else if (!pass.Equals(repass))
@@ -241,6 +259,42 @@ namespace ClientApp
                 SystemSounds.Hand.Play();
                 MessageBox.Show("E-mail can not contain special characters", "Error");
             }
+            else if (!regexItem.IsMatch(name))
+            {
+                SystemSounds.Hand.Play();
+                MessageBox.Show("Name can not contain special characters", "Error");
+            }
+            else if (!regexItem.IsMatch(lastName))
+            {
+                SystemSounds.Hand.Play();
+                MessageBox.Show("Last name can not contain special characters", "Error");
+            }
+            else if (String.IsNullOrWhiteSpace(name))
+            {
+                SystemSounds.Hand.Play();
+                MessageBox.Show("Name can not contain special characters", "Error");
+            }
+            else if (String.IsNullOrWhiteSpace(lastName))
+            {
+                SystemSounds.Hand.Play();
+                MessageBox.Show("Last name can not contain special characters", "Error");
+            }
+            else if (lastName.Length < 2)
+            {
+                SystemSounds.Hand.Play();
+                MessageBox.Show("Too short Last name", "Error");
+            }
+            else if (name.Length < 2)
+            {
+                SystemSounds.Hand.Play();
+                MessageBox.Show("Too short name", "Error");
+            }
+            else if (String.IsNullOrWhiteSpace(dateTextBox.Text))
+            {
+                SystemSounds.Hand.Play();
+                MessageBox.Show("Date is not valid", "Error");
+            }
+
         }
 
         /// <summary>
@@ -253,6 +307,99 @@ namespace ClientApp
             if (e.Key == Key.Enter)
             {
                 button2.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
+
+        /// <summary>
+        /// When focus on name is lost, textBox should change color border
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void nameTextbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var regexItem = new Regex(@"^[a-zA-Z0-9@.]+$");
+
+            if (nameTextbox.Text.Contains("\t"))
+            {
+                nameTextbox.BorderBrush = new SolidColorBrush(Colors.Red);
+                nameTextbox.ToolTip = "E-mail should not contain tabs!";
+            }
+            else if (String.IsNullOrWhiteSpace(nameTextbox.Text))
+            {
+                nameTextbox.BorderBrush = new SolidColorBrush(Colors.Red);
+                nameTextbox.ToolTip = "You must fill this field!";
+            }
+            else if (!regexItem.IsMatch(nameTextbox.Text))
+            {
+                nameTextbox.BorderBrush = new SolidColorBrush(Colors.Red);
+                nameTextbox.ToolTip = "Name can not contain special characters!";
+            }
+            else
+            {
+                nameTextbox.BorderBrush = new SolidColorBrush(Colors.Green);
+                nameTextbox.ToolTip = "Combination of 2 to 30 alphabetic charactes ";
+            }
+        }
+
+        /// <summary>
+        /// When focus on last name is lost, textBox should change color border
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lastNameTextbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var regexItem = new Regex(@"^[a-zA-Z0-9@.]+$");
+
+            if (lastNameTextbox.Text.Contains("\t"))
+            {
+                lastNameTextbox.BorderBrush = new SolidColorBrush(Colors.Red);
+                lastNameTextbox.ToolTip = "Last name should not contain tabs!";
+            }
+            else if (String.IsNullOrWhiteSpace(lastNameTextbox.Text))
+            {
+                lastNameTextbox.BorderBrush = new SolidColorBrush(Colors.Red);
+                lastNameTextbox.ToolTip = "You must fill this field!";
+            }
+            else if (!regexItem.IsMatch(nameTextbox.Text))
+            {
+                lastNameTextbox.BorderBrush = new SolidColorBrush(Colors.Red);
+                lastNameTextbox.ToolTip = "Last name can not contain special characters!";
+            }
+            else
+            {
+                lastNameTextbox.BorderBrush = new SolidColorBrush(Colors.Green);
+                lastNameTextbox.ToolTip = "Combination of 2 to 30 alphabetic charactes ";
+            }
+        }
+
+        /// <summary>
+        /// When focus on date is lost, textBox should change color border
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dateTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var regexItem = new Regex(@"^[a-zA-Z0-9@.]+$");
+
+            if (dateTextBox.Text.Contains("\t"))
+            {
+                dateTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
+                dateTextBox.ToolTip = "Date should not contain tabs!";
+            }
+            else if (String.IsNullOrWhiteSpace(dateTextBox.Text))
+            {
+                dateTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
+                dateTextBox.ToolTip = "You must fill this field!";
+            }
+            else if (!regexItem.IsMatch(dateTextBox.Text))
+            {
+                dateTextBox.BorderBrush = new SolidColorBrush(Colors.Red);
+                dateTextBox.ToolTip = "Date can not contain special characters!";
+            }
+            else
+            {
+                dateTextBox.BorderBrush = new SolidColorBrush(Colors.Green);
+                dateTextBox.ToolTip = "XX.XX.XXXX.";
             }
         }
     }
