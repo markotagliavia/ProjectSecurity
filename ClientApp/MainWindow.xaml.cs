@@ -22,13 +22,16 @@ namespace ClientApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private WCFClient proxy;
+
+
         public MainWindow()
         {
             InitializeComponent();
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:9999/ServiceApp";
 
-            using (WCFClient proxy = new WCFClient(binding, new EndpointAddress(new Uri(address))))
+            using (proxy = new WCFClient(binding, new EndpointAddress(new Uri(address))))
             {
                
 
@@ -54,7 +57,7 @@ namespace ClientApp
         /// <param name="e">event</param>
         private void button2_Click(object sender, RoutedEventArgs e)
         {
-            var s = new NewUserWindow();
+            var s = new NewUserWindow(proxy);
             this.Close();
             s.Show();
         }
@@ -87,8 +90,12 @@ namespace ClientApp
             {
                 SystemSounds.Asterisk.Play();
 
+                proxy.LogIn(user,pass,"code");// OVDE TREBA KOD
+
+
+
                 //Send data to server
-                var s = new Forum.MainWindow();    //Forum starting if data is ok
+                var s = new GroupChat(proxy);    //Forum starting if data is ok
                 SystemSounds.Asterisk.Play();
                 s.Show();
                 this.Close();
@@ -110,7 +117,7 @@ namespace ClientApp
                 }
 
                 //Send input data to server
-                var s = new Forum.MainWindow();    //Forum starting if data is ok
+                var s = new GroupChat(proxy);    //Forum starting if data is ok
                 SystemSounds.Asterisk.Play();
                 s.Show();
                 this.Close();

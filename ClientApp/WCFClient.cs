@@ -149,7 +149,7 @@ namespace ClientApp
             }
         }
 
-        public void Registration(string name, string sname, DateTime date, char gender, string email, string password)
+        public void Registration(string name, string sname, DateTime date, string gender, string email, string password)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientApp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
@@ -15,14 +16,18 @@ using System.Windows.Media;
 
 namespace ClientApp
 {
+   
     /// <summary>
     /// Interaction logic for NewUserWindow.xaml
     /// </summary>
     public partial class NewUserWindow : Window
     {
-        public NewUserWindow()
+        WCFClient proxy;
+
+        public NewUserWindow(WCFClient proxy)
         {
             InitializeComponent();
+            this.proxy = proxy;
         }
 
         /// <summary>
@@ -210,6 +215,7 @@ namespace ClientApp
                 !repass.Contains(" ") && !repass.Contains("\t") && name.Length >= 2 && lastName.Length >= 2 && !String.IsNullOrWhiteSpace(dateTextBox.Text))
             {
                 //Valid data. Send it to server
+                proxy.Registration(name, lastName, birthDate, gender, user, pass);
 
                 this.Close();
             }

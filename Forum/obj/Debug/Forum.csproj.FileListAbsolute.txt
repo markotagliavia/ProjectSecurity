@@ -50,3 +50,6 @@ C:\Users\Tijana\Desktop\Projekat\Forum\obj\Debug\MainWindow.baml
 C:\Users\Tijana\Desktop\Projekat\Forum\obj\Debug\Forum.g.resources
 C:\Users\Tijana\Desktop\Projekat\Forum\obj\Debug\Forum.Properties.Resources.resources
 C:\Users\Tijana\Desktop\Projekat\Forum\obj\Debug\Forum.csproj.GenerateResource.Cache
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Forum\bin\Debug\Forum.exe.config
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Forum\obj\Debug\Forum.exe
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Forum\obj\Debug\Forum.pdb

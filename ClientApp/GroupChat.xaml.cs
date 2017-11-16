@@ -13,16 +13,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Forum
+namespace ClientApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class GroupChat : Window
     {
-        public MainWindow()
+        WCFClient prox;
+
+        public GroupChat(WCFClient proxy)
         {
             InitializeComponent();
+            this.prox = proxy;
         }
     }
 }

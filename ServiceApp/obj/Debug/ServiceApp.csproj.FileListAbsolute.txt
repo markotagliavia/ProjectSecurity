@@ -20,3 +20,15 @@ C:\Users\Tijana\Desktop\Projekat\ServiceApp\bin\Debug\SecurityManager.dll
 C:\Users\Tijana\Desktop\Projekat\ServiceApp\bin\Debug\Contracts.pdb
 C:\Users\Tijana\Desktop\Projekat\ServiceApp\bin\Debug\ForumModels.pdb
 C:\Users\Tijana\Desktop\Projekat\ServiceApp\bin\Debug\SecurityManager.pdb
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\ForumModels.dll
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\SecurityManager.dll
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\ForumModels.pdb
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\SecurityManager.pdb
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\obj\Debug\ServiceApp.pdb

@@ -13,3 +13,8 @@ C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\Contracts.pdb
 C:\Users\Tijana\Desktop\Projekat\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
 C:\Users\Tijana\Desktop\Projekat\Contracts\obj\Debug\Contracts.dll
 C:\Users\Tijana\Desktop\Projekat\Contracts\obj\Debug\Contracts.pdb
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\bin\Debug\Contracts.dll
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\obj\Debug\Contracts.dll
+C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\Contracts\obj\Debug\Contracts.pdb
