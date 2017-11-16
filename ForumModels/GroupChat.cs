@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Forum
 {
-    class GroupChat
+    public class GroupChat
     {
         private static ObservableCollection<User> blocked;
 

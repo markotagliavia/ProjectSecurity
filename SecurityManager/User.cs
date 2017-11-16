@@ -37,7 +37,7 @@ namespace SecurityManager
             this.Logged = false;
             this.secureCode = 0; //TO DO
             this.code = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
-            this.firstName = firstName;
+            this.firstName = firstname;
             this.LastName = lastName;
             this.gender = gender;
             this.email = email;

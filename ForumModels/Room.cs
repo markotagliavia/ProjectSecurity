@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Forum
 {
-    class Room
+    public class Room
     {
         private string theme;
 

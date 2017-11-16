@@ -3,7 +3,7 @@ using System;
 
 namespace Forum
 {
-    class PrivateChat
+    public class PrivateChat
     {
         private Guid uid;
 

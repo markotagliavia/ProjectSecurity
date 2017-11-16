@@ -24,5 +24,36 @@ namespace Contracts
 
         [OperationContract]
         void LogOut(string email);
+
+        [OperationContract]
+        void AddAdmin(string email);
+
+        [OperationContract]
+        void DeleteAdmin(string email);
+
+        [OperationContract]
+        void BlockUser(string requestEmail, string blockEmail);
+
+        [OperationContract]
+        void RemoveBlockUser(string requestEmail, string unblockEmail);
+
+        [OperationContract]
+        void BlockGroupChat(string blockEmai);
+
+        [OperationContract]
+        void RemoveBlockGroupChat(string unblockEmail);
+
+        [OperationContract]
+        void BlockUserFromRoom(string blockEmail, string roomName);
+
+        [OperationContract]
+        void RemoveBlockUserFromRoom(string unblockEmail, string roomName);
+
+        [OperationContract]
+        void CreatePrivateChat(string firstEmail, string secondEmail);
+
+        [OperationContract]
+        void CreateRoom(string roomName);
+
     }
 }

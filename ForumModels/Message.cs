@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Forum
 {
-    class Message
+    public class Message
     {
         private string text;
 
