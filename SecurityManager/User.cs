@@ -34,6 +34,8 @@ namespace SecurityManager
 
         private ObservableCollection<User> blocked;
 
+        private bool verify;
+
 
         public User(string firstname, string lastname, DateTime birthDate, string email, string password, Roles role, bool gender)
         {
@@ -48,6 +50,7 @@ namespace SecurityManager
             this.Role = role;
             this.birthDate = birthDate;
             this.Blocked = new ObservableCollection<User>();
+            this.verify = false;
 
             this.identity = new GenericIdentity(email);
         }
@@ -62,6 +65,19 @@ namespace SecurityManager
             set
             {
                 code = value;
+            }
+        }
+
+        public bool Verify
+        {
+            get
+            {
+                return verify;
+            }
+
+            set
+            {
+                verify = value;
             }
         }
 
