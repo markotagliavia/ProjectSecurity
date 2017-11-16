@@ -12,3 +12,11 @@ C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ForumModels\bin\Debug\Securit
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\krist\Desktop\SBESRepo\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\krist\Desktop\SBESRepo\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\krist\Desktop\SBESRepo\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\krist\Desktop\SBESRepo\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\krist\Desktop\SBESRepo\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\krist\Desktop\SBESRepo\ForumModels\obj\Debug\ForumModels.csproj.CoreCompileInputs.cache
+C:\Users\krist\Desktop\SBESRepo\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\krist\Desktop\SBESRepo\ForumModels\obj\Debug\ForumModels.pdb

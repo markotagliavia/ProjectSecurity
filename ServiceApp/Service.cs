@@ -13,58 +13,12 @@ namespace ServiceApp
 {
     public class Service : IService
     {
-        private ObservableCollection<User> loggedIn;
+        public static ObservableCollection<User> loggedIn = new ObservableCollection<User>();
 
-        private ObservableCollection<Room> rooms;
+        public static ObservableCollection<Room> rooms = new ObservableCollection<Room>();
 
-        private ObservableCollection<PrivateChat> privateChats;
+        public static ObservableCollection<PrivateChat> privateChats = new ObservableCollection<PrivateChat>();
 
-
-        public Service()
-        {
-            this.LoggedIn = new ObservableCollection<User>();
-            this.Rooms = new ObservableCollection<Room>();
-            this.PrivateChats = new ObservableCollection<PrivateChat>();
-        }
-
-        public ObservableCollection<PrivateChat> PrivateChats
-        {
-            get
-            {
-                return privateChats;
-            }
-
-            set
-            {
-                privateChats = value;
-            }
-        }
-
-        public ObservableCollection<Room> Rooms
-        {
-            get
-            {
-                return rooms;
-            }
-
-            set
-            {
-                rooms = value;
-            }
-        }
-
-        public ObservableCollection<User> LoggedIn
-        {
-            get
-            {
-                return loggedIn;
-            }
-
-            set
-            {
-                loggedIn = value;
-            }
-        }
 
         public void AddAdmin(string email)
         {
@@ -188,17 +142,9 @@ namespace ServiceApp
 
         public void LogIn(string email, string password, string code)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //TODO ubaciti u listo ulogovanih
 
-            /// audit both successfull and failed authorization checks
-            if (user.IsInRole(Permissions.LogIn.ToString()))
-            {
-                //TODO fje
-            }
-            else
-            {
-                //TODO greske
-            }
+            Thread.CurrentPrincipal = loggedIn.Single(i => i.Email == email);
         }
 
         public void LogOut(string email)

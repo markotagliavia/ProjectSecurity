@@ -32,3 +32,16 @@ C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\bin\Debug\Security
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\Administrator.DOMAINADMINS0\Desktop\Projj\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\obj\Debug\ServiceApp.csproj.CoreCompileInputs.cache
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\ForumModels.dll
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\SecurityManager.dll
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\ForumModels.pdb
+C:\Users\krist\Desktop\SBESRepo\ServiceApp\bin\Debug\SecurityManager.pdb
