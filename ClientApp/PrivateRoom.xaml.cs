@@ -1,7 +1,5 @@
-﻿using SecurityManager;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,25 +10,23 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Forum;
 
 namespace ClientApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PrivateRoom.xaml
     /// </summary>
-    public partial class GroupChat : Window
+    public partial class PrivateRoom : Window
     {
         private WCFClient proxy;
-        public Forum.GroupChat groupChat;
+        public Forum.Room room;
 
-        public GroupChat(WCFClient proxy)
+        public PrivateRoom(WCFClient proxy)
         {
-            InitializeComponent();
             this.proxy = proxy;
-            groupChat = proxy.GetGroupChat();
+            this.room = this.proxy.GetPrivateRoom(room.Theme);
+            InitializeComponent();
             DataContext = this;
         }
     }
