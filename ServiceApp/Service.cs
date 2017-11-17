@@ -23,29 +23,39 @@ namespace ServiceApp
 
         public static GroupChat groupChat = new GroupChat();
 
+        public static ObservableCollection<Room> roomList = new ObservableCollection<Room>();
 
-        public void AddAdmin(string email)
+
+        public bool AddAdmin(string email)
         {
             User user = Thread.CurrentPrincipal as User;
-
+            bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.AddAdmin.ToString()))
             {
                 //TODO fje
-                User u = loggedIn.Single(i => i.Email == email);
-                u.Role = Roles.Admin;
+                if (user.Logged)
+                {
+                    User u = loggedIn.Single(i => i.Email == email);
+                    u.Role = Roles.Admin;
+                    retVal = true;
+                }else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            return retVal;
         }
 
         public bool BlockGroupChat(string blockEmail)
         {
             User user = Thread.CurrentPrincipal as User;
-
+            bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.BlockGroupChat.ToString()))
             {
@@ -56,9 +66,11 @@ namespace ServiceApp
                     if (groupChat.Blocked.Single(i => i.Email == blockEmail) == null)
                     {
                         groupChat.Blocked.Add(u);
-                        return true;
+                       retVal = true;
                     }
-                    
+                }else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
                 }
 
             }
@@ -67,7 +79,7 @@ namespace ServiceApp
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
-            return false;
+            return retVal;
         }
 
         public void BlockUser(string requestEmail, string blockEmail)
@@ -85,19 +97,34 @@ namespace ServiceApp
             }
         }
 
-        public void BlockUserFromRoom(string blockEmail, string roomName)
+        public bool BlockUserFromRoom(string blockEmail, string roomName)
         {
             User user = Thread.CurrentPrincipal as User;
+            bool retVal = false;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.BlockUserFromRoom.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    Room room = roomList.Single(r => r.Theme == roomName);
+                    User u = loggedIn.Single(i => i.Email == blockEmail);
+                    room.Blocked.Add(u);
+                    retVal = true;
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return retVal;
         }
 
         public void ChangePassword(string oldPassowrd, string newPassword)
@@ -130,19 +157,32 @@ namespace ServiceApp
             }
         }
 
-        public void CreateRoom(string roomName)
+        public bool CreateRoom(string roomName)
         {
             User user = Thread.CurrentPrincipal as User;
+            bool retVal = false;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.CreateRoom.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    Room room = new Room(roomName);
+                    roomList.Add(room);
+                    retVal = true;
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            return retVal;
         }
 
         public void DeleteAdmin(string email)
@@ -327,19 +367,34 @@ namespace ServiceApp
             }
         }
 
-        public void RemoveBlockUserFromRoom(string unblockEmail, string roomName)
+        public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)
         {
             User user = Thread.CurrentPrincipal as User;
+            bool retval = false;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.RemoveBlockRoom.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    Room room = roomList.Single(r => r.Theme == roomName);
+                    User u = loggedIn.Single(i => i.Email == unblockEmail);
+                    room.Blocked.Remove(u);
+                    retval = true;
+                }
+                else
+                {
+                    Console.WriteLine("User {0} don't have permission!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return retval;
         }
 
         public int ResetPassword(string email)

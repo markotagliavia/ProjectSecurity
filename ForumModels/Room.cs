@@ -21,7 +21,7 @@ namespace Forum
         private ObservableCollection<Message> allMessages;
 
 
-        private Room(string theme)
+        public Room(string theme)
         {
             this.theme = theme;
             this.code = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));

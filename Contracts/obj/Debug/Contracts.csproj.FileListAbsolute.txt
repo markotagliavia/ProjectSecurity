@@ -35,3 +35,12 @@ C:\Users\Marko\Desktop\repo1\Contracts\obj\Debug\Contracts.csprojResolveAssembly
 C:\Users\Marko\Desktop\repo1\Contracts\obj\Debug\Contracts.csproj.CoreCompileInputs.cache
 C:\Users\Marko\Desktop\repo1\Contracts\obj\Debug\Contracts.dll
 C:\Users\Marko\Desktop\repo1\Contracts\obj\Debug\Contracts.pdb
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\bin\Debug\Contracts.dll
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\bin\Debug\ForumModels.dll
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\bin\Debug\SecurityManager.dll
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\bin\Debug\ForumModels.pdb
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\bin\Debug\SecurityManager.pdb
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\obj\Debug\Contracts.dll
+C:\Users\Kristijan\Desktop\NewVersion\Contracts\obj\Debug\Contracts.pdb

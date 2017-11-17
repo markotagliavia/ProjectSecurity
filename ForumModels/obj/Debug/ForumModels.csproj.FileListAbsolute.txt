@@ -35,3 +35,10 @@ C:\Users\Marko\Desktop\repo1\ForumModels\obj\Debug\ForumModels.csprojResolveAsse
 C:\Users\Marko\Desktop\repo1\ForumModels\obj\Debug\ForumModels.csproj.CoreCompileInputs.cache
 C:\Users\Marko\Desktop\repo1\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\Marko\Desktop\repo1\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\Kristijan\Desktop\NewVersion\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Kristijan\Desktop\NewVersion\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Kristijan\Desktop\NewVersion\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Kristijan\Desktop\NewVersion\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Kristijan\Desktop\NewVersion\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Kristijan\Desktop\NewVersion\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Kristijan\Desktop\NewVersion\ForumModels\obj\Debug\ForumModels.pdb

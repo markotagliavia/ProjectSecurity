@@ -19,17 +19,19 @@ namespace ClientApp
             factory = this.CreateChannel();
         }
 
-        public void AddAdmin(string email)
+        public bool AddAdmin(string email)
         {
+            bool retVal = false;
             try
             {
-                factory.AddAdmin(email);
+                retVal = factory.AddAdmin(email);
                 Console.WriteLine("AddAdmin executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to AddAdmin(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public bool BlockGroupChat(string blockEmai)
@@ -61,17 +63,20 @@ namespace ClientApp
             }
         }
 
-        public void BlockUserFromRoom(string blockEmail, string roomName)
+        public bool BlockUserFromRoom(string blockEmail, string roomName)
         {
+            bool retVal = false;
             try
             {
-                factory.BlockUserFromRoom(blockEmail, roomName);
+                retVal = factory.BlockUserFromRoom(blockEmail, roomName);
                 Console.WriteLine("BlockUserFromRoom executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to BlockUserFromRoom(). {0}", e.Message);
             }
+
+            return retVal;
         }
 
         public void ChangePassword(string oldPassowrd, string newPassword)
@@ -106,17 +111,19 @@ namespace ClientApp
             }
         }
 
-        public void CreateRoom(string roomName)
+        public bool CreateRoom(string roomName)
         {
+            bool retVal = false;
             try
             {
-                factory.CreateRoom(roomName);
+                retVal = factory.CreateRoom(roomName);
                 Console.WriteLine("CreateRoom executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to CreateRoom(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public void DeleteAdmin(string email)
@@ -221,17 +228,20 @@ namespace ClientApp
             }
         }
 
-        public void RemoveBlockUserFromRoom(string unblockEmail, string roomName)
+        public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)
         {
+            bool retVal = false;
             try
             {
-                factory.RemoveBlockUserFromRoom(unblockEmail, roomName);
+                retVal = factory.RemoveBlockUserFromRoom(unblockEmail, roomName);
                 Console.WriteLine("RemoveBlockUserFromRoom executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to RemoveBlockUserFromRoom(). {0}", e.Message);
             }
+
+            return retVal;
         }
 
         public int ResetPassword(string email)
