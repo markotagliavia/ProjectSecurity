@@ -50,17 +50,19 @@ namespace ClientApp
             return retVal;
         }
 
-        public void BlockUser(string requestEmail, string blockEmail)
+        public bool BlockUser(string requestEmail, string blockEmail)
         {
+            bool retVal = false;
             try
             {
-                factory.BlockUser(requestEmail, blockEmail);
+                retVal = factory.BlockUser(requestEmail, blockEmail);
                 Console.WriteLine("BlockUser executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to BlockUser(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public bool BlockUserFromRoom(string blockEmail, string roomName)
@@ -176,17 +178,19 @@ namespace ClientApp
             return i;
         }
 
-        public void LogOut(string email)
+        public bool LogOut(string email)
         {
+            bool retVal = false;
             try
             {
-                factory.LogOut(email);
+                retVal = factory.LogOut(email);
                 Console.WriteLine("LogOut executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to LogOut(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public void Registration(string name, string sname, DateTime date, string gender, string email, string password)
@@ -215,17 +219,19 @@ namespace ClientApp
             }
         }
 
-        public void RemoveBlockUser(string requestEmail, string unblockEmail)
+        public bool RemoveBlockUser(string requestEmail, string unblockEmail)
         {
+            bool retVal = false;
             try
             {
-                factory.RemoveBlockUser(requestEmail, unblockEmail);
+                retVal = factory.RemoveBlockUser(requestEmail, unblockEmail);
                 Console.WriteLine("RemoveBlockUser executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to RemoveBlockUser(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)

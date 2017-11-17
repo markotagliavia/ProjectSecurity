@@ -25,7 +25,7 @@ namespace Contracts
         int LogIn(string email, string password);
 
         [OperationContract]
-        void LogOut(string email);
+        bool LogOut(string email);
 
         [OperationContract]
         bool AddAdmin(string email);
@@ -34,10 +34,10 @@ namespace Contracts
         void DeleteAdmin(string email);
 
         [OperationContract]
-        void BlockUser(string requestEmail, string blockEmail);
+        bool BlockUser(string requestEmail, string blockEmail);
 
         [OperationContract]
-        void RemoveBlockUser(string requestEmail, string unblockEmail);
+        bool RemoveBlockUser(string requestEmail, string unblockEmail);
 
         [OperationContract]
         bool BlockGroupChat(string blockEmai);

@@ -17,8 +17,6 @@ namespace ServiceApp
     {
         public static ObservableCollection<User> loggedIn = new ObservableCollection<User>();
 
-        public static ObservableCollection<Room> rooms = new ObservableCollection<Room>();
-
         public static ObservableCollection<PrivateChat> privateChats = new ObservableCollection<PrivateChat>();
 
         public static GroupChat groupChat = new GroupChat();
@@ -82,19 +80,34 @@ namespace ServiceApp
             return retVal;
         }
 
-        public void BlockUser(string requestEmail, string blockEmail)
+        public bool BlockUser(string requestEmail, string blockEmail)
         {
             User user = Thread.CurrentPrincipal as User;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.BlockUser.ToString()))
             {
-                //TODO fje
+                if (user.Logged)
+                {
+                    if (user.Blocked.Single(i => i.Email == blockEmail) == null)
+                    {
+                        User blockUser = loggedIn.Single(i => i.Email == blockEmail);
+                        if (blockUser != null)
+                        {
+                            user.Blocked.Add(blockUser);
+                            return true;
+                        }
+                    }
+                }
+
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return false;
         }
 
         public bool BlockUserFromRoom(string blockEmail, string roomName)
@@ -273,20 +286,27 @@ namespace ServiceApp
         }
 
 
-        public void LogOut(string email)
+        public bool LogOut(string email)
         {
             User user = Thread.CurrentPrincipal as User;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.LogOut.ToString()))
             {
-                user.Logged = false;
-                loggedIn.Remove(user);
+                if (user.Logged)
+                {
+                    user.Logged = false;
+                    loggedIn.Remove(user);
+                    return true;
+                }
+                
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            return false;
         }
 
 
@@ -352,7 +372,7 @@ namespace ServiceApp
             }
         }
 
-        public void RemoveBlockUser(string requestEmail, string unblockEmail)
+        public bool RemoveBlockUser(string requestEmail, string unblockEmail)
         {
             User user = Thread.CurrentPrincipal as User;
 
@@ -360,11 +380,22 @@ namespace ServiceApp
             if (user.IsInRole(Permissions.RemoveBlockUser.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    User blocked = user.Blocked.Single(i => i.Email == unblockEmail);
+                    if (blocked != null)
+                    {
+                        user.Blocked.Add(blocked);
+                        return true;
+                    }
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            return false;
         }
 
         public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)
