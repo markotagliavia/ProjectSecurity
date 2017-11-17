@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,14 +19,37 @@ namespace ServiceApp
     {
         public static ObservableCollection<User> loggedIn = new ObservableCollection<User>();
 
-        public static ObservableCollection<Room> rooms = new ObservableCollection<Room>();
-
         public static ObservableCollection<PrivateChat> privateChats = new ObservableCollection<PrivateChat>();
 
         public static GroupChat groupChat = new GroupChat();
 
         public static ObservableCollection<Room> roomList = new ObservableCollection<Room>();
 
+        public List<User> DeserializeUsers()
+        {
+            List<User> lista = new List<User>();
+
+            FileStream fs = new FileStream("Users.dat", FileMode.Open);
+
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                lista = (List<User>)formatter.Deserialize(fs);
+
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+
+            return lista;
+        }
 
         public bool AddAdmin(string email)
         {
@@ -82,19 +107,34 @@ namespace ServiceApp
             return retVal;
         }
 
-        public void BlockUser(string requestEmail, string blockEmail)
+        public bool BlockUser(string requestEmail, string blockEmail)
         {
             User user = Thread.CurrentPrincipal as User;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.BlockUser.ToString()))
             {
-                //TODO fje
+                if (user.Logged)
+                {
+                    if (user.Blocked.Single(i => i.Email == blockEmail) == null)
+                    {
+                        User blockUser = loggedIn.Single(i => i.Email == blockEmail);
+                        if (blockUser != null)
+                        {
+                            user.Blocked.Add(blockUser);
+                            return true;
+                        }
+                    }
+                }
+
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return false;
         }
 
         public bool BlockUserFromRoom(string blockEmail, string roomName)
@@ -127,19 +167,32 @@ namespace ServiceApp
             return retVal;
         }
 
-        public void ChangePassword(string oldPassowrd, string newPassword)
+        public bool ChangePassword(string email, string oldPassowrd, string newPassword)
         {
             User user = Thread.CurrentPrincipal as User;
-
+            bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.ChangePassword.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    User u = loggedIn.Single(i => i.Email == email && i.Password == oldPassowrd);
+                    u.Password = newPassword;
+                    retVal = true;
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return retVal;
         }
 
         public void CreatePrivateChat(string firstEmail, string secondEmail)
@@ -168,9 +221,12 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    Room room = new Room(roomName);
-                    roomList.Add(room);
-                    retVal = true;
+                    if (roomList.Single(i => i.Theme == roomName) == null)
+                    {
+                        Room room = new Room(roomName);
+                        roomList.Add(room);
+                        retVal = true;
+                    }
                 }
                 else
                 {
@@ -185,19 +241,32 @@ namespace ServiceApp
             return retVal;
         }
 
-        public void DeleteAdmin(string email)
+        public bool DeleteAdmin(string email)
         {
             User user = Thread.CurrentPrincipal as User;
-
+            bool retVal = true;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.DeleteAdmin.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    User u = loggedIn.Single(i => i.Email == email);
+                    u.Role = Roles.User;
+                    retVal = true;
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return retVal;
         }
 
         public int LogIn(string email, string password)
@@ -273,68 +342,115 @@ namespace ServiceApp
         }
 
 
-        public void LogOut(string email)
+        public bool LogOut(string email)
         {
             User user = Thread.CurrentPrincipal as User;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.LogOut.ToString()))
             {
-                user.Logged = false;
-                loggedIn.Remove(user);
+                if (user.Logged)
+                {
+                    user.Logged = false;
+                    loggedIn.Remove(user);
+                    return true;
+                }
+                
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            return false;
         }
 
 
 
-        public void Registration(string name, string sname, DateTime date, string gender, string email, string password)
+        public bool Registration(string name, string sname, DateTime date, string gender, string email, string password)
         {
-            /*if (loggedIn.Select(i => i.Email == email) != null)
-            { //ispraviti da radi sa bool
-                return;
-            }*/
-            //za test
-            User u1 = new User("Marko", "Tagliavia", DateTime.Now, "max.tagliavia@gmail.com", "1234567", Roles.User, true);
-            User u2 = new User("Tijana", "Lalosevic", DateTime.Now, "tijana.vdn@gmail.com", "1234567", Roles.Admin, true);
-            User u3 = new User("Pijana", "Lalosevic", DateTime.Now, "marko@gmail.com", "1234567", Roles.Admin, false);
-            loggedIn.Add(u1);
-            loggedIn.Add(u2);
-            loggedIn.Add(u3);
+            bool exists = false;
+            List<User> lista = new List<User>();
 
-            if (!File.Exists("Users"))
+            User u1 = new User(name, sname, date, email, password, Roles.User, gender);
+            lista.Add(u1);
+
+            BinaryFormatter bf = new BinaryFormatter();
+
+            if (!File.Exists("Users.dat"))   // ako fajl ne postoji nema sta da se proverava i samo se dodaje
+            {
+                Stream s = File.Open("Users.dat", FileMode.Create);
+                try
                 {
-                    using (BinaryWriter writer = new BinaryWriter(File.Open("Users", FileMode.Create)))
-                    {
-                        writer.Write(name);
-                        writer.Write(sname);
-                        writer.Write(date.ToBinary());
-                        writer.Write(gender);
-                        writer.Write(email);
-                        writer.Write(password);
-
-                    }
-
+                    bf.Serialize(s, lista);
+                    lista.Remove(u1);
                 }
-                else
+                catch (SerializationException e)
                 {
-                    using (BinaryWriter writer = new BinaryWriter(File.Open("Users", FileMode.Append)))
+                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    s.Close();
+                }
+
+            }
+            else
+            {
+                if (File.Exists("Users.dat"))
+                {
+
+
+                    // Open the file containing the data that you want to deserialize.
+                    FileStream fs = new FileStream("Users.dat", FileMode.Open);
+
+                    try
                     {
-                        writer.Write(name);
-                        writer.Write(sname);
-                        writer.Write(date.ToBinary());
-                        writer.Write(gender);
-                        writer.Write(email);
-                        writer.Write(password);
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        lista = (List<User>)formatter.Deserialize(fs);
 
                     }
+                    catch (SerializationException e)
+                    {
+                        Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                        throw;
+                    }
+                    finally
+                    {
+                        fs.Close();
+                    }
 
-                }        
-            
-            
+                    foreach (User u in lista)
+                    {
+                        if (u.Email == email)
+                        {
+                            exists = true;
+                        }
+                    }
+                }
+                if (exists != true)       // ako ne postoji upisi ga u fajl
+                {
+                    Stream s = File.Open("Users.dat", FileMode.Create);
+
+                    try
+                    {
+                        lista.Add(u1);
+                        bf.Serialize(s, lista);
+                    }
+                    catch (SerializationException e)
+                    {
+                        Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                        throw;
+                    }
+                    finally
+                    {
+                        s.Close();
+                    }
+                }
+            }
+
+            return exists;
         }
 
         public void RemoveBlockGroupChat(string unblockEmail)
@@ -352,7 +468,8 @@ namespace ServiceApp
             }
         }
 
-        public void RemoveBlockUser(string requestEmail, string unblockEmail)
+
+        public bool RemoveBlockUser(string requestEmail, string unblockEmail)
         {
             User user = Thread.CurrentPrincipal as User;
 
@@ -360,11 +477,22 @@ namespace ServiceApp
             if (user.IsInRole(Permissions.RemoveBlockUser.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    User blocked = user.Blocked.Single(i => i.Email == unblockEmail);
+                    if (blocked != null)
+                    {
+                        user.Blocked.Add(blocked);
+                        return true;
+                    }
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            return false;
         }
 
         public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)
@@ -506,12 +634,13 @@ namespace ServiceApp
 
         public GroupChat GetGroupChat()
         {
-            throw new NotImplementedException();
+            return groupChat;
         }
 
         public Room GetPrivateRoom(string roomName)
         {
-            throw new NotImplementedException();
+            Room room = roomList.Single(r => r.Theme == roomName);
+            return room;
         }
 
         public bool CloseRoom(string roomName, string email)

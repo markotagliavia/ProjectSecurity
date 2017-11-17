@@ -50,17 +50,19 @@ namespace ClientApp
             return retVal;
         }
 
-        public void BlockUser(string requestEmail, string blockEmail)
+        public bool BlockUser(string requestEmail, string blockEmail)
         {
+            bool retVal = false;
             try
             {
-                factory.BlockUser(requestEmail, blockEmail);
+                retVal = factory.BlockUser(requestEmail, blockEmail);
                 Console.WriteLine("BlockUser executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to BlockUser(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public bool BlockUserFromRoom(string blockEmail, string roomName)
@@ -79,18 +81,19 @@ namespace ClientApp
             return retVal;
         }
 
-        public void ChangePassword(string oldPassowrd, string newPassword)
+        public bool ChangePassword(string email, string oldPassowrd, string newPassword)
         {
+            bool retVal = false;
             try
             {
-                  factory.ChangePassword(oldPassowrd, newPassword);
-                  Console.WriteLine("ChangePassword executed");
-                Console.WriteLine("asdasdasdasdads");
+                retVal = factory.ChangePassword(email, oldPassowrd, newPassword);
+                Console.WriteLine("ChangePassword executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to ChangePassword(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public bool CloseRoom(string roomName, string email)
@@ -126,17 +129,20 @@ namespace ClientApp
             return retVal;
         }
 
-        public void DeleteAdmin(string email)
+        public bool DeleteAdmin(string email)
         {
+            bool retVal = false;
             try
             {
-                factory.DeleteAdmin(email);
+                retVal = factory.DeleteAdmin(email);
                 Console.WriteLine("DeleteAdmin executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to DeleteAdmin(). {0}", e.Message);
             }
+
+            return retVal;
         }
 
         public Forum.GroupChat GetGroupChat()
@@ -145,11 +151,11 @@ namespace ClientApp
             try
             {
                 groupChat = factory.GetGroupChat();
-                Console.WriteLine("DeleteAdmin executed");
+                Console.WriteLine("GetGroupChat executed");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error while trying to DeleteAdmin(). {0}", e.Message);
+                Console.WriteLine("Error while trying to GetGroupChat(). {0}", e.Message);
             }
 
             return groupChat;
@@ -157,7 +163,18 @@ namespace ClientApp
 
         public Room GetPrivateRoom(string roomName)
         {
-            throw new NotImplementedException();
+            Room room = new Room();
+            try
+            {
+                room = factory.GetPrivateRoom(roomName);
+                Console.WriteLine("GetPrivateRoom executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to GetPrivateRoom(). {0}", e.Message);
+            }
+
+            return room;
         }
 
         public int LogIn(string email, string password)
@@ -176,29 +193,33 @@ namespace ClientApp
             return i;
         }
 
-        public void LogOut(string email)
+        public bool LogOut(string email)
         {
+            bool retVal = false;
             try
             {
-                factory.LogOut(email);
+                retVal = factory.LogOut(email);
                 Console.WriteLine("LogOut executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to LogOut(). {0}", e.Message);
             }
+            return retVal;
         }
 
-        public void Registration(string name, string sname, DateTime date, string gender, string email, string password)
+        public bool Registration(string name, string sname, DateTime date, string gender, string email, string password)
         {
             try
             {
                 factory.Registration(name, sname, date, gender, email, password);
                 Console.WriteLine("Registration executed");
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to Registration(). {0}", e.Message);
+                return false;
             }
         }
 
@@ -215,17 +236,19 @@ namespace ClientApp
             }
         }
 
-        public void RemoveBlockUser(string requestEmail, string unblockEmail)
+        public bool RemoveBlockUser(string requestEmail, string unblockEmail)
         {
+            bool retVal = false;
             try
             {
-                factory.RemoveBlockUser(requestEmail, unblockEmail);
+                retVal = factory.RemoveBlockUser(requestEmail, unblockEmail);
                 Console.WriteLine("RemoveBlockUser executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to RemoveBlockUser(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)

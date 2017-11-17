@@ -13,10 +13,10 @@ namespace Contracts
     {
 
         [OperationContract]
-        void Registration(string name, string sname, DateTime date, string gender, string email, string password);
+        bool Registration(string name, string sname, DateTime date, string gender, string email, string password);
 
         [OperationContract]
-        void ChangePassword(string oldPassowrd, string newPassword);
+        bool ChangePassword(string email, string oldPassowrd, string newPassword);
 
         [OperationContract]
         int ResetPassword(string email);
@@ -25,19 +25,19 @@ namespace Contracts
         int LogIn(string email, string password);
 
         [OperationContract]
-        void LogOut(string email);
+        bool LogOut(string email);
 
         [OperationContract]
         bool AddAdmin(string email);
 
         [OperationContract]
-        void DeleteAdmin(string email);
+        bool DeleteAdmin(string email);
 
         [OperationContract]
-        void BlockUser(string requestEmail, string blockEmail);
+        bool BlockUser(string requestEmail, string blockEmail);
 
         [OperationContract]
-        void RemoveBlockUser(string requestEmail, string unblockEmail);
+        bool RemoveBlockUser(string requestEmail, string unblockEmail);
 
         [OperationContract]
         bool BlockGroupChat(string blockEmai);

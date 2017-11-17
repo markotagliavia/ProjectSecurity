@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace SecurityManager
 {
+    [Serializable]
     public class User : IPrincipal
     {
         private GenericIdentity identity;
 
         private Guid code;
 
-        private bool gender;
+        private string gender;
 
         private bool logged;
 
@@ -37,7 +38,7 @@ namespace SecurityManager
         private bool verify;
 
 
-        public User(string firstname, string lastname, DateTime birthDate, string email, string password, Roles role, bool gender)
+        public User(string firstname, string lastname, DateTime birthDate, string email, string password, Roles role, string gender)
         {
             this.Logged = false;
            
@@ -172,7 +173,7 @@ namespace SecurityManager
             }
         }
 
-        public bool Gender
+        public string Gender
         {
             get
             {

@@ -30,7 +30,7 @@ namespace ClientApp
         {
             InitializeComponent();
             NetTcpBinding binding = new NetTcpBinding();
-            string address = "net.tcp://localhost:9999/ServiceApp";
+            string address = "net.tcp://localhost:27019/ServiceApp";
 
             this.proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
             Console.ReadLine();
