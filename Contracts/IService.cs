@@ -28,7 +28,7 @@ namespace Contracts
         void LogOut(string email);
 
         [OperationContract]
-        void AddAdmin(string email);
+        bool AddAdmin(string email);
 
         [OperationContract]
         void DeleteAdmin(string email);
@@ -46,16 +46,16 @@ namespace Contracts
         void RemoveBlockGroupChat(string unblockEmail);
 
         [OperationContract]
-        void BlockUserFromRoom(string blockEmail, string roomName);
+        bool BlockUserFromRoom(string blockEmail, string roomName);
 
         [OperationContract]
-        void RemoveBlockUserFromRoom(string unblockEmail, string roomName);
+        bool RemoveBlockUserFromRoom(string unblockEmail, string roomName);
 
         [OperationContract]
         void CreatePrivateChat(string firstEmail, string secondEmail);
 
         [OperationContract]
-        void CreateRoom(string roomName);
+        bool CreateRoom(string roomName);
 
         [OperationContract]
         bool SendVerificationKey(string key);

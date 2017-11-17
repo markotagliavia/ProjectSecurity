@@ -70,3 +70,15 @@ C:\Users\Marko\Desktop\repo1\ServiceApp\bin\Debug\SecurityManager.dll
 C:\Users\Marko\Desktop\repo1\ServiceApp\bin\Debug\Contracts.pdb
 C:\Users\Marko\Desktop\repo1\ServiceApp\bin\Debug\ForumModels.pdb
 C:\Users\Marko\Desktop\repo1\ServiceApp\bin\Debug\SecurityManager.pdb
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\ForumModels.dll
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\SecurityManager.dll
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\ForumModels.pdb
+C:\Users\Kristijan\Desktop\NewVersion\ServiceApp\bin\Debug\SecurityManager.pdb
