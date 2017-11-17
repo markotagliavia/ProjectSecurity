@@ -81,18 +81,19 @@ namespace ClientApp
             return retVal;
         }
 
-        public void ChangePassword(string oldPassowrd, string newPassword)
+        public bool ChangePassword(string email, string oldPassowrd, string newPassword)
         {
+            bool retVal = false;
             try
             {
-                  factory.ChangePassword(oldPassowrd, newPassword);
-                  Console.WriteLine("ChangePassword executed");
-                Console.WriteLine("asdasdasdasdads");
+                retVal = factory.ChangePassword(email, oldPassowrd, newPassword);
+                Console.WriteLine("ChangePassword executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to ChangePassword(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public bool CloseRoom(string roomName, string email)
@@ -128,17 +129,20 @@ namespace ClientApp
             return retVal;
         }
 
-        public void DeleteAdmin(string email)
+        public bool DeleteAdmin(string email)
         {
+            bool retVal = false;
             try
             {
-                factory.DeleteAdmin(email);
+                retVal = factory.DeleteAdmin(email);
                 Console.WriteLine("DeleteAdmin executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to DeleteAdmin(). {0}", e.Message);
             }
+
+            return retVal;
         }
 
         public Forum.GroupChat GetGroupChat()
@@ -147,11 +151,11 @@ namespace ClientApp
             try
             {
                 groupChat = factory.GetGroupChat();
-                Console.WriteLine("DeleteAdmin executed");
+                Console.WriteLine("GetGroupChat executed");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error while trying to DeleteAdmin(). {0}", e.Message);
+                Console.WriteLine("Error while trying to GetGroupChat(). {0}", e.Message);
             }
 
             return groupChat;
@@ -159,7 +163,18 @@ namespace ClientApp
 
         public Room GetPrivateRoom(string roomName)
         {
-            throw new NotImplementedException();
+            Room room = new Room();
+            try
+            {
+                room = factory.GetPrivateRoom(roomName);
+                Console.WriteLine("GetPrivateRoom executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to GetPrivateRoom(). {0}", e.Message);
+            }
+
+            return room;
         }
 
         public int LogIn(string email, string password)

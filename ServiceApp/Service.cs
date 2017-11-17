@@ -167,19 +167,32 @@ namespace ServiceApp
             return retVal;
         }
 
-        public void ChangePassword(string oldPassowrd, string newPassword)
+        public bool ChangePassword(string email, string oldPassowrd, string newPassword)
         {
             User user = Thread.CurrentPrincipal as User;
-
+            bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.ChangePassword.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    User u = loggedIn.Single(i => i.Email == email && i.Password == oldPassowrd);
+                    u.Password = newPassword;
+                    retVal = true;
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return retVal;
         }
 
         public void CreatePrivateChat(string firstEmail, string secondEmail)
@@ -208,9 +221,12 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    Room room = new Room(roomName);
-                    roomList.Add(room);
-                    retVal = true;
+                    if (roomList.Single(i => i.Theme == roomName) == null)
+                    {
+                        Room room = new Room(roomName);
+                        roomList.Add(room);
+                        retVal = true;
+                    }
                 }
                 else
                 {
@@ -225,19 +241,32 @@ namespace ServiceApp
             return retVal;
         }
 
-        public void DeleteAdmin(string email)
+        public bool DeleteAdmin(string email)
         {
             User user = Thread.CurrentPrincipal as User;
-
+            bool retVal = true;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.DeleteAdmin.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    User u = loggedIn.Single(i => i.Email == email);
+                    u.Role = Roles.User;
+                    retVal = true;
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return retVal;
         }
 
         public int LogIn(string email, string password)
@@ -605,12 +634,13 @@ namespace ServiceApp
 
         public GroupChat GetGroupChat()
         {
-            throw new NotImplementedException();
+            return groupChat;
         }
 
         public Room GetPrivateRoom(string roomName)
         {
-            throw new NotImplementedException();
+            Room room = roomList.Single(r => r.Theme == roomName);
+            return room;
         }
 
         public bool CloseRoom(string roomName, string email)
