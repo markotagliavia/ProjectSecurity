@@ -5,6 +5,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using Forum;
 
 namespace ClientApp
 {
@@ -31,17 +32,20 @@ namespace ClientApp
             }
         }
 
-        public void BlockGroupChat(string blockEmai)
+        public bool BlockGroupChat(string blockEmai)
         {
+            bool retVal = false;
             try
             {
-                factory.BlockGroupChat(blockEmai);
+                retVal = factory.BlockGroupChat(blockEmai);
                 Console.WriteLine("BlockGroupChat executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to BlockGroupChat(). {0}", e.Message);
             }
+
+            return retVal;
         }
 
         public void BlockUser(string requestEmail, string blockEmail)
@@ -84,6 +88,11 @@ namespace ClientApp
             }
         }
 
+        public bool CloseRoom(string roomName, string email)
+        {
+            throw new NotImplementedException();
+        }
+
         public void CreatePrivateChat(string firstEmail, string secondEmail)
         {
             try
@@ -121,6 +130,27 @@ namespace ClientApp
             {
                 Console.WriteLine("Error while trying to DeleteAdmin(). {0}", e.Message);
             }
+        }
+
+        public Forum.GroupChat GetGroupChat()
+        {
+            Forum.GroupChat groupChat = new Forum.GroupChat();
+            try
+            {
+                groupChat = factory.GetGroupChat();
+                Console.WriteLine("DeleteAdmin executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to DeleteAdmin(). {0}", e.Message);
+            }
+
+            return groupChat;
+        }
+
+        public Room GetPrivateRoom(string roomName)
+        {
+            throw new NotImplementedException();
         }
 
         public int LogIn(string email, string password)
@@ -218,6 +248,21 @@ namespace ClientApp
             }
 
             return ret;
+        }
+
+        public bool SendGroupMessage(string email, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SendPrivateMessage(string firstEmail, string secondEmail, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SendRoomMessage(string email, string roomName, string message)
+        {
+            throw new NotImplementedException();
         }
 
         public bool SendVerificationKey(string key)

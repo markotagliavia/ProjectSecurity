@@ -123,6 +123,10 @@
       <Project>{F9455C09-FDC2-46C1-96CF-0213324059FB}</Project>
       <Name>Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ForumModels\ForumModels.csproj">
+      <Project>{7360691b-b8ec-4d18-bfac-60ca345725b9}</Project>
+      <Name>ForumModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SecurityManager\SecurityManager.csproj">
       <Project>{35d5e70e-6849-4ba7-a6c9-417c596f6bc3}</Project>
       <Name>SecurityManager</Name>

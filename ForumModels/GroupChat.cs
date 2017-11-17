@@ -10,21 +10,21 @@ namespace Forum
 {
     public class GroupChat
     {
-        private static ObservableCollection<User> blocked;
+        private ObservableCollection<User> blocked;
 
-        private static ObservableCollection<User> logged;
+        private ObservableCollection<User> logged;
 
-        private static  ObservableCollection<Message> allMessages;
+        private ObservableCollection<Message> allMessages;
 
 
-        static GroupChat()
+        public GroupChat()
         {
             Blocked = new ObservableCollection<User>();
             Logged = new ObservableCollection<User>();
             allMessages = new ObservableCollection<Message>();
         }
 
-        public static ObservableCollection<User> Blocked
+        public ObservableCollection<User> Blocked
         {
             get
             {
@@ -37,7 +37,7 @@ namespace Forum
             }
         }
 
-        public static ObservableCollection<User> Logged
+        public ObservableCollection<User> Logged
         {
             get
             {
@@ -50,7 +50,7 @@ namespace Forum
             }
         }
 
-        public static ObservableCollection<Message> AllMessages
+        public ObservableCollection<Message> AllMessages
         {
             get
             {

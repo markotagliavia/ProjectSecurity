@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Forum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -39,7 +40,7 @@ namespace Contracts
         void RemoveBlockUser(string requestEmail, string unblockEmail);
 
         [OperationContract]
-        void BlockGroupChat(string blockEmai);
+        bool BlockGroupChat(string blockEmai);
 
         [OperationContract]
         void RemoveBlockGroupChat(string unblockEmail);
@@ -59,5 +60,22 @@ namespace Contracts
         [OperationContract]
         bool SendVerificationKey(string key);
 
+        [OperationContract]
+        bool SendPrivateMessage(string firstEmail, string secondEmail, string message);
+
+        [OperationContract]
+        bool SendGroupMessage(string email, string message);
+
+        [OperationContract]
+        bool SendRoomMessage(string email, string roomName, string message);
+
+        [OperationContract]
+        GroupChat GetGroupChat();
+
+        [OperationContract]
+        Room GetPrivateRoom(string roomName);
+
+        [OperationContract]
+        bool CloseRoom(string roomName, string email);
     }
 }

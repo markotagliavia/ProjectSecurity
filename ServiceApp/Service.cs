@@ -21,6 +21,8 @@ namespace ServiceApp
 
         public static ObservableCollection<PrivateChat> privateChats = new ObservableCollection<PrivateChat>();
 
+        public static GroupChat groupChat = new GroupChat();
+
 
         public void AddAdmin(string email)
         {
@@ -30,26 +32,42 @@ namespace ServiceApp
             if (user.IsInRole(Permissions.AddAdmin.ToString()))
             {
                 //TODO fje
+                User u = loggedIn.Single(i => i.Email == email);
+                u.Role = Roles.Admin;
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
         }
 
-        public void BlockGroupChat(string blockEmail)
+        public bool BlockGroupChat(string blockEmail)
         {
             User user = Thread.CurrentPrincipal as User;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.BlockGroupChat.ToString()))
             {
-                //TODO fje
+                if (user.Logged)
+                {
+                    //TODO fje
+                    User u = loggedIn.Single(i => i.Email == blockEmail);
+                    if (groupChat.Blocked.Single(i => i.Email == blockEmail) == null)
+                    {
+                        groupChat.Blocked.Add(u);
+                        return true;
+                    }
+                    
+                }
+
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            return false;
         }
 
         public void BlockUser(string requestEmail, string blockEmail)
@@ -414,6 +432,36 @@ namespace ServiceApp
             System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
             byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
             return Convert.ToBase64String(hashedDataBytes);
+        }
+
+        public bool SendPrivateMessage(string firstEmail, string secondEmail, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SendGroupMessage(string email, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SendRoomMessage(string email, string roomName, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GroupChat GetGroupChat()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Room GetPrivateRoom(string roomName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CloseRoom(string roomName, string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }
