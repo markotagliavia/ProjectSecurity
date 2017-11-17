@@ -32,6 +32,23 @@ namespace ClientApp
             this.proxy = proxy;
             groupChat = proxy.GetGroupChat();
             DataContext = this;
+            populateMsg();
+        }
+
+        public ObservableCollection<User> Logged
+        {
+            get
+            {
+                return groupChat.Logged;
+            }
+        }
+
+        private void populateMsg()
+        {
+            foreach (Message m in groupChat.AllMessages)
+            {
+                ChatBox.AppendText($"{m.User} wrote on {m.CreationTime.ToString()} :\n{m.Text}\n\n");
+            }
         }
     }
 }

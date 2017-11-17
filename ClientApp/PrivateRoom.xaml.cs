@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Forum;
+using SecurityManager;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +30,25 @@ namespace ClientApp
             this.proxy = proxy;
             this.room = this.proxy.GetPrivateRoom(room.Theme);
             InitializeComponent();
+            label.Content = room.Theme;
             DataContext = this;
+            populateMsg();
+        }
+
+        public ObservableCollection<User> Logged 
+        {
+            get
+            {
+                return room.Logged;
+            }
+        }
+
+        private void populateMsg()
+        {
+            foreach (Message m in room.AllMessages)
+            {
+                ChatBox.AppendText($"{m.User} wrote on {m.CreationTime.ToString()} :\n{m.Text}\n\n");
+            }
         }
     }
 }
