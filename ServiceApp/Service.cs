@@ -195,19 +195,49 @@ namespace ServiceApp
             return retVal;
         }
 
-        public void CreatePrivateChat(string firstEmail, string secondEmail)
+        public int CreatePrivateChat(string firstEmail, string secondEmail)
         {
             User user = Thread.CurrentPrincipal as User;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.CreatePrivateChat.ToString()))
             {
-                //TODO fje
+                if (user.Logged)
+                {
+                    User user2 = loggedIn.Single(i => i.Email == secondEmail);
+                    if (user2 != null)
+                    {
+                        if (privateChats.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))) == null)
+                        {
+                            PrivateChat pc = new PrivateChat(user.Email, user2.Email);
+                            privateChats.Add(pc);
+                            return 0;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Chat already exists!");
+                            return -4;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("User {0} is not logged in!", secondEmail);
+                        return -3;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                    return -2; //nije logovan user
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return -1;
         }
 
         public bool CreateRoom(string roomName)
@@ -355,7 +385,11 @@ namespace ServiceApp
                     loggedIn.Remove(user);
                     return true;
                 }
-                
+                else
+                {
+                    Console.WriteLine("User {0} is already logged out!", user.Name);
+                }
+
             }
             else
             {

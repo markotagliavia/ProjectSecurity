@@ -53,3 +53,7 @@ C:\Users\Tijana\Desktop\Projekat1\Contracts\bin\Debug\SecurityManager.pdb
 C:\Users\Tijana\Desktop\Projekat1\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
 C:\Users\Tijana\Desktop\Projekat1\Contracts\obj\Debug\Contracts.dll
 C:\Users\Tijana\Desktop\Projekat1\Contracts\obj\Debug\Contracts.pdb
+C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\ForumModels.dll
+C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\SecurityManager.dll
+C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\ForumModels.pdb
+C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\SecurityManager.pdb

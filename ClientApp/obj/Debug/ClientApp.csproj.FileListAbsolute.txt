@@ -204,3 +204,7 @@ C:\Users\Tijana\Desktop\Projekat1\ClientApp\obj\Debug\ClientApp.Properties.Resou
 C:\Users\Tijana\Desktop\Projekat1\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
 C:\Users\Tijana\Desktop\Projekat1\ClientApp\obj\Debug\ClientApp.exe
 C:\Users\Tijana\Desktop\Projekat1\ClientApp\obj\Debug\ClientApp.pdb
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ThemeRoom.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\ForumModels.dll
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\ForumModels.pdb
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ThemeRoom.baml

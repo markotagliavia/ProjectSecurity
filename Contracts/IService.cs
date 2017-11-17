@@ -52,7 +52,7 @@ namespace Contracts
         bool RemoveBlockUserFromRoom(string unblockEmail, string roomName);
 
         [OperationContract]
-        void CreatePrivateChat(string firstEmail, string secondEmail);
+        int CreatePrivateChat(string firstEmail, string secondEmail);
 
         [OperationContract]
         bool CreateRoom(string roomName);

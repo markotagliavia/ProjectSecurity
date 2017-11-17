@@ -101,17 +101,19 @@ namespace ClientApp
             throw new NotImplementedException();
         }
 
-        public void CreatePrivateChat(string firstEmail, string secondEmail)
+        public int CreatePrivateChat(string firstEmail, string secondEmail)
         {
+            int retVal = -1;
             try
             {
-                factory.CreatePrivateChat(firstEmail, secondEmail);
+                retVal = factory.CreatePrivateChat(firstEmail, secondEmail);
                 Console.WriteLine("CreatePrivateChat executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to CreatePrivateChat(). {0}", e.Message);
             }
+            return retVal;
         }
 
         public bool CreateRoom(string roomName)
@@ -163,7 +165,7 @@ namespace ClientApp
 
         public Room GetPrivateRoom(string roomName)
         {
-            Room room = new Room();
+            Room room = new Room("");
             try
             {
                 room = factory.GetPrivateRoom(roomName);
