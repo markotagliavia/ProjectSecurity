@@ -25,6 +25,26 @@ namespace ServiceApp
 
         public static ObservableCollection<Room> roomList = new ObservableCollection<Room>();
 
+        public void SerializeUsers(List<User> lista)
+        {
+            Stream s = File.Open("Users.dat", FileMode.Create);
+            try
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(s, lista);
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                s.Close();
+            }
+        }
+
+
         public List<User> DeserializeUsers()
         {
             List<User> lista = new List<User>();
@@ -61,21 +81,33 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    User u = loggedIn.Single(i => i.Email == email);
-                    u.Role = Roles.Admin;
-                    retVal = true;
-                }else
+                    List<User> lista = DeserializeUsers();
+
+                    foreach (User u in lista)
+                    {
+                        if (u.Email == email)
+                        {
+                            u.Role = Roles.Admin;
+                            SerializeUsers(lista); // dodaj u fajl
+                            retVal = true;
+                        }
+                    }
+
+                }
+                else
                 {
                     Console.WriteLine("User {0} is not logged in!", user.Name);
+                    retVal = false;
                 }
             }
             else
             {
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
+                retVal = false;
             }
             return retVal;
-        }
+        }         // uzima iz datoteke User.dat  DONE
 
         public bool BlockGroupChat(string blockEmail)
         {
@@ -107,23 +139,44 @@ namespace ServiceApp
             return retVal;
         }
 
-        public bool BlockUser(string requestEmail, string blockEmail)
+        public bool BlockUser(string requestEmail, string blockEmail)   // blokira usera citajuci ga iz User.dat DONE
         {
             User user = Thread.CurrentPrincipal as User;
-
+            bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.BlockUser.ToString()))
             {
                 if (user.Logged)
                 {
+
                     if (user.Blocked.Single(i => i.Email == blockEmail) == null)
                     {
-                        User blockUser = loggedIn.Single(i => i.Email == blockEmail);
-                        if (blockUser != null)
+
+                        List<User> lista = DeserializeUsers();
+                        User blokator=new User(null,null,DateTime.Now,null,null,Roles.User,null);
+                        User blokirani= new User(null, null, DateTime.Now, null, null, Roles.User, null);
+
+                        foreach (User u in lista)
                         {
-                            user.Blocked.Add(blockUser);
-                            return true;
+                            if (u.Email == requestEmail)
+                            {
+                                blokator = u;
+                              
+                            }
+                            if (u.Email == blockEmail)
+                            {
+                                blokirani = u;
+                            }
                         }
+
+                        if(blokirani.Email!=null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
+                        {
+                            blokator.Blocked.Add(blokirani);
+                            SerializeUsers(lista); // dodaj u fajl
+                            retVal = true;
+
+                        }
+                        
                     }
                 }
 
@@ -132,9 +185,10 @@ namespace ServiceApp
             {
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
+                retVal = false;
             }
 
-            return false;
+            return retVal;
         }
 
         public bool BlockUserFromRoom(string blockEmail, string roomName)
@@ -167,7 +221,7 @@ namespace ServiceApp
             return retVal;
         }
 
-        public bool ChangePassword(string email, string oldPassowrd, string newPassword)
+        public bool ChangePassword(string email, string oldPassowrd, string newPassword)    // menjanje passworda i upisivanje promene u fajl DONE
         {
             User user = Thread.CurrentPrincipal as User;
             bool retVal = false;
@@ -177,8 +231,22 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
+
                     User u = loggedIn.Single(i => i.Email == email && i.Password == oldPassowrd);
                     u.Password = newPassword;
+
+                    List<User> lista = DeserializeUsers();
+                    foreach (User ur in lista)
+                    {
+                        if (ur.Email == email && ur.Password==oldPassowrd)
+                        {
+                            ur.Password = newPassword;
+
+                            SerializeUsers(lista); // upisi u fajl
+                        }
+            
+                    }
+
                     retVal = true;
                 }
                 else
@@ -271,7 +339,7 @@ namespace ServiceApp
             return retVal;
         }
 
-        public bool DeleteAdmin(string email)
+        public bool DeleteAdmin(string email)                 // promena uloge na obicnog sa admina i upisivanje u fajl DONE
         {
             User user = Thread.CurrentPrincipal as User;
             bool retVal = true;
@@ -283,6 +351,17 @@ namespace ServiceApp
                 {
                     User u = loggedIn.Single(i => i.Email == email);
                     u.Role = Roles.User;
+
+                    List<User> lista = DeserializeUsers();
+                    foreach (User ur in lista)
+                    {
+                        if (ur.Email == email)
+                        {
+                            ur.Role = Roles.User;
+                            SerializeUsers(lista); // upisi u fajl
+                        }
+
+                    }
                     retVal = true;
                 }
                 else
@@ -369,7 +448,7 @@ namespace ServiceApp
             }
 
             
-        }
+        }         // ne treba da se upisuje promena u fajl
 
 
         public bool LogOut(string email)
@@ -397,7 +476,8 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
             return false;
-        }
+        }                   // ne treba da se upisuje promena u fajl
+
 
 
 
@@ -485,7 +565,7 @@ namespace ServiceApp
             }
 
             return exists;
-        }
+        }  //Upise u fajl registruje koristnika DONE
 
         public void RemoveBlockGroupChat(string unblockEmail)
         {
@@ -503,10 +583,10 @@ namespace ServiceApp
         }
 
 
-        public bool RemoveBlockUser(string requestEmail, string unblockEmail)
-        {
+        public bool RemoveBlockUser(string requestEmail, string unblockEmail)        // unblock nalazi ga u fajlu i menja tu promenu DONE
+        { 
             User user = Thread.CurrentPrincipal as User;
-
+            bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.RemoveBlockUser.ToString()))
             {
@@ -516,8 +596,30 @@ namespace ServiceApp
                     User blocked = user.Blocked.Single(i => i.Email == unblockEmail);
                     if (blocked != null)
                     {
-                        user.Blocked.Add(blocked);
-                        return true;
+                        List<User> lista = DeserializeUsers();
+                        User blokator = new User(null, null, DateTime.Now, null, null, Roles.User, null);
+                        User blokirani = new User(null, null, DateTime.Now, null, null, Roles.User, null);
+
+                        foreach (User u in lista)
+                        {
+                            if (u.Email == requestEmail)
+                            {
+                                blokator = u;
+
+                            }
+                            if (u.Email == unblockEmail)
+                            {
+                                blokirani = u;
+                            }
+                        }
+
+                        if (blokirani.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
+                        {
+                            blokator.Blocked.Remove(blokirani);
+                            SerializeUsers(lista); // dodaj u fajl promene
+                            retVal = true;
+
+                        }
                     }
                 }
             }
@@ -526,7 +628,7 @@ namespace ServiceApp
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
-            return false;
+            return retVal;
         }
 
         public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)
