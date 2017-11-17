@@ -25,6 +25,8 @@ namespace ServiceApp
 
         public static ObservableCollection<Room> roomList = new ObservableCollection<Room>();
 
+        public static ObservableCollection<PrivateChat> privateChatList = new ObservableCollection<PrivateChat>();
+
         public void SerializeUsers(List<User> lista)
         {
             Stream s = File.Open("Users.dat", FileMode.Create);
@@ -571,19 +573,36 @@ namespace ServiceApp
             return exists;
         }  //Upise u fajl registruje koristnika DONE
 
-        public void RemoveBlockGroupChat(string unblockEmail)
+        public bool RemoveBlockGroupChat(string unblockEmail)
         {
             User user = Thread.CurrentPrincipal as User;
+            bool retVal = false;
 
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.RemoveBlockGroupChat.ToString()))
             {
                 //TODO fje
+                if (user.Logged)
+                {
+                    User u = loggedIn.Single(i => i.Email == unblockEmail);
+                    if (u != null)
+                    {
+                        groupChat.Blocked.Remove(u);
+                        retVal = true;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is already logged out!", user.Name);
+                }
             }
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            return retVal;
         }
 
 
@@ -653,7 +672,7 @@ namespace ServiceApp
                 }
                 else
                 {
-                    Console.WriteLine("User {0} don't have permission!", user.Name);
+                    Console.WriteLine("User {0} is already logged out!", user.Name);
                 }
             }
             else
@@ -759,19 +778,108 @@ namespace ServiceApp
             return Convert.ToBase64String(hashedDataBytes);
         }
 
-        public bool SendPrivateMessage(string firstEmail, string secondEmail, string message)
+        public bool SendPrivateMessage(Guid sendUserId, string sendEmail, string reciveEmail, string message)
         {
-            throw new NotImplementedException();
+            User user = Thread.CurrentPrincipal as User;
+            bool ok = false;
+            /// audit both successfull and failed authorization checks
+            if (user.IsInRole(Permissions.SendPrivateMessage.ToString()))
+            {
+                if (user.Logged)
+                {
+                    Message m = new Message(message, sendUserId);
+                    PrivateChat privateChat = privateChatList.Single(i => (i.User1 == sendEmail && i.User2 == reciveEmail) || (i.User2 == sendEmail && i.User1 == reciveEmail));
+                    if (privateChat == null)
+                    {
+                        PrivateChat newChat = new PrivateChat(sendEmail, reciveEmail);
+                        newChat.Messages.Add(m);
+                        privateChatList.Add(newChat);
+                        ok = true;
+                    }
+                    else
+                    {
+                        privateChat.Messages.Add(m);
+                        ok = true;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is already logged out!", user.Name);
+                }
+
+            }
+            else
+            {
+                //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            return ok;
         }
 
-        public bool SendGroupMessage(string email, string message)
+        public bool SendGroupMessage(Guid userId, string message)
         {
-            throw new NotImplementedException();
+            User user = Thread.CurrentPrincipal as User;
+            bool ok = false;
+            /// audit both successfull and failed authorization checks
+            if (user.IsInRole(Permissions.SendGroupMessage.ToString()))
+            {
+                if (user.Logged)
+                {
+                    Message m = new Message(message, userId);
+                    groupChat.AllMessages.Add(m);
+                    ok = true;
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is already logged out!", user.Name);
+                }
+
+            }
+            else
+            {
+                //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            return ok;
         }
 
-        public bool SendRoomMessage(string email, string roomName, string message)
+        public bool SendRoomMessage(Guid userId, string roomName, string message)
         {
-            throw new NotImplementedException();
+            User user = Thread.CurrentPrincipal as User;
+            bool ok = false;
+            /// audit both successfull and failed authorization checks
+            if (user.IsInRole(Permissions.SendRoomMessage.ToString()))
+            {
+                if (user.Logged)
+                {
+                    Message m = new Message(message, userId);
+                    Room room = roomList.Single(r => r.Theme == roomName);
+                    if(room != null)
+                    {
+                        room.AllMessages.Add(m);
+                        ok = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Room {0} dose not exist", roomName);
+                    }
+                    
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is already logged out!", user.Name);
+                }
+
+            }
+            else
+            {
+                //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            return ok;
         }
 
         public GroupChat GetGroupChat()
@@ -785,9 +893,39 @@ namespace ServiceApp
             return room;
         }
 
-        public bool CloseRoom(string roomName, string email)
+        public bool CloseRoom(string roomName)
         {
-            throw new NotImplementedException();
+            User user = Thread.CurrentPrincipal as User;
+            bool ok = false;
+            /// audit both successfull and failed authorization checks
+            if (user.IsInRole(Permissions.CloseRoom.ToString()))
+            {
+                if (user.Logged)
+                {
+                    Room room = roomList.Single(r => r.Theme == roomName);
+                    if(room != null)
+                    {
+                        ok = true;
+                        roomList.Remove(room);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Room {0} dose not exist", roomName);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is already logged out!", user.Name);
+                }
+
+            }
+            else
+            {
+                //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            return ok;
         }
     }
 }

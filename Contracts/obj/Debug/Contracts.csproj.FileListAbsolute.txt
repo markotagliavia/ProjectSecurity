@@ -57,3 +57,13 @@ C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\ForumModels.dll
 C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\SecurityManager.dll
 C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\ForumModels.pdb
 C:\Users\Tijana\Desktop\Projekat\Contracts\bin\Debug\SecurityManager.pdb
+C:\Users\krist\Desktop\Repo\Contracts\bin\Debug\Contracts.dll
+C:\Users\krist\Desktop\Repo\Contracts\bin\Debug\Contracts.pdb
+C:\Users\krist\Desktop\Repo\Contracts\bin\Debug\ForumModels.dll
+C:\Users\krist\Desktop\Repo\Contracts\bin\Debug\SecurityManager.dll
+C:\Users\krist\Desktop\Repo\Contracts\bin\Debug\ForumModels.pdb
+C:\Users\krist\Desktop\Repo\Contracts\bin\Debug\SecurityManager.pdb
+C:\Users\krist\Desktop\Repo\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\krist\Desktop\Repo\Contracts\obj\Debug\Contracts.csproj.CoreCompileInputs.cache
+C:\Users\krist\Desktop\Repo\Contracts\obj\Debug\Contracts.dll
+C:\Users\krist\Desktop\Repo\Contracts\obj\Debug\Contracts.pdb

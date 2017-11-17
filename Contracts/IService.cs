@@ -43,7 +43,7 @@ namespace Contracts
         bool BlockGroupChat(string blockEmai);
 
         [OperationContract]
-        void RemoveBlockGroupChat(string unblockEmail);
+        bool RemoveBlockGroupChat(string unblockEmail);
 
         [OperationContract]
         bool BlockUserFromRoom(string blockEmail, string roomName);
@@ -61,13 +61,13 @@ namespace Contracts
         bool SendVerificationKey(string key);
 
         [OperationContract]
-        bool SendPrivateMessage(string firstEmail, string secondEmail, string message);
+        bool SendPrivateMessage(Guid sendUserId,string sendEmail, string reciveEmail, string message);
 
         [OperationContract]
-        bool SendGroupMessage(string email, string message);
+        bool SendGroupMessage(Guid userId, string message);
 
         [OperationContract]
-        bool SendRoomMessage(string email, string roomName, string message);
+        bool SendRoomMessage(Guid userId, string roomName, string message);
 
         [OperationContract]
         GroupChat GetGroupChat();
@@ -76,6 +76,6 @@ namespace Contracts
         Room GetPrivateRoom(string roomName);
 
         [OperationContract]
-        bool CloseRoom(string roomName, string email);
+        bool CloseRoom(string roomName);
     }
 }

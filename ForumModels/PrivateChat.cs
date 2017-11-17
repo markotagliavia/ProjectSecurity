@@ -1,5 +1,6 @@
 ﻿using SecurityManager;
 using System;
+using System.Collections.ObjectModel;
 
 namespace Forum
 {
@@ -11,11 +12,27 @@ namespace Forum
 
         private string user2;
 
+        private ObservableCollection<Message> messages;
+
         public PrivateChat(string user1, string user2)
         {
             this.User1 = user1;
             this.user2 = user2;
             this.uid = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
+            messages = new ObservableCollection<Message>();
+        }
+
+        public ObservableCollection<Message> Messages
+        {
+            get
+            {
+                return messages;
+            }
+
+            set
+            {
+                messages = value;
+            }
         }
 
         public Guid Uid

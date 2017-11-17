@@ -96,9 +96,19 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool CloseRoom(string roomName, string email)
+        public bool CloseRoom(string roomName)
         {
-            throw new NotImplementedException();
+            bool retVal = false;
+            try
+            {
+                retVal = factory.CloseRoom(roomName);
+                Console.WriteLine("CloseRoom executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to CloseRoom(). {0}", e.Message);
+            }
+            return retVal;
         }
 
         public int CreatePrivateChat(string firstEmail, string secondEmail)
@@ -225,17 +235,21 @@ namespace ClientApp
             }
         }
 
-        public void RemoveBlockGroupChat(string unblockEmail)
+        public bool RemoveBlockGroupChat(string unblockEmail)
         {
+            bool retVal = false;
+
             try
             {
-                factory.RemoveBlockGroupChat(unblockEmail);
+                retVal = factory.RemoveBlockGroupChat(unblockEmail);
                 Console.WriteLine("RemoveBlockGroupChat executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to RemoveBlockGroupChat(). {0}", e.Message);
             }
+
+            return retVal;
         }
 
         public bool RemoveBlockUser(string requestEmail, string unblockEmail)
@@ -285,19 +299,52 @@ namespace ClientApp
             return ret;
         }
 
-        public bool SendGroupMessage(string email, string message)
+        public bool SendGroupMessage(Guid userId, string message)
         {
-            throw new NotImplementedException();
+            bool retVal = false;
+            try
+            {
+                retVal = factory.SendGroupMessage(userId, message);
+                Console.WriteLine("SendGroupMessage executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to SendGroupMessage(). {0}", e.Message);
+            }
+
+            return retVal;
         }
 
-        public bool SendPrivateMessage(string firstEmail, string secondEmail, string message)
+        public bool SendPrivateMessage(Guid sendUserId, string sendEmail, string reciveEmail, string message)
         {
-            throw new NotImplementedException();
+            bool retVal = false;
+            try
+            {
+                retVal = factory.SendPrivateMessage(sendUserId, sendEmail, reciveEmail, message);
+                Console.WriteLine("SendPrivateMessage executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to SendPrivateMessage(). {0}", e.Message);
+            }
+
+            return retVal;
         }
 
-        public bool SendRoomMessage(string email, string roomName, string message)
+        public bool SendRoomMessage(Guid userId, string roomName, string message)
         {
-            throw new NotImplementedException();
+            bool retVal = false;
+            try
+            {
+                retVal = factory.SendRoomMessage(userId,roomName, message);
+                Console.WriteLine("SendRoomMessage executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to SendRoomMessage(). {0}", e.Message);
+            }
+
+            return retVal;
         }
 
         public bool SendVerificationKey(string key)
