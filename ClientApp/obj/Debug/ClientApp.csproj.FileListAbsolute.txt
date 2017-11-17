@@ -40,9 +40,7 @@ C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\ClientApp.exe.config
 C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\ClientApp.exe
 C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\ClientApp.pdb
 C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\Contracts.dll
-C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\Forum.exe
 C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\Contracts.pdb
-C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\Forum.pdb
 C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ClientApp.csprojResolveAssemblyReference.cache
 C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\MainWindow.g.cs
 C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\NewUserWindow.g.cs
@@ -146,3 +144,9 @@ C:\Users\Marko\Desktop\repo1\ClientApp\obj\Debug\ClientApp.g.resources
 C:\Users\Marko\Desktop\repo1\ClientApp\obj\Debug\ClientApp.Properties.Resources.resources
 C:\Users\Marko\Desktop\repo1\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
 C:\Users\Marko\Desktop\repo1\ClientApp\obj\Debug\ClientApp.csproj.CoreCompileInputs.cache
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\SecurityManager.dll
+C:\Users\Tijana\Desktop\Projekat\ClientApp\bin\Debug\SecurityManager.pdb
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\GroupChat.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\VerificationKey.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\GroupChat.baml
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\VerificationKey.baml

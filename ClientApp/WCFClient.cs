@@ -204,17 +204,20 @@ namespace ClientApp
             }
         }
 
-        public void ResetPassword(string email)
+        public int ResetPassword(string email)
         {
+            int ret = -1;
             try
             {
-                factory.ResetPassword(email);
+                ret = factory.ResetPassword(email);
                 Console.WriteLine("ResetPassword executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to ResetPassword(). {0}", e.Message);
             }
+
+            return ret;
         }
 
         public bool SendVerificationKey(string key)

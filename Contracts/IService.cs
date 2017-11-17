@@ -18,7 +18,7 @@ namespace Contracts
         void ChangePassword(string oldPassowrd, string newPassword);
 
         [OperationContract]
-        void ResetPassword(string email);
+        int ResetPassword(string email);
 
         [OperationContract]
         int LogIn(string email, string password);

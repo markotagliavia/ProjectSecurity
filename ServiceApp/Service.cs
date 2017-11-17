@@ -146,8 +146,6 @@ namespace ServiceApp
         {
             //TODO ubaciti u listo ulogovanih
 
-            int ok = 0;
-
             Thread.CurrentPrincipal = loggedIn.Single(i => i.Email == email);
 
             User u = loggedIn.Single(i => i.Email == email);
@@ -156,46 +154,56 @@ namespace ServiceApp
 
             if (u != null)
             {
-                if (!u.Verify)
+                if (password.Equals(u.Password))
                 {
-                    string your_id = "forumblok@gmail.com";
-                    string your_password = "sifra123";
-                    try
+                    if (!u.Verify)
                     {
-                        SmtpClient client = new SmtpClient();
-                        client.Port = 587;
-                        client.Host = "smtp.gmail.com";
-                        client.EnableSsl = true;
-                        client.Timeout = 10000;
-                        client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        client.UseDefaultCredentials = false;
-                        client.Credentials = new System.Net.NetworkCredential(your_id, your_password);
+                        string your_id = "forumblok@gmail.com";
+                        string your_password = "sifra123";
+                        try
+                        {
+                            SmtpClient client = new SmtpClient();
+                            client.Port = 587;
+                            client.Host = "smtp.gmail.com";
+                            client.EnableSsl = true;
+                            client.Timeout = 10000;
+                            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            client.UseDefaultCredentials = false;
+                            client.Credentials = new System.Net.NetworkCredential(your_id, your_password);
 
-                        MailMessage mm = new MailMessage(your_id, "max.tagliavia@gmail.com");
-                        mm.BodyEncoding = UTF8Encoding.UTF8;
-                        mm.Subject = "CODE FOR FORUM";
-                        mm.Body = "Secure code :" + u.SecureCode;
-                        mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+                            MailMessage mm = new MailMessage(your_id, u.Email);
+                            mm.BodyEncoding = UTF8Encoding.UTF8;
+                            mm.Subject = "CODE FOR FORUM";
+                            mm.Body = "Secure code :" + u.SecureCode;
+                            mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
 
-                        client.Send(mm);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Could not end email\n\n" + e.ToString());
-                    }
-                    return 0;
-                }
-                else
-                {
-
-                    if (password.Equals(u.Password)) //cuvati ih sifrovane u registraciji
-                    {
-                        return 1;
+                            client.Send(mm);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Could not end email\n\n" + e.ToString());
+                        }
+                        return 0;
                     }
                     else
                     {
-                        return -1;
+                        if (!u.Logged)
+                        {
+                            u.Logged = true;
+                            loggedIn.Add(u);
+                            return 1;
+                        }
+                        else
+                        {
+                            return -2; //neko je vec logovan sa tim nalogom
+                        }
+                        
                     }
+                    
+                }
+                else
+                {
+                    return -1;    
                 }
             }
             else
@@ -214,7 +222,8 @@ namespace ServiceApp
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.LogOut.ToString()))
             {
-                //TODO fje
+                user.Logged = false;
+                loggedIn.Remove(user);
             }
             else
             {
@@ -315,7 +324,7 @@ namespace ServiceApp
             }
         }
 
-        public void ResetPassword(string email)
+        public int ResetPassword(string email)
         {
             User user = Thread.CurrentPrincipal as User;
 
@@ -323,11 +332,51 @@ namespace ServiceApp
             if (user.IsInRole(Permissions.ResetPassword.ToString()))
             {
                 //TODO fje
+
+                if (user.Logged)
+                {
+                    string pass = Guid.NewGuid().ToString();
+                    user.Password = Sha256encrypt(pass);
+                    string your_id = "forumblok@gmail.com";
+                    string your_password = "sifra123";
+                    try
+                    {
+                        SmtpClient client = new SmtpClient();
+                        client.Port = 587;
+                        client.Host = "smtp.gmail.com";
+                        client.EnableSsl = true;
+                        client.Timeout = 10000;
+                        client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        client.UseDefaultCredentials = false;
+                        client.Credentials = new System.Net.NetworkCredential(your_id, your_password);
+
+                        MailMessage mm = new MailMessage(your_id, user.Email);
+                        mm.BodyEncoding = UTF8Encoding.UTF8;
+                        mm.Subject = "CODE FOR FORUM";
+                        mm.Body = "New password :" + pass;
+                        mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+
+                        client.Send(mm);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Could not end email\n\n" + e.ToString());
+                    }
+                    return 0;
+
+                }
+                else
+                {
+                    return -2; // neulogovan je
+                }
+
             }
             else
             {
                 //TODO greske
             }
+
+            return -1;
         }
 
         public bool SendVerificationKey(string key)
@@ -339,7 +388,14 @@ namespace ServiceApp
             {
                 if (user.SecureCode.ToString().Equals(key))
                 {
-                    ok = true;
+
+                    if (!user.Logged)
+                    {
+                        ok = true;
+                        user.Logged = true;
+                        loggedIn.Add(user);
+                    }
+                    
                 }
 
             }
