@@ -382,18 +382,21 @@ namespace ServiceApp
         {
             //TODO ubaciti u listo ulogovanih
 
-            Thread.CurrentPrincipal = loggedIn.Single(i => i.Email == email);
+            List<User> lista = DeserializeUsers();
 
-            User u = loggedIn.Single(i => i.Email == email);
+
+
+            User u = lista.Single(i => i.Email == email);
 
             u.SecureCode = Guid.NewGuid();
 
             if (u != null)
             {
-                if (password.Equals(u.Password))
+                if (Sha256encrypt(password).Equals(u.Password))
                 {
                     if (!u.Verify)
                     {
+                        Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
                         string your_id = "forumblok@gmail.com";
                         string your_password = "sifra123";
                         try
@@ -427,19 +430,20 @@ namespace ServiceApp
                         {
                             u.Logged = true;
                             loggedIn.Add(u);
+                            Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
                             return 1;
                         }
                         else
                         {
                             return -2; //neko je vec logovan sa tim nalogom
                         }
-                        
+
                     }
-                    
+
                 }
                 else
                 {
-                    return -1;    
+                    return -1;
                 }
             }
             else
@@ -447,8 +451,8 @@ namespace ServiceApp
                 return -1;
             }
 
-            
-        }         // ne treba da se upisuje promena u fajl
+
+        }
 
 
         public bool LogOut(string email)
@@ -730,9 +734,11 @@ namespace ServiceApp
                     {
                         ok = true;
                         user.Logged = true;
+                        user.Verify = true;
                         loggedIn.Add(user);
+
                     }
-                    
+
                 }
 
             }
