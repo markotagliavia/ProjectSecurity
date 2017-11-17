@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Forum
 {
+    [Serializable]
     public class Room
     {
         private string theme;

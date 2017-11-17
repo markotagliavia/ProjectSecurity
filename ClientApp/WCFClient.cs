@@ -193,16 +193,18 @@ namespace ClientApp
             return retVal;
         }
 
-        public void Registration(string name, string sname, DateTime date, string gender, string email, string password)
+        public bool Registration(string name, string sname, DateTime date, string gender, string email, string password)
         {
             try
             {
                 factory.Registration(name, sname, date, gender, email, password);
                 Console.WriteLine("Registration executed");
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to Registration(). {0}", e.Message);
+                return false;
             }
         }
 

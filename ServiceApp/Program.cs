@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Contracts;
 using SecurityManager;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace ServiceApp
 {
@@ -17,51 +19,60 @@ namespace ServiceApp
         {
 
             NetTcpBinding binding = new NetTcpBinding();
-            string address = "net.tcp://localhost:9999/ServiceApp";
+            string address = "net.tcp://localhost:27019/ServiceApp";
 
             ServiceHost host = new ServiceHost(typeof(Service));
             host.AddServiceEndpoint(typeof(IService), binding, address);
 
             host.Open();
-            using (BinaryWriter writer = new BinaryWriter(File.Open("Users", FileMode.Create)))
-            {
-                writer.Write("admin");
-                writer.Write("adminovic");
-                writer.Write(DateTime.Now.ToString());
-                writer.Write("Male");
-                writer.Write("admin@gmail.com");
-                writer.Write("admin");
 
-            }
+            List<User> lista = new List<User>();
 
-           /* string name;                       // CITANJE CISTO DA VIDIM JEL DOBRO 
-            string surname;
-            string date;
-            string gender;
-            string mail;
-            string pass;
+            User u1 = new User("admin", "adminovic", DateTime.Now, "admin@gmail.com", "admin", Roles.User, "Male");
+            lista.Add(u1);
 
-            if (File.Exists("Users"))
-            {
-                using (BinaryReader reader = new BinaryReader(File.Open("Users", FileMode.Open)))
+            BinaryFormatter bf = new BinaryFormatter();
+       
+                Stream s = File.Open("Users.dat", FileMode.Create);
+                try
                 {
-                    name = reader.ReadString();
-                    surname = reader.ReadString();
-                    date = reader.ReadString();
-                    gender = reader.ReadString();
-                    mail = reader.ReadString();
-                    pass = reader.ReadString();
+                    bf.Serialize(s, lista);
+                 
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    s.Close();
                 }
 
-                Console.WriteLine("Name: " + name);
-                Console.WriteLine("surname: " + surname);
-                Console.WriteLine("date: " + date);
-                Console.WriteLine("gender: " + gender);
-                Console.WriteLine("mail: " + mail);
-                Console.WriteLine("pass: " + pass);
+            FileStream fs = new FileStream("Users.dat", FileMode.Open);  // cisto read bzvz da vidim jel dobro
+
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                lista = (List<User>)formatter.Deserialize(fs);
 
             }
-            */
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+            foreach (User u in lista)
+            {
+                Console.WriteLine("{0} ovo je mail", u.Email);
+            }
+
+
 
             Console.WriteLine("WCFService is opened. Press <enter> to finish...");
             Console.ReadLine();

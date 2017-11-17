@@ -13,7 +13,7 @@ namespace Contracts
     {
 
         [OperationContract]
-        void Registration(string name, string sname, DateTime date, string gender, string email, string password);
+        bool Registration(string name, string sname, DateTime date, string gender, string email, string password);
 
         [OperationContract]
         void ChangePassword(string oldPassowrd, string newPassword);
