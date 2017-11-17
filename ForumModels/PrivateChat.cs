@@ -7,11 +7,11 @@ namespace Forum
     {
         private Guid uid;
 
-        private Guid user1;
+        private string user1;
 
-        private Guid user2;
+        private string user2;
 
-        public PrivateChat(Guid user1, Guid user2)
+        public PrivateChat(string user1, string user2)
         {
             this.User1 = user1;
             this.user2 = user2;
@@ -31,7 +31,7 @@ namespace Forum
             }
         }
 
-        public Guid User1
+        public string User1
         {
             get
             {
@@ -44,7 +44,7 @@ namespace Forum
             }
         }
 
-        public Guid User2
+        public string User2
         {
             get
             {

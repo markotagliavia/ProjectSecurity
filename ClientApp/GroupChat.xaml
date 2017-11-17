@@ -40,7 +40,7 @@
         <Label x:Name="labelLoggedUsers" Content="Logged users: " HorizontalAlignment="Left" Margin="2,25,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="88"/>
         <ListBox x:Name="loggedUsersListBox" ItemsSource="{Binding Logged}"  HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="120" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
         <ScrollViewer x:Name="allMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,51,0,187">
-            <TextBox x:Name="ChatBox" Background="#FFE2A1A1" IsEnabled="False"/>
+            <ListBox x:Name="ChatBox" ItemsSource="{Binding Msg}" Background="#FFE2A1A1" IsEnabled="False"/>
         </ScrollViewer>
         <ScrollViewer x:Name="entryMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,397,0,87">
             <TextBox x:Name="entryMessageTextbox" Background="#FFE2A1A1"/>

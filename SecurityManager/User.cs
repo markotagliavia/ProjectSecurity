@@ -255,5 +255,10 @@ namespace SecurityManager
 
             return IsAuthz;
         }
+
+        public override string ToString()
+        {
+            return Email;
+        }
     }
 }

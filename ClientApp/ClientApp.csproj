@@ -62,8 +62,8 @@
     <Compile Include="NewUserWindow.xaml.cs">
       <DependentUpon>NewUserWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PrivateRoom.xaml.cs">
-      <DependentUpon>PrivateRoom.xaml</DependentUpon>
+    <Compile Include="ThemeRoom.xaml.cs">
+      <DependentUpon>ThemeRoom.xaml</DependentUpon>
     </Compile>
     <Compile Include="VerificationKey.xaml.cs">
       <DependentUpon>VerificationKey.xaml</DependentUpon>
@@ -89,7 +89,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PrivateRoom.xaml">
+    <Page Include="ThemeRoom.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

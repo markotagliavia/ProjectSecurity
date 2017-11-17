@@ -20,19 +20,18 @@ namespace ClientApp
     /// <summary>
     /// Interaction logic for PrivateRoom.xaml
     /// </summary>
-    public partial class PrivateRoom : Window
+    public partial class ThemeRoom : Window
     {
         private WCFClient proxy;
         public Forum.Room room;
 
-        public PrivateRoom(WCFClient proxy)
+        public ThemeRoom(WCFClient proxy)
         {
             this.proxy = proxy;
             this.room = this.proxy.GetPrivateRoom(room.Theme);
             InitializeComponent();
             label.Content = room.Theme;
             DataContext = this;
-            populateMsg();
         }
 
         public ObservableCollection<User> Logged 
@@ -43,12 +42,15 @@ namespace ClientApp
             }
         }
 
-        private void populateMsg()
+        public ObservableCollection<Message> Msg
         {
-            foreach (Message m in room.AllMessages)
+            get
             {
-                ChatBox.AppendText($"{m.User} wrote on {m.CreationTime.ToString()} :\n{m.Text}\n\n");
+                return room.AllMessages;
             }
         }
+
+
+
     }
 }

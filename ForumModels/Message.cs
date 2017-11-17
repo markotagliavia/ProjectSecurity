@@ -75,5 +75,10 @@ namespace Forum
                 creationTime = value;
             }
         }
+
+        public override string ToString()
+        {
+            return $"{User} wrote on {CreationTime.ToString()} :\n{Text}\n\n";
+        }
     }
 }
