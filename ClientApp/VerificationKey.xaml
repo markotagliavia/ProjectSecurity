@@ -8,7 +8,7 @@
         Title="Verifiy your account" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="Gray" Height="218" Width="380">
     <Grid KeyDown="Grid_KeyDown">
         <Label Content="Verification key:" Height="25" HorizontalAlignment="Left" Margin="57,48,0,0" Name="label1" VerticalAlignment="Top" Width="102" />
-        <TextBox Height="25" HorizontalAlignment="Left" Margin="165,48,0,0" Name="verificationKeyTextBox" VerticalAlignment="Top" Width="143" MaxLength="30" />
+        <TextBox Height="25" HorizontalAlignment="Left" Margin="165,48,0,0" Name="verificationKeyTextBox" VerticalAlignment="Top" Width="143" />
         <Button Content="Submit" Height="25" HorizontalAlignment="Center" Margin="213,120,66,0" Name="submitButton" VerticalAlignment="Top" Width="95" Click="submitButton_Click"/>
         <Button Content="Cancel" Height="25" HorizontalAlignment="Center" Margin="64,120,215,0" Name="cancelButton" VerticalAlignment="Top" Width="95" Click="cancelButton_Click"/>
     </Grid>

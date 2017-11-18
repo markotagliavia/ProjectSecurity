@@ -237,3 +237,31 @@ C:\Users\krist\Desktop\Repo\ClientApp\obj\Debug\ClientApp.csproj.GenerateResourc
 C:\Users\krist\Desktop\Repo\ClientApp\obj\Debug\ClientApp.csproj.CoreCompileInputs.cache
 C:\Users\krist\Desktop\Repo\ClientApp\obj\Debug\ClientApp.exe
 C:\Users\krist\Desktop\Repo\ClientApp\obj\Debug\ClientApp.pdb
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\ClientApp.exe.config
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\ClientApp.exe
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\ClientApp.pdb
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\Contracts.dll
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\Contracts.pdb
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat1\ClientApp\bin\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ClientApp.csprojResolveAssemblyReference.cache
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\GroupChat.g.cs
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\MainWindow.g.cs
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\NewUserWindow.g.cs
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ThemeRoom.g.cs
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\VerificationKey.g.cs
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\App.g.cs
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ClientApp_MarkupCompile.cache
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ClientApp_MarkupCompile.lref
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\GroupChat.baml
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\MainWindow.baml
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\NewUserWindow.baml
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ThemeRoom.baml
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\VerificationKey.baml
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ClientApp.g.resources
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ClientApp.Properties.Resources.resources
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ClientApp.exe
+D:\cetvrta godina\blok2\Projekat1\ClientApp\obj\Debug\ClientApp.pdb

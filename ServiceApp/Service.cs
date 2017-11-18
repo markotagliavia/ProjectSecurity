@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Forum;
+using ForumModels;
 using SecurityManager;
 using System;
 using System.Collections.Generic;
@@ -9,23 +10,17 @@ using System.Linq;
 using System.Net.Mail;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.ServiceModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServiceApp
 {
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class Service : IService
     {
-        public static ObservableCollection<User> loggedIn = new ObservableCollection<User>();
-
-        public static ObservableCollection<PrivateChat> privateChats = new ObservableCollection<PrivateChat>();
-
-        public static GroupChat groupChat = new GroupChat();
-
-        public static ObservableCollection<Room> roomList = new ObservableCollection<Room>();
-
-        public static ObservableCollection<PrivateChat> privateChatList = new ObservableCollection<PrivateChat>();
+        private User userOnSession;
 
         public void SerializeUsers(List<User> lista)
         {
@@ -121,10 +116,10 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     //TODO fje
-                    User u = loggedIn.Single(i => i.Email == blockEmail);
-                    if (groupChat.Blocked.Single(i => i.Email == blockEmail) == null)
+                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
+                    if (ServiceModel.Instance.GroupChat.Blocked.Single(i => i.Email == blockEmail) == null)
                     {
-                        groupChat.Blocked.Add(u);
+                        ServiceModel.Instance.GroupChat.Blocked.Add(u);
                        retVal = true;
                     }
                 }else
@@ -204,8 +199,8 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    Room room = roomList.Single(r => r.Theme == roomName);
-                    User u = loggedIn.Single(i => i.Email == blockEmail);
+                    Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
+                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
                     room.Blocked.Add(u);
                     retVal = true;
                 }
@@ -234,7 +229,7 @@ namespace ServiceApp
                 if (user.Logged)
                 {
 
-                    User u = loggedIn.Single(i => i.Email == email && i.Password == oldPassowrd);
+                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == email && i.Password == oldPassowrd);
                     u.Password = newPassword;
 
                     List<User> lista = DeserializeUsers();
@@ -274,13 +269,13 @@ namespace ServiceApp
             {
                 if (user.Logged)
                 {
-                    User user2 = loggedIn.Single(i => i.Email == secondEmail);
+                    User user2 = ServiceModel.Instance.LoggedIn.Single(i => i.Email == secondEmail);
                     if (user2 != null)
                     {
-                        if (privateChats.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))) == null)
+                        if (ServiceModel.Instance.PrivateChats.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))) == null)
                         {
                             PrivateChat pc = new PrivateChat(user.Email, user2.Email);
-                            privateChats.Add(pc);
+                            ServiceModel.Instance.PrivateChats.Add(pc);
                             return 0;
                         }
                         else
@@ -321,10 +316,10 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    if (roomList.Single(i => i.Theme == roomName) == null)
+                    if (ServiceModel.Instance.RoomList.Single(i => i.Theme == roomName) == null)
                     {
                         Room room = new Room(roomName);
-                        roomList.Add(room);
+                        ServiceModel.Instance.RoomList.Add(room);
                         retVal = true;
                     }
                 }
@@ -351,7 +346,7 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    User u = loggedIn.Single(i => i.Email == email);
+                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == email);
                     u.Role = Roles.User;
 
                     List<User> lista = DeserializeUsers();
@@ -386,8 +381,15 @@ namespace ServiceApp
 
             List<User> lista = DeserializeUsers();
 
+            if (lista == null)
+            {
+                return -2;
+            }
 
-
+            if (lista.Any(p => p.Email == email) == false)
+            {
+                return -2;
+            }
             User u = lista.Single(i => i.Email == email);
 
             u.SecureCode = Guid.NewGuid();
@@ -398,7 +400,8 @@ namespace ServiceApp
                 {
                     if (!u.Verify)
                     {
-                        Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
+                        //Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
+                        userOnSession = u;
                         string your_id = "forumblok@gmail.com";
                         string your_password = "sifra123";
                         try
@@ -431,8 +434,10 @@ namespace ServiceApp
                         if (!u.Logged)
                         {
                             u.Logged = true;
-                            loggedIn.Add(u);
-                            Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
+                            ServiceModel.Instance.LoggedIn.Add(u);
+                            ServiceModel.Instance.GroupChat.Logged.Add(u);
+                            //Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
+                            userOnSession = u;
                             return 1;
                         }
                         else
@@ -467,7 +472,8 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     user.Logged = false;
-                    loggedIn.Remove(user);
+                    ServiceModel.Instance.LoggedIn.Remove(user);
+                    ServiceModel.Instance.GroupChat.Logged.Remove(user);
                     return true;
                 }
                 else
@@ -584,10 +590,10 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    User u = loggedIn.Single(i => i.Email == unblockEmail);
+                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
                     if (u != null)
                     {
-                        groupChat.Blocked.Remove(u);
+                        ServiceModel.Instance.GroupChat.Blocked.Remove(u);
                         retVal = true;
                     }
                 }
@@ -665,8 +671,8 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    Room room = roomList.Single(r => r.Theme == roomName);
-                    User u = loggedIn.Single(i => i.Email == unblockEmail);
+                    Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
+                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
                     room.Blocked.Remove(u);
                     retval = true;
                 }
@@ -741,7 +747,8 @@ namespace ServiceApp
 
         public bool SendVerificationKey(string key)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendVerificationKey.ToString()))
@@ -754,7 +761,8 @@ namespace ServiceApp
                         ok = true;
                         user.Logged = true;
                         user.Verify = true;
-                        loggedIn.Add(user);
+                        ServiceModel.Instance.LoggedIn.Add(user);
+                        ServiceModel.Instance.GroupChat.Logged.Add(user);
 
                     }
 
@@ -788,12 +796,12 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     Message m = new Message(message, sendEmail);
-                    PrivateChat privateChat = privateChatList.Single(i => (i.User1 == sendEmail && i.User2 == reciveEmail) || (i.User2 == sendEmail && i.User1 == reciveEmail));
+                    PrivateChat privateChat = ServiceModel.Instance.PrivateChatList.Single(i => (i.User1 == sendEmail && i.User2 == reciveEmail) || (i.User2 == sendEmail && i.User1 == reciveEmail));
                     if (privateChat == null)
                     {
                         PrivateChat newChat = new PrivateChat(sendEmail, reciveEmail);
                         newChat.Messages.Add(m);
-                        privateChatList.Add(newChat);
+                        ServiceModel.Instance.PrivateChatList.Add(newChat);
                         ok = true;
                     }
                     else
@@ -827,7 +835,7 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     Message m = new Message(message, userName);
-                    groupChat.AllMessages.Add(m);
+                    ServiceModel.Instance.GroupChat.AllMessages.Add(m);
                     ok = true;
                 }
                 else
@@ -855,7 +863,7 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     Message m = new Message(message, userName);
-                    Room room = roomList.Single(r => r.Theme == roomName);
+                    Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
                     if(room != null)
                     {
                         room.AllMessages.Add(m);
@@ -884,12 +892,12 @@ namespace ServiceApp
 
         public GroupChat GetGroupChat()
         {
-            return groupChat;
+            return ServiceModel.Instance.GroupChat;
         }
 
         public Room GetPrivateRoom(string roomName)
         {
-            Room room = roomList.Single(r => r.Theme == roomName);
+            Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
             return room;
         }
 
@@ -902,11 +910,11 @@ namespace ServiceApp
             {
                 if (user.Logged)
                 {
-                    Room room = roomList.Single(r => r.Theme == roomName);
+                    Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
                     if(room != null)
                     {
                         ok = true;
-                        roomList.Remove(room);
+                        ServiceModel.Instance.RoomList.Remove(room);
                     }
                     else
                     {

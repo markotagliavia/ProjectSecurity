@@ -107,3 +107,15 @@ C:\Users\krist\Desktop\Repo\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssembl
 C:\Users\krist\Desktop\Repo\ServiceApp\obj\Debug\ServiceApp.csproj.CoreCompileInputs.cache
 C:\Users\krist\Desktop\Repo\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\krist\Desktop\Repo\ServiceApp\obj\Debug\ServiceApp.pdb
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\ServiceApp.exe.config
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\ServiceApp.exe
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\ServiceApp.pdb
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\Contracts.dll
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\Contracts.pdb
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\bin\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\obj\Debug\ServiceApp.exe
+D:\cetvrta godina\blok2\Projekat1\ServiceApp\obj\Debug\ServiceApp.pdb

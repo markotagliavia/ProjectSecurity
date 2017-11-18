@@ -50,3 +50,8 @@ C:\Users\krist\Desktop\Repo\SecurityManager\obj\Debug\SecurityManager.csprojReso
 C:\Users\krist\Desktop\Repo\SecurityManager\obj\Debug\SecurityManager.csproj.CoreCompileInputs.cache
 C:\Users\krist\Desktop\Repo\SecurityManager\obj\Debug\SecurityManager.dll
 C:\Users\krist\Desktop\Repo\SecurityManager\obj\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat1\SecurityManager\bin\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat1\SecurityManager\bin\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat1\SecurityManager\obj\Debug\SecurityManager.csprojResolveAssemblyReference.cache
+D:\cetvrta godina\blok2\Projekat1\SecurityManager\obj\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat1\SecurityManager\obj\Debug\SecurityManager.pdb
