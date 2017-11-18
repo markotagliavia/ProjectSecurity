@@ -76,3 +76,12 @@ D:\cetvrta godina\blok2\Projekat1\Contracts\bin\Debug\SecurityManager.pdb
 D:\cetvrta godina\blok2\Projekat1\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
 D:\cetvrta godina\blok2\Projekat1\Contracts\obj\Debug\Contracts.dll
 D:\cetvrta godina\blok2\Projekat1\Contracts\obj\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\ppp\Contracts\bin\Debug\Contracts.dll
+C:\Users\Marko\Desktop\ppp\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\ppp\Contracts\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\ppp\Contracts\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\ppp\Contracts\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\ppp\Contracts\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\ppp\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\ppp\Contracts\obj\Debug\Contracts.dll
+C:\Users\Marko\Desktop\ppp\Contracts\obj\Debug\Contracts.pdb

@@ -27,17 +27,24 @@ namespace ServiceApp
             host.Open();
 
             List<User> lista = new List<User>();
+            if(!File.Exists("Users.dat"))
+            {
+                User u1 = new User("admin", "adminovic", DateTime.Now, "admin@gmail.com", "admin", Roles.Admin, "Male");
+                u1.Verify = true;
+                lista.Add(u1);
 
-            User u1 = new User("admin", "adminovic", DateTime.Now, "admin@gmail.com", "admin", Roles.User, "Male");
-            lista.Add(u1);
+                User u2 = new User("Tijana", "Tagliavia", DateTime.Now, "titagli@gmail.com", "admin", Roles.Admin, "Female");
+                u2.Verify = true;
+                lista.Add(u2);
 
-            BinaryFormatter bf = new BinaryFormatter();
-       
+
+                BinaryFormatter bf = new BinaryFormatter();
+
                 Stream s = File.Open("Users.dat", FileMode.Create);
                 try
                 {
                     bf.Serialize(s, lista);
-                 
+
                 }
                 catch (SerializationException e)
                 {
@@ -49,31 +56,32 @@ namespace ServiceApp
                     s.Close();
                 }
 
-            FileStream fs = new FileStream("Users.dat", FileMode.Open);  // cisto read bzvz da vidim jel dobro
+                FileStream fs = new FileStream("Users.dat", FileMode.Open);  // cisto read bzvz da vidim jel dobro
 
-            try
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                lista = (List<User>)formatter.Deserialize(fs);
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    lista = (List<User>)formatter.Deserialize(fs);
+
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    fs.Close();
+                }
+
+                foreach (User u in lista)
+                {
+                    Console.WriteLine("{0} ovo je mail", u.Email);
+                }
+
 
             }
-            catch (SerializationException e)
-            {
-                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                throw;
-            }
-            finally
-            {
-                fs.Close();
-            }
-
-            foreach (User u in lista)
-            {
-                Console.WriteLine("{0} ovo je mail", u.Email);
-            }
-
-
-
+           
             Console.WriteLine("WCFService is opened. Press <enter> to finish...");
             Console.ReadLine();
             host.Close();

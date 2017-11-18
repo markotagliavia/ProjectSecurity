@@ -51,16 +51,81 @@ namespace ForumModels
                     }
                     return instance;
                 }
-                
-                
+
+
             }
         }
 
-        public ObservableCollection<User> LoggedIn { get => loggedIn; set => loggedIn = value; }
-        public ObservableCollection<PrivateChat> PrivateChats { get => privateChats; set => privateChats = value; }
-        public GroupChat GroupChat { get => groupChat; set => groupChat = value; }
-        public ObservableCollection<Room> RoomList { get => roomList; set => roomList = value; }
-        public ObservableCollection<PrivateChat> PrivateChatList { get => privateChatList; set => privateChatList = value; }
+        public ObservableCollection<User> LoggedIn
+        {
 
+            get
+            {
+                return loggedIn;
+            }
+
+            set
+            {
+                loggedIn = value;
+            }
+
+        }
+        public ObservableCollection<PrivateChat> PrivateChats
+        {
+            get
+            {
+                return privateChats;
+            }
+
+            set
+            {
+                privateChats = value;
+            }
+
+          
+
+
+        }
+        public GroupChat GroupChat
+        {
+            get
+            {
+                return groupChat;
+            }
+
+            set
+            {
+                groupChat = value;
+            }
+          
+        }
+        public ObservableCollection<Room> RoomList
+        {
+            get
+            {
+                return roomList;
+            }
+
+            set
+            {
+                roomList = value;
+            }
+            
+        }
+        public ObservableCollection<PrivateChat> PrivateChatList
+        {
+            get
+            {
+                return privateChatList;
+            }
+
+            set
+            {
+                privateChatList = value;
+            }
+           
+        }
+
+        
     }
 }

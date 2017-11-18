@@ -22,6 +22,167 @@ namespace ServiceApp
     {
         private User userOnSession;
 
+        public void SerializeGroupChat(GroupChat gc)
+        {
+            Stream s = File.Open("GroupChat.dat", FileMode.Create);
+            try
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(s, gc);
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                s.Close();
+            }
+
+        }   // serialize GroupChat
+
+        public GroupChat DeserializeGroupChat()
+        {
+            GroupChat gc = new GroupChat();
+
+            FileStream fs = new FileStream("GroupChat.dat", FileMode.Open);
+
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                gc = (GroupChat)formatter.Deserialize(fs);
+
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+
+            return gc;
+
+        }        // deserialize GroupChat
+
+        public void CloseupRoom(Room room)
+        {
+            if (File.Exists(room.Code.ToString() + ".dat"))
+            {
+
+                    try
+                    {
+                        System.IO.File.Delete(@"C:\Users\Marko\Desktop\ppp\ServiceApp\bin\Debug\" + room.Code.ToString() + ".dat"); 
+                    }
+                    catch (System.IO.IOException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        return;
+                    }
+  
+            }
+
+
+
+        }     // delete room from file PROMENI PUTANJU U ZAVISNOSTI OD TOGA GDE SE FAJL NALAZI DA BI GA OBRISAO
+
+        public void SerializeRoom(Room room)     // Serialize Room
+        {
+            Stream s = File.Open(room.Code.ToString() + ".dat", FileMode.Create);
+            try
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(s, room);
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                s.Close();
+            }
+
+
+        }
+
+        public Room DeserializeRoom(Room room)   // DEserialize Room
+        {
+            Room pc1;
+
+            FileStream fs = new FileStream(room.Code.ToString() + ".dat", FileMode.Open);
+
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                pc1 = (Room)formatter.Deserialize(fs);
+
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+            return pc1;
+
+
+
+        }
+
+        public void SerializePrivateChat(PrivateChat pc)
+        {        
+                Stream s = File.Open(pc.Uid.ToString()+".dat", FileMode.Create);
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(s, pc);
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    s.Close();
+                }
+        }             // serialize PrivateChat datoteka
+
+        public PrivateChat DeserializePrivateChat(PrivateChat pc)
+        {
+            PrivateChat pc1;
+
+            FileStream fs = new FileStream(pc.Uid.ToString()+".dat", FileMode.Open);
+
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                pc1 = (PrivateChat)formatter.Deserialize(fs);
+
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+            return pc1;
+        }    // deserialize PrivateChat datoteka
+
         public void SerializeUsers(List<User> lista)
         {
             Stream s = File.Open("Users.dat", FileMode.Create);
@@ -39,8 +200,7 @@ namespace ServiceApp
             {
                 s.Close();
             }
-        }
-
+        }        // serialize user datoteka
 
         public List<User> DeserializeUsers()
         {
@@ -66,7 +226,7 @@ namespace ServiceApp
 
 
             return lista;
-        }
+        }               // deserialize user datoteka
 
         public bool AddAdmin(string email)
         {
@@ -104,7 +264,7 @@ namespace ServiceApp
                 retVal = false;
             }
             return retVal;
-        }         // uzima iz datoteke User.dat  DONE
+        }                 // uzima iz datoteke User.dat  DONE
 
         public bool BlockGroupChat(string blockEmail)
         {
@@ -120,6 +280,7 @@ namespace ServiceApp
                     if (ServiceModel.Instance.GroupChat.Blocked.Single(i => i.Email == blockEmail) == null)
                     {
                         ServiceModel.Instance.GroupChat.Blocked.Add(u);
+                        SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
                        retVal = true;
                     }
                 }else
@@ -134,7 +295,7 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
             return retVal;
-        }
+        }     // DONE
 
         public bool BlockUser(string requestEmail, string blockEmail)   // blokira usera citajuci ga iz User.dat DONE
         {
@@ -202,6 +363,7 @@ namespace ServiceApp
                     Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
                     User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
                     room.Blocked.Add(u);
+                    SerializeRoom(room);
                     retVal = true;
                 }
                 else
@@ -216,7 +378,7 @@ namespace ServiceApp
             }
 
             return retVal;
-        }
+        }  // DONE
 
         public bool ChangePassword(string email, string oldPassowrd, string newPassword)    // menjanje passworda i upisivanje promene u fajl DONE
         {
@@ -275,6 +437,7 @@ namespace ServiceApp
                         if (ServiceModel.Instance.PrivateChats.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))) == null)
                         {
                             PrivateChat pc = new PrivateChat(user.Email, user2.Email);
+                            SerializePrivateChat(pc);  // kreiraj fajl
                             ServiceModel.Instance.PrivateChats.Add(pc);
                             return 0;
                         }
@@ -303,7 +466,7 @@ namespace ServiceApp
             }
 
             return -1;
-        }
+        }        // kreiraj fajl sa privatnim chatom ako ne postoji DONE
 
         public bool CreateRoom(string roomName)
         {
@@ -320,6 +483,7 @@ namespace ServiceApp
                     {
                         Room room = new Room(roomName);
                         ServiceModel.Instance.RoomList.Add(room);
+                        SerializeRoom(room);
                         retVal = true;
                     }
                 }
@@ -334,7 +498,7 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
             return retVal;
-        }
+        }    // DONE
 
         public bool DeleteAdmin(string email)                 // promena uloge na obicnog sa admina i upisivanje u fajl DONE
         {
@@ -459,8 +623,7 @@ namespace ServiceApp
             }
 
 
-        }
-
+        }    // ne treba da se upisuje promena u fajl
 
         public bool LogOut(string email)
         {
@@ -489,9 +652,6 @@ namespace ServiceApp
             }
             return false;
         }                   // ne treba da se upisuje promena u fajl
-
-
-
 
         public bool Registration(string name, string sname, DateTime date, string gender, string email, string password)
         {
@@ -594,6 +754,7 @@ namespace ServiceApp
                     if (u != null)
                     {
                         ServiceModel.Instance.GroupChat.Blocked.Remove(u);
+                        SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
                         retVal = true;
                     }
                 }
@@ -609,8 +770,7 @@ namespace ServiceApp
             }
 
             return retVal;
-        }
-
+        } // DONE
 
         public bool RemoveBlockUser(string requestEmail, string unblockEmail)        // unblock nalazi ga u fajlu i menja tu promenu DONE
         { 
@@ -674,6 +834,7 @@ namespace ServiceApp
                     Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
                     User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
                     room.Blocked.Remove(u);
+                    SerializeRoom(room);
                     retval = true;
                 }
                 else
@@ -688,7 +849,7 @@ namespace ServiceApp
             }
 
             return retval;
-        }
+        } // DONE
 
         public int ResetPassword(string email)
         {
@@ -743,7 +904,7 @@ namespace ServiceApp
             }
 
             return -1;
-        }
+        }     // ???????? kako ovo radi gde sta treba itd
 
         public bool SendVerificationKey(string key)
         {
@@ -776,7 +937,7 @@ namespace ServiceApp
 
             return ok;
 
-        }
+        } // ????????
 
         public string Sha256encrypt(string phrase)
         {
@@ -784,9 +945,9 @@ namespace ServiceApp
             System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
             byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
             return Convert.ToBase64String(hashedDataBytes);
-        }
+        }  // ovo ne treba
 
-        public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)
+        public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)  // DONE
         {
             User user = Thread.CurrentPrincipal as User;
             bool ok = false;
@@ -802,11 +963,17 @@ namespace ServiceApp
                         PrivateChat newChat = new PrivateChat(sendEmail, reciveEmail);
                         newChat.Messages.Add(m);
                         ServiceModel.Instance.PrivateChatList.Add(newChat);
+
+                        SerializePrivateChat(newChat);
+
                         ok = true;
                     }
                     else
                     {
                         privateChat.Messages.Add(m);
+
+                        SerializePrivateChat(privateChat);
+
                         ok = true;
                     }
                 }
@@ -836,6 +1003,7 @@ namespace ServiceApp
                 {
                     Message m = new Message(message, userName);
                     ServiceModel.Instance.GroupChat.AllMessages.Add(m);
+                    SerializeGroupChat(ServiceModel.Instance.GroupChat);   // serijal
                     ok = true;
                 }
                 else
@@ -851,7 +1019,7 @@ namespace ServiceApp
             }
 
             return ok;
-        }
+        }    // DONE
 
         public bool SendRoomMessage(string userName, string roomName, string message)
         {
@@ -867,6 +1035,7 @@ namespace ServiceApp
                     if(room != null)
                     {
                         room.AllMessages.Add(m);
+                        SerializeRoom(room);
                         ok = true;
                     }
                     else
@@ -888,7 +1057,7 @@ namespace ServiceApp
             }
 
             return ok;
-        }
+        }  // DONE
 
         public GroupChat GetGroupChat()
         {
@@ -898,8 +1067,10 @@ namespace ServiceApp
         public Room GetPrivateRoom(string roomName)
         {
             Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
+
+            //room=DeserializeRoom(room);     ?????
             return room;
-        }
+        } // ????? Da li se ovde uzimaju roomovi iz fajla il sta????
 
         public bool CloseRoom(string roomName)
         {
@@ -914,6 +1085,7 @@ namespace ServiceApp
                     if(room != null)
                     {
                         ok = true;
+                        CloseupRoom(room);   // Obrisi taj fajl kompletno
                         ServiceModel.Instance.RoomList.Remove(room);
                     }
                     else
@@ -934,6 +1106,6 @@ namespace ServiceApp
             }
 
             return ok;
-        }
+        }     // DONE
     }
 }
