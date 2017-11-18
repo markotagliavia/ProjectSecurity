@@ -61,13 +61,13 @@ namespace Contracts
         bool SendVerificationKey(string key);
 
         [OperationContract]
-        bool SendPrivateMessage(Guid sendUserId,string sendEmail, string reciveEmail, string message);
+        bool SendPrivateMessage(string sendEmail, string reciveEmail, string message);
 
         [OperationContract]
-        bool SendGroupMessage(Guid userId, string message);
+        bool SendGroupMessage(string sender, string message);
 
         [OperationContract]
-        bool SendRoomMessage(Guid userId, string roomName, string message);
+        bool SendRoomMessage(string sender, string roomName, string message);
 
         [OperationContract]
         GroupChat GetGroupChat();

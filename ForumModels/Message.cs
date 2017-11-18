@@ -12,11 +12,11 @@ namespace Forum
 
         private Guid code;
 
-        private Guid user;
+        private string user;
 
         private DateTime creationTime;
 
-        public Message(string text, Guid user)
+        public Message(string text, string user)
         {
             this.Text = text;
             this.User = user;
@@ -50,7 +50,7 @@ namespace Forum
             }
         }
 
-        public Guid User
+        public string User
         {
             get
             {

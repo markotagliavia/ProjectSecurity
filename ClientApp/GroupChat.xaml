@@ -11,15 +11,15 @@
         <!--> **************Menu************ <-->
         <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Width="792">
             <MenuItem Header="Options">
-                <MenuItem Header="New room" HorizontalAlignment="Left" Width="190"/>
-                <MenuItem Header="Block user" HorizontalAlignment="Left" Width="190"/>
-                <MenuItem Header="Unblock user" HorizontalAlignment="Left" Width="190"/>
+                <MenuItem x:Name="newRoomMenuItem" Header="New room" HorizontalAlignment="Left" Width="190" Click="newRoomMenuItem_Click"/>
+                <!--<MenuItem Header="Block user" HorizontalAlignment="Left" Width="190"/>
+                <MenuItem Header="Unblock user" HorizontalAlignment="Left" Width="190"/>-->
                 <Separator HorizontalAlignment="Left" Width="190"/>
-                <MenuItem Header="Change password" HorizontalAlignment="Left" Width="190"/>
-                <MenuItem Header="Reset password" HorizontalAlignment="Left" Width="190"/>
-                <MenuItem Header="Change privilegies" HorizontalAlignment="Left" Width="190"/>
+                <MenuItem x:Name="pswChangeMenuItem" Header="Change password" HorizontalAlignment="Left" Width="190" Click="pswChangeMenuItem_Click"/>
+                <!--><MenuItem Header="Reset password" HorizontalAlignment="Left" Width="190"/><-->
+                <MenuItem x:Name="changePrivsMenuItem" Header="Change privilegies" HorizontalAlignment="Left" Width="190" Visibility="Hidden" Click="changePrivsMenuItem_Click"/>
                 <Separator HorizontalAlignment="Left" Width="190"/>
-                <MenuItem Header="Log out" HorizontalAlignment="Left" Width="190"/>
+                <MenuItem x:Name="logOutMenuItem" Header="Log out" HorizontalAlignment="Left" Width="190" Click="logOutMenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="Rooms" >
                 <!-->ItemsSource="{Binding GraphMenuItems}" ovo je atribut za iznad kada napravimo kolekciju<-->
@@ -38,7 +38,7 @@
 
         <!-->****************Messages part**********<-->
         <Label x:Name="labelLoggedUsers" Content="Logged users: " HorizontalAlignment="Left" Margin="2,25,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="88"/>
-        <ListBox x:Name="loggedUsersListBox" ItemsSource="{Binding Logged}"  HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="120" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+        <ListBox x:Name="loggedUsersListBox" ItemsSource="{Binding Logged}"  HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="120" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionChanged="loggedUsersListBox_SelectionChanged"/>
         <ScrollViewer x:Name="allMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,51,0,187">
             <ListBox x:Name="ChatBox" ItemsSource="{Binding Msg}" Background="#FFE2A1A1" IsEnabled="False"/>
         </ScrollViewer>
@@ -50,8 +50,10 @@
 
 
         <!-->****************Button cntrl**********<-->
-        <Button x:Name="enterMsgButton" Content="Enter message" HorizontalAlignment="Left" Margin="632,518,0,0" VerticalAlignment="Top" Width="132" Height="30"/>
-        <Button x:Name="logOutButton" Content="Log out" HorizontalAlignment="Left" Margin="10,518,0,0" VerticalAlignment="Top" Width="110" Height="30"/>
+        <Button x:Name="enterMsgButton" Content="Enter message" HorizontalAlignment="Left" Margin="632,518,0,0" VerticalAlignment="Top" Width="132" Height="30" Click="enterMsgButton_Click"/>
+        <Button x:Name="logOutButton" Content="Log out" HorizontalAlignment="Left" Margin="10,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="logOutButton_Click"/>
+        <Button x:Name="blockUserButton" Content="Block user" HorizontalAlignment="Left" Margin="155,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="blockUserButton_Click"/>
+        <Button x:Name="removeUserButton" Content="Ban user from chat" HorizontalAlignment="Left" Margin="301,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Hidden" Click="removeUserButton_Click"/>
         <!-->****************End of Button cntrl part**********<-->
     </Grid>
 </Window>

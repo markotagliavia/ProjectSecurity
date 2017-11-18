@@ -44,13 +44,13 @@ namespace ClientApp
             if(i == true)
             {
                 //key is ok
-            //  var s = new GroupChat(proxy, email);
-            //  s.Show();
-            //  this.Close();
+                 var s = new GroupChat(proxy, email);
+                 s.Show();
+                 this.Close();
             }
             else
             {
-            //  //key is not ok, try again
+                MessageBox.Show("Key is not valid! Please provide correct one. Check your email.");
             }
         }
 

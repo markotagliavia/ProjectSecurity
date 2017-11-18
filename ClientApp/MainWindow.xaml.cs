@@ -97,25 +97,17 @@ namespace ClientApp
                 }
                 else if (i == -1)
                 {
-                    //Greska , ne postoji korisnik sa unetom kombinacijom user/pass
-                    //hendlati ovde
+                    MessageBox.Show("Email and password are incorrect! Try again or reset your password.");
                 }
                 else if (i == 1)
                 {
                     //uspesan login
                     //Send data to server
-                    var s1 = new GroupChat(proxy);    //Forum starting if data is ok
+                    var s1 = new GroupChat(proxy, "admin");    //Forum starting if data is ok
                     SystemSounds.Asterisk.Play();
                     s1.Show();
                     this.Close();
                 }
-
-                proxy.LogIn(user, pass);// OVDE TREBA KOD
-                //Send data to server
-                var s = new GroupChat(proxy);    //Forum starting if data is ok
-                SystemSounds.Asterisk.Play();
-                s.Show();
-                this.Close();
             }
             else
             {
@@ -145,14 +137,13 @@ namespace ClientApp
                 }
                 else if (i == -1)
                 {
-                    //Greska , ne postoji korisnik sa unetom kombinacijom user/pass
-                    //hendlati ovde
+                    MessageBox.Show("Email and password are incorrect! Try again or reset your password.");
                 }
                 else if (i == 1)
                 {
                     //uspesan login
                     //Send data to server
-                    var s1 = new GroupChat(proxy);    //Forum starting if data is ok
+                    var s1 = new GroupChat(proxy, user);    //Forum starting if data is ok
                     SystemSounds.Asterisk.Play();
                     s1.Show();
                     this.Close();

@@ -299,12 +299,12 @@ namespace ClientApp
             return ret;
         }
 
-        public bool SendGroupMessage(Guid userId, string message)
+        public bool SendGroupMessage(string userName, string message)
         {
             bool retVal = false;
             try
             {
-                retVal = factory.SendGroupMessage(userId, message);
+                retVal = factory.SendGroupMessage(userName, message);
                 Console.WriteLine("SendGroupMessage executed");
             }
             catch (Exception e)
@@ -315,12 +315,12 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool SendPrivateMessage(Guid sendUserId, string sendEmail, string reciveEmail, string message)
+        public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)
         {
             bool retVal = false;
             try
             {
-                retVal = factory.SendPrivateMessage(sendUserId, sendEmail, reciveEmail, message);
+                retVal = factory.SendPrivateMessage(sendEmail, reciveEmail, message);
                 Console.WriteLine("SendPrivateMessage executed");
             }
             catch (Exception e)
@@ -331,12 +331,12 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool SendRoomMessage(Guid userId, string roomName, string message)
+        public bool SendRoomMessage(string userName, string roomName, string message)
         {
             bool retVal = false;
             try
             {
-                retVal = factory.SendRoomMessage(userId,roomName, message);
+                retVal = factory.SendRoomMessage(userName, roomName, message);
                 Console.WriteLine("SendRoomMessage executed");
             }
             catch (Exception e)

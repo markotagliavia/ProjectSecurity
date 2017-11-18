@@ -778,7 +778,7 @@ namespace ServiceApp
             return Convert.ToBase64String(hashedDataBytes);
         }
 
-        public bool SendPrivateMessage(Guid sendUserId, string sendEmail, string reciveEmail, string message)
+        public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)
         {
             User user = Thread.CurrentPrincipal as User;
             bool ok = false;
@@ -787,7 +787,7 @@ namespace ServiceApp
             {
                 if (user.Logged)
                 {
-                    Message m = new Message(message, sendUserId);
+                    Message m = new Message(message, sendEmail);
                     PrivateChat privateChat = privateChatList.Single(i => (i.User1 == sendEmail && i.User2 == reciveEmail) || (i.User2 == sendEmail && i.User1 == reciveEmail));
                     if (privateChat == null)
                     {
@@ -817,7 +817,7 @@ namespace ServiceApp
             return ok;
         }
 
-        public bool SendGroupMessage(Guid userId, string message)
+        public bool SendGroupMessage(string userName, string message)
         {
             User user = Thread.CurrentPrincipal as User;
             bool ok = false;
@@ -826,7 +826,7 @@ namespace ServiceApp
             {
                 if (user.Logged)
                 {
-                    Message m = new Message(message, userId);
+                    Message m = new Message(message, userName);
                     groupChat.AllMessages.Add(m);
                     ok = true;
                 }
@@ -845,7 +845,7 @@ namespace ServiceApp
             return ok;
         }
 
-        public bool SendRoomMessage(Guid userId, string roomName, string message)
+        public bool SendRoomMessage(string userName, string roomName, string message)
         {
             User user = Thread.CurrentPrincipal as User;
             bool ok = false;
@@ -854,7 +854,7 @@ namespace ServiceApp
             {
                 if (user.Logged)
                 {
-                    Message m = new Message(message, userId);
+                    Message m = new Message(message, userName);
                     Room room = roomList.Single(r => r.Theme == roomName);
                     if(room != null)
                     {
