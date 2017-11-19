@@ -15,6 +15,13 @@ namespace ServiceApp
 {
     class Program
     {
+        public string Sha256encrypt(string phrase)
+        {
+            UTF8Encoding encoder = new UTF8Encoding();
+            System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
+        }  // ovo ne treba
         static void Main(string[] args)
         {
 
@@ -29,12 +36,16 @@ namespace ServiceApp
             List<User> lista = new List<User>();
             if(!File.Exists("Users.dat"))
             {
-                User u1 = new User("admin", "adminovic", DateTime.Now, "admin@gmail.com", "admin", Roles.Admin, "Male");
+                Program p = new Program();
+                string pass = p.Sha256encrypt("admin");
+                User u1 = new User("admin", "adminovic", DateTime.Now, "admin@gmail.com", pass, Roles.Admin, "Male");
                 u1.Verify = true;
                 lista.Add(u1);
-                User u2 = new User("Tijana", "Tagliavia", DateTime.Now, "titagli@gmail.com", "admin", Roles.Admin, "Female");
+                User u2 = new User("Tijana", "Tagliavia", DateTime.Now, "titagli@gmail.com", pass, Roles.Admin, "Female");
                 u2.Verify = true;
                 lista.Add(u2);
+
+                //Sha256Encrypt
 
 
                 BinaryFormatter bf = new BinaryFormatter();
@@ -85,5 +96,7 @@ namespace ServiceApp
             Console.ReadLine();
             host.Close();
         }
+        
     }
+
 }

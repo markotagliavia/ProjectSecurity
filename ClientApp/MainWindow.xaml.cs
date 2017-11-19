@@ -90,7 +90,7 @@ namespace ClientApp
             {
                 SystemSounds.Asterisk.Play();
                 //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unese
-                int i = proxy.LogIn(user, pass);
+                int i = proxy.LogIn(user, cryptedPass);
                 if (i == 0)
                 {
                     //prvi put se loguje i mora da se unese i kod
@@ -130,7 +130,7 @@ namespace ClientApp
                 }
 
                 //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unes
-                int i = proxy.LogIn(user, pass);
+                int i = proxy.LogIn(user, cryptedPass);
                 if (i == 0)
                 {
                     //prvi put se loguje i mora da se unese i kod

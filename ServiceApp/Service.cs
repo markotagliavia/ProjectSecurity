@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.ServiceModel;
@@ -16,12 +17,12 @@ using System.Threading.Tasks;
 
 namespace ServiceApp
 {
-
+    
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class Service : IService
     {
         private User userOnSession;     //logged user
-
+        public static string AppRoot;
         /// <summary>
         /// THis function notifies all logged clients about changes in forum
         /// </summary>
@@ -74,7 +75,7 @@ namespace ServiceApp
         {
             Stream s = File.Open("GroupChat.dat", FileMode.Create);
             try
-            {
+            {         
                 BinaryFormatter bf = new BinaryFormatter();
                 bf.Serialize(s, gc);
             }
@@ -119,25 +120,21 @@ namespace ServiceApp
 
         public void CloseupRoom(Room room)
         {
+            AppRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
             if (File.Exists(room.Code.ToString() + ".dat"))
             {
-
-                    try
-                    {
-                        // System.IO.File.Delete(@"C:\Users\Marko\Desktop\ppp\ServiceApp\bin\Debug\" + room.Code.ToString() + ".dat"); ne valja,mora relativna putanja
-                        //Izbrisati iz listi soba 
-                    }
-                    catch (System.IO.IOException e)
-                    {
-                        Console.WriteLine(e.Message);
-                        return;
-                    }
-  
+                try
+                {
+                    System.IO.File.Delete(AppRoot + room.Code.ToString() + ".dat");
+                }
+                catch (System.IO.IOException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return;
+                }
             }
-
-
-
-        }     // delete room from file PROMENI PUTANJU U ZAVISNOSTI OD TOGA GDE SE FAJL NALAZI DA BI GA OBRISAO
+        }             // apsolutna putanja 
 
         public void SerializeRoom(Room room)     // Serialize Room
         {
@@ -238,6 +235,11 @@ namespace ServiceApp
             try
             {
                 BinaryFormatter bf = new BinaryFormatter();
+               /* foreach(User u in lista)
+                {
+                    Sha256encrypt(u.Password);
+                }*/
+
                 bf.Serialize(s, lista);
             }
             catch (SerializationException e)
@@ -609,8 +611,9 @@ namespace ServiceApp
 
             if (u != null)
             {
-                if (Sha256encrypt(password).Equals(u.Password))
+                if(string.Equals(password,u.Password))
                 {
+                  
                     if (!u.Verify)
                     {
                         //Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
@@ -953,6 +956,19 @@ namespace ServiceApp
                         mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
 
                         client.Send(mm);
+
+                        List<User> lista;
+                        lista = DeserializeUsers();
+                        foreach(User u in lista)
+                        {
+                            if(u.Email==email)
+                            {
+                                u.Password = user.Password;
+                            }
+
+                        }
+
+                        SerializeUsers(lista);
                     }
                     catch (Exception e)
                     {
@@ -973,7 +989,7 @@ namespace ServiceApp
             }
 
             return -1;
-        }    
+        }      // DONE
 
         public bool SendVerificationKey(string key)
         {
@@ -993,7 +1009,21 @@ namespace ServiceApp
                         user.Verify = true;
                         ServiceModel.Instance.LoggedIn.Add(user);
                         ServiceModel.Instance.GroupChat.Logged.Add(user);
-                        
+
+                        List<User> lista = new List<User>();
+                        lista= DeserializeUsers();
+                        foreach(User u in lista)
+                        {
+                            if(u.Email==user.Email)
+                            {
+                                u.Verify = true;
+                                u.SecureCode = user.SecureCode;
+                            }
+
+                        }
+
+                        SerializeUsers(lista);
+
                         NotifyAll();
                         
                     }
@@ -1008,7 +1038,7 @@ namespace ServiceApp
 
             return ok;
 
-        }   //ovde fali da se sacuva u fajl sa promenom ako je verifikovan akaunt
+        }   //DONE
 
         public string Sha256encrypt(string phrase)
         {
