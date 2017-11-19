@@ -281,7 +281,8 @@ namespace ServiceApp
 
         public bool AddAdmin(string email)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.AddAdmin.ToString()))
@@ -319,7 +320,8 @@ namespace ServiceApp
 
         public bool BlockGroupChat(string blockEmail)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.BlockGroupChat.ToString()))
@@ -350,7 +352,8 @@ namespace ServiceApp
 
         public bool BlockUser(string requestEmail, string blockEmail)   // blokira usera citajuci ga iz User.dat DONE
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.BlockUser.ToString()))
@@ -402,7 +405,8 @@ namespace ServiceApp
 
         public bool BlockUserFromRoom(string blockEmail, string roomName)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = false;
 
             /// audit both successfull and failed authorization checks
@@ -433,7 +437,8 @@ namespace ServiceApp
 
         public bool ChangePassword(string email, string oldPassowrd, string newPassword)    // menjanje passworda i upisivanje promene u fajl DONE
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.ChangePassword.ToString()))
@@ -475,8 +480,8 @@ namespace ServiceApp
 
         public int CreatePrivateChat(string firstEmail, string secondEmail)
         {
-            User user = Thread.CurrentPrincipal as User;
-
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.CreatePrivateChat.ToString()))
             {
@@ -521,7 +526,8 @@ namespace ServiceApp
 
         public bool CreateRoom(string roomName)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = false;
 
             /// audit both successfull and failed authorization checks
@@ -553,7 +559,8 @@ namespace ServiceApp
 
         public bool DeleteAdmin(string email)                 // promena uloge na obicnog sa admina i upisivanje u fajl DONE
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = true;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.DeleteAdmin.ToString()))
@@ -692,8 +699,8 @@ namespace ServiceApp
 
         public bool LogOut(string email)
         {
-            User user = Thread.CurrentPrincipal as User;
-
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.LogOut.ToString()))
             {
@@ -813,7 +820,8 @@ namespace ServiceApp
 
         public bool RemoveBlockGroupChat(string unblockEmail)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = false;
 
             /// audit both successfull and failed authorization checks
@@ -845,8 +853,9 @@ namespace ServiceApp
         } // DONE
 
         public bool RemoveBlockUser(string requestEmail, string unblockEmail)        // unblock nalazi ga u fajlu i menja tu promenu DONE
-        { 
-            User user = Thread.CurrentPrincipal as User;
+        {
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.RemoveBlockUser.ToString()))
@@ -894,7 +903,8 @@ namespace ServiceApp
 
         public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool retval = false;
 
             /// audit both successfull and failed authorization checks
@@ -925,8 +935,8 @@ namespace ServiceApp
 
         public int ResetPassword(string email)
         {
-            User user = Thread.CurrentPrincipal as User;
-
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.ResetPassword.ToString()))
             {
@@ -1050,7 +1060,8 @@ namespace ServiceApp
 
         public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)  // DONE
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendPrivateMessage.ToString()))
@@ -1095,7 +1106,8 @@ namespace ServiceApp
 
         public bool SendGroupMessage(string userName, string message)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendGroupMessage.ToString()))
@@ -1124,7 +1136,8 @@ namespace ServiceApp
 
         public bool SendRoomMessage(string userName, string roomName, string message)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendRoomMessage.ToString()))
@@ -1173,7 +1186,8 @@ namespace ServiceApp
 
         public bool CloseRoom(string roomName)
         {
-            User user = Thread.CurrentPrincipal as User;
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
             bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.CloseRoom.ToString()))
