@@ -31,8 +31,12 @@ namespace ClientApp
             InitializeComponent();
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:27019/ServiceApp";
+            InstanceContext instanceContext;
+            ChatServiceCallback chatServiceCallback = new ChatServiceCallback();
+            //chatServiceCallback.ClientNotified += ChatServiceCallback_ClientNotified;
 
-            this.proxy = new WCFClient(binding, new EndpointAddress(new Uri(address)));
+            instanceContext = new InstanceContext(chatServiceCallback);
+            this.proxy = new WCFClient(instanceContext, binding, new EndpointAddress(new Uri(address)));
             Console.ReadLine();
         }
 

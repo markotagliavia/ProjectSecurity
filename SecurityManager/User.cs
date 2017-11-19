@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,7 @@ namespace SecurityManager
             this.identity = new GenericIdentity(email);
         }
 
+
         public Guid Code
         {
             get
@@ -68,6 +70,7 @@ namespace SecurityManager
                 code = value;
             }
         }
+
 
         public bool Verify
         {
@@ -241,7 +244,7 @@ namespace SecurityManager
         {
             get { return this.identity; }
         }
-
+        
         public bool IsInRole(string perms)
         {
             bool IsAuthz = false;

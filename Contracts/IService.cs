@@ -1,14 +1,15 @@
-﻿using Forum;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using ForumModels;
 
 namespace Contracts
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IChatServiceCallback))]
     public interface IService
     {
 
@@ -77,5 +78,13 @@ namespace Contracts
 
         [OperationContract]
         bool CloseRoom(string roomName);
+
+        [OperationContract(IsOneWay = true)]
+        void KeepConnection();
+
+        [OperationContract(IsOneWay = true)]
+        void Subscribe(string email);
     }
+
+   
 }

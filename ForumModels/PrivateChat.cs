@@ -1,11 +1,14 @@
 ﻿using SecurityManager;
 using System;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 
-namespace Forum
+namespace ForumModels
 {
+
     public class PrivateChat
     {
+        
         private Guid uid;
 
         private string user1;

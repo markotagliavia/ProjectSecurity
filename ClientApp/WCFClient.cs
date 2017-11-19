@@ -1,22 +1,48 @@
 ﻿using Contracts;
+using ForumModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
-using Forum;
 
 namespace ClientApp
 {
-    public class WCFClient : ChannelFactory<IService>, IService
+
+    public class WCFClient : DuplexChannelFactory<IService>,IService
     {
         IService factory;
 
-        public WCFClient(NetTcpBinding binding, EndpointAddress address)
-            : base(binding, address)
+        private InstanceContext instanceContext;
+
+        NetTcpBinding binding;
+
+        EndpointAddress address;
+
+        public WCFClient(InstanceContext instanceContext,NetTcpBinding binding, EndpointAddress address)
+            :base(instanceContext,binding,address)
         {
-            factory = this.CreateChannel();
+            this.address = address;
+            this.binding = binding;
+            this.instanceContext = instanceContext;
+           factory = this.CreateChannel();    
+        }
+
+        public EndpointAddress Address
+        {
+            get { return address; }
+        }
+
+        public NetTcpBinding Binding
+        {
+            get { return binding; }
+        }
+
+        public InstanceContext InstanceContext
+        {
+            get { return instanceContext; }
+            set { this.instanceContext = value; }
         }
 
         public bool AddAdmin(string email)
@@ -49,7 +75,7 @@ namespace ClientApp
 
             return retVal;
         }
-
+    
         public bool BlockUser(string requestEmail, string blockEmail)
         {
             bool retVal = false;
@@ -157,20 +183,23 @@ namespace ClientApp
             return retVal;
         }
 
-        public Forum.GroupChat GetGroupChat()
+        public ForumModels.GroupChat GetGroupChat()
         {
-            Forum.GroupChat groupChat = new Forum.GroupChat();
+            ForumModels.GroupChat groupChat = null;
             try
             {
                 groupChat = factory.GetGroupChat();
                 Console.WriteLine("GetGroupChat executed");
+                return groupChat;
+                
             }
-            catch (Exception e)
+            catch (CommunicationException commProblem)
             {
-                Console.WriteLine("Error while trying to GetGroupChat(). {0}", e.Message);
+                Console.WriteLine("There was a communication problem. " + commProblem.Message + commProblem.StackTrace);
+                return null;
             }
 
-            return groupChat;
+
         }
 
         public Room GetPrivateRoom(string roomName)
@@ -187,6 +216,19 @@ namespace ClientApp
             }
 
             return room;
+        }
+
+        public void KeepConnection()
+        {
+            try
+            {
+                factory.KeepConnection();
+                Console.WriteLine("KeepConnection");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to KeepConnection(). {0}", e.Message);
+            }
         }
 
         public int LogIn(string email, string password)
@@ -363,6 +405,17 @@ namespace ClientApp
             return ok;
         }
 
-       
+        public void Subscribe(string email)
+        {
+            try
+            {
+                factory.Subscribe(email);
+                Console.WriteLine("ubscribe executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to Subscribe(). {0}", e.Message);
+            }
+        }
     }
 }

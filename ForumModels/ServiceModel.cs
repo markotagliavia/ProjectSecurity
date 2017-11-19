@@ -1,19 +1,20 @@
-﻿using Forum;
+﻿
 using SecurityManager;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace ForumModels
 {
+    [DataContract]
     public sealed class ServiceModel
     {
         private static ServiceModel instance;
 
         private static readonly object padlock = new object();
+
+        private Dictionary<string, IChatServiceCallback> clients;
 
         private ObservableCollection<User> loggedIn;
 
@@ -25,9 +26,11 @@ namespace ForumModels
 
         private ObservableCollection<PrivateChat> privateChatList;
 
+        
+
         private ServiceModel()
         {
-
+            Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             loggedIn = new ObservableCollection<User>();
 
             privateChats = new ObservableCollection<PrivateChat>();
@@ -37,8 +40,16 @@ namespace ForumModels
             roomList = new ObservableCollection<Room>();
 
             privateChatList = new ObservableCollection<PrivateChat>();
-        }
 
+            clients = new Dictionary<string, IChatServiceCallback>();
+        }
+        [DataMember]
+        public Dictionary<string, IChatServiceCallback> Clients
+        {
+            get { return clients; }
+            set { clients = value; }
+        }
+        [DataMember]
         public static ServiceModel Instance
         {
             get
@@ -55,7 +66,7 @@ namespace ForumModels
 
             }
         }
-
+        [DataMember]
         public ObservableCollection<User> LoggedIn
         {
 
@@ -70,6 +81,7 @@ namespace ForumModels
             }
 
         }
+        [DataMember]
         public ObservableCollection<PrivateChat> PrivateChats
         {
             get
@@ -86,6 +98,7 @@ namespace ForumModels
 
 
         }
+        [DataMember]
         public GroupChat GroupChat
         {
             get
@@ -99,6 +112,7 @@ namespace ForumModels
             }
           
         }
+        [DataMember]
         public ObservableCollection<Room> RoomList
         {
             get
@@ -112,6 +126,7 @@ namespace ForumModels
             }
             
         }
+        [DataMember]
         public ObservableCollection<PrivateChat> PrivateChatList
         {
             get
@@ -126,6 +141,6 @@ namespace ForumModels
            
         }
 
-        
+       
     }
 }

@@ -32,7 +32,6 @@ namespace ServiceApp
                 User u1 = new User("admin", "adminovic", DateTime.Now, "admin@gmail.com", "admin", Roles.Admin, "Male");
                 u1.Verify = true;
                 lista.Add(u1);
-
                 User u2 = new User("Tijana", "Tagliavia", DateTime.Now, "titagli@gmail.com", "admin", Roles.Admin, "Female");
                 u2.Verify = true;
                 lista.Add(u2);

@@ -1,5 +1,4 @@
 ﻿using Contracts;
-using Forum;
 using ForumModels;
 using SecurityManager;
 using System;
@@ -17,10 +16,59 @@ using System.Threading.Tasks;
 
 namespace ServiceApp
 {
+
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class Service : IService
     {
-        private User userOnSession;
+        private User userOnSession;     //logged user
+
+        /// <summary>
+        /// THis function notifies all logged clients about changes in forum
+        /// </summary>
+        private void NotifyAll()
+        {
+            ThreadPool.QueueUserWorkItem
+            (
+                delegate
+                {
+                    lock (ServiceModel.Instance.Clients)
+                    {
+                        List<string> disconnectedClientGuids = new List<string>();
+
+                        foreach (KeyValuePair<string, IChatServiceCallback> client in ServiceModel.Instance.Clients)
+                        {
+                            try
+                            {
+                                client.Value.HandleGroupChat(ServiceModel.Instance.GroupChat);
+                            }
+                            catch (Exception)
+                            {
+                                // TODO: Better to catch specific exception types.                     
+
+                                // If a timeout exception occurred, it means that the server
+                                // can't connect to the client. It might be because of a network
+                                // error, or the client was closed  prematurely due to an exception or
+                                // and was unable to unregister from the server. In any case, we 
+                                // must remove the client from the list of clients.
+
+                                // Another type of exception that might occur is that the communication
+                                // object is aborted, or is closed.
+
+                                // Mark the key for deletion. We will delete the client after the 
+                                // for-loop because using foreach construct makes the clients collection
+                                // non-modifiable while in the loop.
+                                disconnectedClientGuids.Add(client.Key);
+                            }
+                        }
+
+                        foreach (string clientGuid in disconnectedClientGuids)
+                        {
+                            ServiceModel.Instance.Clients.Remove(clientGuid);
+                        }
+                    }
+                }
+            );
+        }
 
         public void SerializeGroupChat(GroupChat gc)
         {
@@ -76,7 +124,8 @@ namespace ServiceApp
 
                     try
                     {
-                        System.IO.File.Delete(@"C:\Users\Marko\Desktop\ppp\ServiceApp\bin\Debug\" + room.Code.ToString() + ".dat"); 
+                        // System.IO.File.Delete(@"C:\Users\Marko\Desktop\ppp\ServiceApp\bin\Debug\" + room.Code.ToString() + ".dat"); ne valja,mora relativna putanja
+                        //Izbrisati iz listi soba 
                     }
                     catch (System.IO.IOException e)
                     {
@@ -602,6 +651,19 @@ namespace ServiceApp
                             ServiceModel.Instance.GroupChat.Logged.Add(u);
                             //Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
                             userOnSession = u;
+                            /*IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
+
+                            Guid clientId = Guid.NewGuid();
+
+                            if (callback != null)
+                            {
+                                lock (ServiceModel.Instance.Clients)
+                                {
+                                    ServiceModel.Instance.Clients.Add(u.Email, callback);
+                                }
+                                
+                            }*/
+                            NotifyAll();
                             return 1;
                         }
                         else
@@ -637,6 +699,13 @@ namespace ServiceApp
                     user.Logged = false;
                     ServiceModel.Instance.LoggedIn.Remove(user);
                     ServiceModel.Instance.GroupChat.Logged.Remove(user);
+                    lock (ServiceModel.Instance.Clients)
+                    {
+                        if (ServiceModel.Instance.Clients.ContainsKey(user.Email))
+                        {
+                            ServiceModel.Instance.Clients.Remove(user.Email);
+                        }
+                    }
                     return true;
                 }
                 else
@@ -862,7 +931,7 @@ namespace ServiceApp
 
                 if (user.Logged)
                 {
-                    string pass = Guid.NewGuid().ToString();
+                    string pass = Guid.NewGuid().ToString().Substring(0,30);
                     user.Password = Sha256encrypt(pass);
                     string your_id = "forumblok@gmail.com";
                     string your_password = "sifra123";
@@ -904,7 +973,7 @@ namespace ServiceApp
             }
 
             return -1;
-        }     // ???????? kako ovo radi gde sta treba itd
+        }    
 
         public bool SendVerificationKey(string key)
         {
@@ -924,7 +993,9 @@ namespace ServiceApp
                         user.Verify = true;
                         ServiceModel.Instance.LoggedIn.Add(user);
                         ServiceModel.Instance.GroupChat.Logged.Add(user);
-
+                        
+                        NotifyAll();
+                        
                     }
 
                 }
@@ -937,7 +1008,7 @@ namespace ServiceApp
 
             return ok;
 
-        } // ????????
+        }   //ovde fali da se sacuva u fajl sa promenom ako je verifikovan akaunt
 
         public string Sha256encrypt(string phrase)
         {
@@ -1062,15 +1133,13 @@ namespace ServiceApp
         public GroupChat GetGroupChat()
         {
             return ServiceModel.Instance.GroupChat;
-        }
+        }   //vraca grupni chat sa singletona
 
         public Room GetPrivateRoom(string roomName)
         {
             Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
-
-            //room=DeserializeRoom(room);     ?????
             return room;
-        } // ????? Da li se ovde uzimaju roomovi iz fajla il sta????
+        } 
 
         public bool CloseRoom(string roomName)
         {
@@ -1107,5 +1176,27 @@ namespace ServiceApp
 
             return ok;
         }     // DONE
+
+        public void KeepConnection()
+        {
+            // do nothing
+        }   //odrzi konekciju u slucaju greske
+
+        public void Subscribe(string email)
+        {
+            IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
+
+            if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+            {
+                lock (ServiceModel.Instance.Clients)
+                {
+                    ServiceModel.Instance.Clients.Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
+                    userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                }
+            }
+
+            
+
+        }   //subscrubuje se user na grupni chat
     }
 }

@@ -1,4 +1,4 @@
-﻿using Forum;
+﻿using ForumModels;
 using SecurityManager;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace ClientApp
     public partial class ThemeRoom : Window
     {
         private WCFClient proxy;
-        public Forum.Room room;
+        public ForumModels.Room room;
 
         public ThemeRoom(WCFClient proxy)
         {
