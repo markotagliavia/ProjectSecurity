@@ -79,3 +79,10 @@ C:\Users\Marko\Desktop\novi repo2\ForumModels\obj\Debug\ForumModels.csprojResolv
 C:\Users\Marko\Desktop\novi repo2\ForumModels\obj\Debug\ForumModels.csproj.CoreCompileInputs.cache
 C:\Users\Marko\Desktop\novi repo2\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\Marko\Desktop\novi repo2\ForumModels\obj\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat2\ForumModels\bin\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat2\ForumModels\bin\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat2\ForumModels\bin\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat2\ForumModels\bin\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat2\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+D:\cetvrta godina\blok2\Projekat2\ForumModels\obj\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat2\ForumModels\obj\Debug\ForumModels.pdb
