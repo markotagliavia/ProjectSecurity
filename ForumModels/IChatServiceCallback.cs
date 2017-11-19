@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SecurityManager;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -18,6 +20,8 @@ namespace ForumModels
             /// </param>
             [OperationContract(IsOneWay = true)]
             void HandleGroupChat(ForumModels.GroupChat gr);
-        }
+            /*[OperationContract(IsOneWay = true)]
+            void AllUsers(ObservableCollection<User> users);*/
+    }
     
 }
