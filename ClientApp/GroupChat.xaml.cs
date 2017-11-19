@@ -182,7 +182,14 @@ namespace ClientApp
         /// <param name="e"></param>
         private void changePrivsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            // TO DO
+            if (Logged.Any(x => x.Email.Equals(email)))
+            {
+                if (Logged.Single(x => x.Email.Equals(email)).Role.Equals(Roles.Admin))
+                {
+                    var s = new ChangeRoll(this.proxy, email);
+                    s.Show();
+                }
+            }
         }
 
         /// <summary>

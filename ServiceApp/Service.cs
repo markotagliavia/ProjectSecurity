@@ -758,7 +758,11 @@ namespace ServiceApp
             List<User> lista = new List<User>();
 
             User u1 = new User(name, sname, date, email, password, Roles.User, gender);
+            User u2 = new User("Adminko", "Adminic", DateTime.Now, "forumblok@gmail.com", Sha256encrypt("sifra123"), Roles.Admin, "Male");
+            User u3 = new User("Adminica", "Adminska", DateTime.Now, "forumblok1@gmail.com", Sha256encrypt("sifra1234"), Roles.Admin, "Female");
             lista.Add(u1);
+            lista.Add(u2);
+            lista.Add(u3);
 
             BinaryFormatter bf = new BinaryFormatter();
 
@@ -1097,7 +1101,7 @@ namespace ServiceApp
             System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
             byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
             return Convert.ToBase64String(hashedDataBytes);
-        }  // ovo ne treba
+        }  
 
         public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)  // DONE
         {
