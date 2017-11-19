@@ -56,8 +56,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ChangeRoll.xaml.cs">
-      <DependentUpon>ChangeRoll.xaml</DependentUpon>
+    <Compile Include="ChangeRole.xaml.cs">
+      <DependentUpon>ChangeRole.xaml</DependentUpon>
     </Compile>
     <Compile Include="GroupChat.xaml.cs">
       <DependentUpon>GroupChat.xaml</DependentUpon>
@@ -72,7 +72,7 @@
       <DependentUpon>VerificationKey.xaml</DependentUpon>
     </Compile>
     <Compile Include="WCFClient.cs" />
-    <Page Include="ChangeRoll.xaml">
+    <Page Include="ChangeRole.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

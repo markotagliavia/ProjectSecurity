@@ -19,9 +19,9 @@ using System.Windows.Shapes;
 namespace ClientApp
 {
     /// <summary>
-    /// Interaction logic for ChangeRoll.xaml
+    /// Interaction logic for ChangeRole.xaml
     /// </summary>
-    public partial class ChangeRoll : Window
+    public partial class ChangeRole : Window
     {
         private WCFClient proxy;
         private string email;
@@ -29,7 +29,7 @@ namespace ClientApp
         private ObservableCollection<User> users;
         private ObservableCollection<User> allusers;
         private InstanceContext instanceContext;
-        public ChangeRoll(WCFClient proxy, string email)
+        public ChangeRole()
         {
             this.DataContext = this;
             Admins = new ObservableCollection<User>();
@@ -39,6 +39,8 @@ namespace ClientApp
             proxy.Abort();
             this.email = email;
             InitializeComponent();
+            AddADMIN.IsEnabled = false;
+            AddUSER.IsEnabled = false;
         }
         public ObservableCollection<User> Admins
         {
@@ -136,15 +138,46 @@ namespace ClientApp
 
         private void AddAdminClick(object sender, RoutedEventArgs e)
         {
-            if (!AdminsListBox.SelectedItem.ToString().Equals(email))
+            if (!loggedUsersListBox.SelectedItem.ToString().Equals(email))
             {
-                this.proxy.AddAdmin(AdminsListBox.SelectedItem.ToString());
-                Admins.Add((User)AdminsListBox.SelectedItem);
+                this.proxy.AddAdmin(loggedUsersListBox.SelectedItem.ToString());
+                Admins.Add((User)loggedUsersListBox.SelectedItem);
+                Users.Remove((User)loggedUsersListBox.SelectedItem);
+                
             }
-            
+            loggedUsersListBox.SelectedItems.Clear();
+            AddADMIN.IsEnabled = false;
+            AddUSER.IsEnabled = false;
+
         }
 
         private void AddUserClick(object sender, RoutedEventArgs e)
+        {
+            if (!AdminsListBox.SelectedItem.ToString().Equals(email))
+            {
+                this.proxy.DeleteAdmin(AdminsListBox.SelectedItem.ToString());
+                Users.Add((User)AdminsListBox.SelectedItem);
+                Admins.Remove((User)AdminsListBox.SelectedItem);
+                
+            }
+            AdminsListBox.SelectedItems.Clear();
+            AddADMIN.IsEnabled = false;
+            AddUSER.IsEnabled = false;
+        }
+
+        private void loggedUsersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AddADMIN.IsEnabled = true;
+            AddUSER.IsEnabled = false;
+        }
+
+        private void AdminsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AddADMIN.IsEnabled = false;
+            AddUSER.IsEnabled = true;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
         }
@@ -170,3 +203,4 @@ namespace ClientApp
         public ObservableCollection<User> AllUsers { get { return allusers; } }
     }
 }
+
