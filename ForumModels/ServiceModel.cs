@@ -10,6 +10,7 @@ namespace ForumModels
     [DataContract]
     public sealed class ServiceModel
     {
+
         private static ServiceModel instance;
 
         private static readonly object padlock = new object();
@@ -30,7 +31,10 @@ namespace ForumModels
 
         private ServiceModel()
         {
-            Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            //Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+           
+
             loggedIn = new ObservableCollection<User>();
 
             privateChats = new ObservableCollection<PrivateChat>();
@@ -41,7 +45,7 @@ namespace ForumModels
 
             privateChatList = new ObservableCollection<PrivateChat>();
 
-            clients = new Dictionary<string, IChatServiceCallback>();
+            clients = new Dictionary<string, IChatServiceCallback>();//ne cuvaj u fajl, to mi cuva proxyje u runtime-u
         }
         [DataMember]
         public Dictionary<string, IChatServiceCallback> Clients

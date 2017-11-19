@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.ServiceModel;
@@ -16,12 +17,12 @@ using System.Threading.Tasks;
 
 namespace ServiceApp
 {
-
+    
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class Service : IService
     {
         private User userOnSession;     //logged user
-
+        public static string AppRoot;
         /// <summary>
         /// THis function notifies all logged clients about changes in forum
         /// </summary>
@@ -74,7 +75,7 @@ namespace ServiceApp
         {
             Stream s = File.Open("GroupChat.dat", FileMode.Create);
             try
-            {
+            {         
                 BinaryFormatter bf = new BinaryFormatter();
                 bf.Serialize(s, gc);
             }
@@ -119,25 +120,21 @@ namespace ServiceApp
 
         public void CloseupRoom(Room room)
         {
+            AppRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
             if (File.Exists(room.Code.ToString() + ".dat"))
             {
-
-                    try
-                    {
-                        // System.IO.File.Delete(@"C:\Users\Marko\Desktop\ppp\ServiceApp\bin\Debug\" + room.Code.ToString() + ".dat"); ne valja,mora relativna putanja
-                        //Izbrisati iz listi soba 
-                    }
-                    catch (System.IO.IOException e)
-                    {
-                        Console.WriteLine(e.Message);
-                        return;
-                    }
-  
+                try
+                {
+                    System.IO.File.Delete(AppRoot + room.Code.ToString() + ".dat");
+                }
+                catch (System.IO.IOException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return;
+                }
             }
-
-
-
-        }     // delete room from file PROMENI PUTANJU U ZAVISNOSTI OD TOGA GDE SE FAJL NALAZI DA BI GA OBRISAO
+        }             // apsolutna putanja 
 
         public void SerializeRoom(Room room)     // Serialize Room
         {
@@ -238,6 +235,11 @@ namespace ServiceApp
             try
             {
                 BinaryFormatter bf = new BinaryFormatter();
+               /* foreach(User u in lista)
+                {
+                    Sha256encrypt(u.Password);
+                }*/
+
                 bf.Serialize(s, lista);
             }
             catch (SerializationException e)
@@ -326,13 +328,20 @@ namespace ServiceApp
             {
                 if (user.Logged)
                 {
-                    //TODO fje
-                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
-                    if (ServiceModel.Instance.GroupChat.Blocked.Single(i => i.Email == blockEmail) == null)
+                    if (user.Email != blockEmail)
                     {
-                        ServiceModel.Instance.GroupChat.Blocked.Add(u);
-                        SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
-                       retVal = true;
+                        //TODO fje
+                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
+                        if (ServiceModel.Instance.GroupChat.Blocked.Single(i => i.Email == blockEmail) == null)
+                        {
+                            ServiceModel.Instance.GroupChat.Blocked.Add(u);
+                            SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
+                            retVal = true;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("You can not block yourself retard!");
                     }
                 }else
                 {
@@ -358,35 +367,41 @@ namespace ServiceApp
             {
                 if (user.Logged)
                 {
-
-                    if (user.Blocked.Single(i => i.Email == blockEmail) == null)
+                    if (requestEmail != blockEmail)
                     {
-
-                        List<User> lista = DeserializeUsers();
-                        User blokator=new User(null,null,DateTime.Now,null,null,Roles.User,null);
-                        User blokirani= new User(null, null, DateTime.Now, null, null, Roles.User, null);
-
-                        foreach (User u in lista)
+                        if (user.Blocked.Single(i => i.Email == blockEmail) == null)
                         {
-                            if (u.Email == requestEmail)
-                            {
-                                blokator = u;
-                              
-                            }
-                            if (u.Email == blockEmail)
-                            {
-                                blokirani = u;
-                            }
-                        }
 
-                        if(blokirani.Email!=null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
-                        {
-                            blokator.Blocked.Add(blokirani);
-                            SerializeUsers(lista); // dodaj u fajl
-                            retVal = true;
+                            List<User> lista = DeserializeUsers();
+                            User blokator = new User(null, null, DateTime.Now, null, null, Roles.User, null);
+                            User blokirani = new User(null, null, DateTime.Now, null, null, Roles.User, null);
+
+                            foreach (User u in lista)
+                            {
+                                if (u.Email == requestEmail)
+                                {
+                                    blokator = u;
+
+                                }
+                                if (u.Email == blockEmail)
+                                {
+                                    blokirani = u;
+                                }
+                            }
+
+                            if (blokirani.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
+                            {
+                                blokator.Blocked.Add(blokirani);
+                                SerializeUsers(lista); // dodaj u fajl
+                                retVal = true;
+
+                            }
 
                         }
-                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("You can not block yourself retard!");
                     }
                 }
 
@@ -413,11 +428,18 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
-                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
-                    room.Blocked.Add(u);
-                    SerializeRoom(room);
-                    retVal = true;
+                    if (user.Email != blockEmail)
+                    {
+                        Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
+                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
+                        room.Blocked.Add(u);
+                        SerializeRoom(room);
+                        retVal = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You can not block yourself retard!");
+                    }
                 }
                 else
                 {
@@ -616,8 +638,9 @@ namespace ServiceApp
 
             if (u != null)
             {
-                if (Sha256encrypt(password).Equals(u.Password))
+                if(string.Equals(password,u.Password))
                 {
+                  
                     if (!u.Verify)
                     {
                         //Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
@@ -827,12 +850,19 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
-                    if (u != null)
+                    if (user.Email != unblockEmail)
                     {
-                        ServiceModel.Instance.GroupChat.Blocked.Remove(u);
-                        SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
-                        retVal = true;
+                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
+                        if (u != null)
+                        {
+                            ServiceModel.Instance.GroupChat.Blocked.Remove(u);
+                            SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
+                            retVal = true;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("You can not unblock yourself!");
                     }
                 }
                 else
@@ -860,33 +890,40 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    User blocked = user.Blocked.Single(i => i.Email == unblockEmail);
-                    if (blocked != null)
+                    if (requestEmail != unblockEmail)
                     {
-                        List<User> lista = DeserializeUsers();
-                        User blokator = new User(null, null, DateTime.Now, null, null, Roles.User, null);
-                        User blokirani = new User(null, null, DateTime.Now, null, null, Roles.User, null);
-
-                        foreach (User u in lista)
+                        User blocked = user.Blocked.Single(i => i.Email == unblockEmail);
+                        if (blocked != null)
                         {
-                            if (u.Email == requestEmail)
+                            List<User> lista = DeserializeUsers();
+                            User blokator = new User(null, null, DateTime.Now, null, null, Roles.User, null);
+                            User blokirani = new User(null, null, DateTime.Now, null, null, Roles.User, null);
+
+                            foreach (User u in lista)
                             {
-                                blokator = u;
+                                if (u.Email == requestEmail)
+                                {
+                                    blokator = u;
+
+                                }
+                                if (u.Email == unblockEmail)
+                                {
+                                    blokirani = u;
+                                }
+                            }
+
+                            if (blokirani.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
+                            {
+                                blokator.Blocked.Remove(blokirani);
+                                SerializeUsers(lista); // dodaj u fajl promene
+                                retVal = true;
 
                             }
-                            if (u.Email == unblockEmail)
-                            {
-                                blokirani = u;
-                            }
                         }
-
-                        if (blokirani.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
-                        {
-                            blokator.Blocked.Remove(blokirani);
-                            SerializeUsers(lista); // dodaj u fajl promene
-                            retVal = true;
-
-                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("You can not unblock yourself!");
                     }
                 }
             }
@@ -910,11 +947,18 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
-                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
-                    room.Blocked.Remove(u);
-                    SerializeRoom(room);
-                    retval = true;
+                    if (user.Email != unblockEmail)
+                    {
+                        Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
+                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
+                        room.Blocked.Remove(u);
+                        SerializeRoom(room);
+                        retval = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You can not unblock yourself retard!");
+                    }
                 }
                 else
                 {
@@ -963,6 +1007,19 @@ namespace ServiceApp
                         mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
 
                         client.Send(mm);
+
+                        List<User> lista;
+                        lista = DeserializeUsers();
+                        foreach(User u in lista)
+                        {
+                            if(u.Email==email)
+                            {
+                                u.Password = user.Password;
+                            }
+
+                        }
+
+                        SerializeUsers(lista);
                     }
                     catch (Exception e)
                     {
@@ -983,7 +1040,7 @@ namespace ServiceApp
             }
 
             return -1;
-        }    
+        }      // DONE
 
         public bool SendVerificationKey(string key)
         {
@@ -1003,7 +1060,21 @@ namespace ServiceApp
                         user.Verify = true;
                         ServiceModel.Instance.LoggedIn.Add(user);
                         ServiceModel.Instance.GroupChat.Logged.Add(user);
-                        
+
+                        List<User> lista = new List<User>();
+                        lista= DeserializeUsers();
+                        foreach(User u in lista)
+                        {
+                            if(u.Email==user.Email)
+                            {
+                                u.Verify = true;
+                                u.SecureCode = user.SecureCode;
+                            }
+
+                        }
+
+                        SerializeUsers(lista);
+
                         NotifyAll();
                         
                     }
@@ -1018,7 +1089,7 @@ namespace ServiceApp
 
             return ok;
 
-        }   //ovde fali da se sacuva u fajl sa promenom ako je verifikovan akaunt
+        }   //DONE
 
         public string Sha256encrypt(string phrase)
         {

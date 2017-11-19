@@ -95,12 +95,12 @@ C:\Users\Marko\Desktop\novi repo2\Contracts\bin\Debug\ForumModels.pdb
 C:\Users\Marko\Desktop\novi repo2\Contracts\bin\Debug\SecurityManager.pdb
 C:\Users\Marko\Desktop\novi repo2\Contracts\obj\Debug\Contracts.dll
 C:\Users\Marko\Desktop\novi repo2\Contracts\obj\Debug\Contracts.pdb
-D:\cetvrta godina\blok2\Projekat2\Contracts\bin\Debug\Contracts.dll
-D:\cetvrta godina\blok2\Projekat2\Contracts\bin\Debug\Contracts.pdb
-D:\cetvrta godina\blok2\Projekat2\Contracts\bin\Debug\ForumModels.dll
-D:\cetvrta godina\blok2\Projekat2\Contracts\bin\Debug\SecurityManager.dll
-D:\cetvrta godina\blok2\Projekat2\Contracts\bin\Debug\ForumModels.pdb
-D:\cetvrta godina\blok2\Projekat2\Contracts\bin\Debug\SecurityManager.pdb
-D:\cetvrta godina\blok2\Projekat2\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
-D:\cetvrta godina\blok2\Projekat2\Contracts\obj\Debug\Contracts.dll
-D:\cetvrta godina\blok2\Projekat2\Contracts\obj\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\pppp\Contracts\bin\Debug\Contracts.dll
+C:\Users\Marko\Desktop\pppp\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\pppp\Contracts\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\pppp\Contracts\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\pppp\Contracts\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\pppp\Contracts\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\pppp\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\pppp\Contracts\obj\Debug\Contracts.dll
+C:\Users\Marko\Desktop\pppp\Contracts\obj\Debug\Contracts.pdb
