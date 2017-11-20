@@ -29,7 +29,7 @@
         <Label Content="Title" x:Name="loggedAsLabel" HorizontalAlignment="Left" Margin="519,25,0,0" VerticalAlignment="Top"/>
         <!-->****************Messages part**********<-->
         <Label x:Name="labelLoggedUsers" Content="Logged users: " HorizontalAlignment="Left" Margin="2,25,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="88"/>
-        <ListBox x:Name="loggedUsersListBox" ItemsSource="{Binding Path=Logged}"  HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="178" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionChanged="loggedUsersListBox_SelectionChanged"/>
+        <ListBox x:Name="loggedUsersListBox" SelectionMode="Single" ItemsSource="{Binding Path=Logged}"  HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="178" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionChanged="loggedUsersListBox_SelectionChanged"/>
         <ScrollViewer x:Name="allMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="199,51,0,187">
             <ListBox x:Name="ChatBox" ItemsSource="{Binding Path=Msg}" Background="#FFE2A1A1" IsEnabled="False"/>
         </ScrollViewer>
@@ -44,7 +44,7 @@
         <Button x:Name="enterMsgButton" Content="Enter message" HorizontalAlignment="Left" Margin="632,518,0,0" VerticalAlignment="Top" Width="132" Height="30" Click="enterMsgButton_Click"/>
         <Button x:Name="logOutButton" Content="Log out" HorizontalAlignment="Left" Margin="10,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="logOutButton_Click"/>
         <Button x:Name="blockUserButton" Content="Block user" HorizontalAlignment="Left" Margin="155,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="blockUserButton_Click"/>
-        <Button x:Name="removeUserButton" Content="Ban user from chat" HorizontalAlignment="Left" Margin="301,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Visible" Click="removeUserButton_Click"/>
+        <Button x:Name="removeUserButton" Content="Ban user from chat" HorizontalAlignment="Left" Margin="301,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Hidden" Click="removeUserButton_Click"/>
         <Button x:Name="openPrivateChatButton" Content="Open private chat" HorizontalAlignment="Left" Margin="451,518,0,0" VerticalAlignment="Top" Width="121" Height="30" IsEnabled="False" Click="openPrivateChatButton_Click" />
 
         <!-->****************End of Button cntrl part**********<-->

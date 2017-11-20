@@ -290,7 +290,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                    Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                    //Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
                 }
                 finally
                 {
@@ -353,7 +353,7 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+               // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
                 
             }
             finally
@@ -405,7 +405,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                    Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                   // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
                     
                 }
                 finally
@@ -460,7 +460,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                    Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                   // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
                     
                 }
                 finally

@@ -63,11 +63,45 @@ namespace ClientApp
             {
                 MenuItem mi = new MenuItem();
                 mi.Header = s;
+                mi.Click += new RoutedEventHandler(menuItemRoomsClick);
                 roomsMenuItem.Items.Add(mi);
             }
-            //Logged = groupChat.Logged;
-            //Msg = groupChat.AllMessages;
 
+            if (groupChat.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
+            {
+                removeUserButton.Visibility = Visibility.Visible;
+                changePrivsMenuItem.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                removeUserButton.Visibility = Visibility.Hidden;
+                changePrivsMenuItem.Visibility = Visibility.Hidden;
+            }
+        }
+
+        protected void menuItemRoomsClick(object sender, EventArgs e)
+        {
+            if (Logged.Any(x => x.Email.Equals(email)))
+            {
+                if (Logged.Single(x => x.Email.Equals(email)).Logged)
+                {
+                    Console.WriteLine(((MenuItem)sender).Header.ToString());
+                    Room r = proxy.GetThemeRoom(((MenuItem)sender).Header.ToString());
+                    if (r != null)
+                    {
+                        if (!r.Blocked.Any(x => x.Email.Equals(email)))
+                        {
+                            r.Logged.Add(Logged.Single(x => x.Email.Equals(email)));
+                            var window = new ThemeRoom(proxy, r, email);
+                            window.Show();
+                        }
+                        else
+                        {
+                            MessageBox.Show("You are removed from this room!");
+                        }
+                    }
+                }
+            }
         }
 
         public ObservableCollection<User> Logged
@@ -95,14 +129,21 @@ namespace ClientApp
         /// <param name="e"></param>
         private void enterMsgButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(entryMessageTextbox.Text))
+            if (!groupChat.Blocked.Any(x => x.Email.Equals(email)))
             {
-                if (groupChat.Logged.Single(x => x.Email.Equals(email)).Logged)
+                if (!String.IsNullOrWhiteSpace(entryMessageTextbox.Text))
                 {
-                    if (groupChat.Logged.Single(x => x.Email.Equals(email)) != null)
+                    if (groupChat.Logged.Single(x => x.Email.Equals(email)).Logged)
                     {
-                        proxy.SendGroupMessage(email, entryMessageTextbox.Text);
-                        entryMessageTextbox.Clear();
+                        if (groupChat.Logged.Single(x => x.Email.Equals(email)) != null)
+                        {
+                            proxy.SendGroupMessage(email, entryMessageTextbox.Text);
+                            entryMessageTextbox.Clear();
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                     else
                     {
@@ -116,7 +157,7 @@ namespace ClientApp
             }
             else
             {
-                return;
+                MessageBox.Show("You are banned from group chat and cannot write messages!");
             }
         }
 
@@ -144,7 +185,14 @@ namespace ClientApp
             {
                 if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                 {
-                    proxy.BlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                    if (((Button)sender).Content.Equals("Block"))
+                    {
+                        proxy.BlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                    }
+                    else
+                    {
+                        proxy.RemoveBlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                    }
                 }
             }
         }
@@ -160,7 +208,14 @@ namespace ClientApp
             {
                 if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                 {
-                    proxy.BlockGroupChat(loggedUsersListBox.SelectedItem.ToString());
+                    if (((Button)sender).Content.Equals("Ban user from chat"))
+                    {
+                        proxy.BlockGroupChat(loggedUsersListBox.SelectedItem.ToString());
+                    }
+                    else
+                    {
+                        proxy.RemoveBlockGroupChat(loggedUsersListBox.SelectedItem.ToString());
+                    }
                 }
             }
         }
@@ -258,9 +313,19 @@ namespace ClientApp
                 }
                 else
                 {
-                    //TO DO proveriti da li je vec blokiran, onda promeniti tekst na dugmetu u "Unblock"
-                    //TO DO proveriti da li je vec izbacen iz sobe od strane admina pa promeniti tekst dugmeta u "Add user to chat"
-                    //TO DO proveriti da li je vec blokiran taj user kod tog korisnika pa disablovati dugme ako jeste
+                    if (groupChat.Blocked.Any(x => x.Email.Equals(email)))
+                    {
+                        removeUserButton.Content = "Unban user";
+                    }
+
+                    if (groupChat.Logged.Any(x => x.Email.Equals(email)))
+                    {
+                        if (groupChat.Logged.Single(x => x.Email.Equals(email)).Blocked.Any(x => x.Email.Equals(loggedUsersListBox.SelectedItem.ToString())))
+                        {
+                            blockUserButton.Content = "Unblock";
+                            openPrivateChatButton.IsEnabled = false;
+                        }
+                    }
                     blockUserButton.IsEnabled = true;
                     removeUserButton.IsEnabled = true;
                     openPrivateChatButton.IsEnabled = true;
@@ -268,6 +333,11 @@ namespace ClientApp
             }
         }
 
+        /// <summary>
+        /// Setup for group chat windows on load
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ChatServiceCallback chatServiceCallback = new ChatServiceCallback();
@@ -364,7 +434,7 @@ namespace ClientApp
         {
             if (e.Key == Key.Enter)
             {
-                 enterMsgButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                 if(enterMsgButton.IsEnabled) enterMsgButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
         }
 
@@ -378,8 +448,14 @@ namespace ClientApp
             proxy.LogOut(email);
         }
 
+        /// <summary>
+        /// Opens private chat with selected user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void openPrivateChatButton_Click(object sender, RoutedEventArgs e)
         {
+            string userToChat = loggedUsersListBox.SelectedItem.ToString();
             //TO DO
         }
 
@@ -423,7 +499,7 @@ namespace ClientApp
         }
         void IChatServiceCallback.AllUsers(ObservableCollection<User> users)
         {
-            if (ClientNotified != null)
+            if (UserNotified != null)
             {
                 UserNotified(this, new AllUsersNotifiedEventArgs(users));
             }
