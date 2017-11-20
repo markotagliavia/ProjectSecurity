@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿
+using Contracts;
 using ForumModels;
 using SecurityManager;
 using System;
@@ -379,6 +380,8 @@ namespace ServiceApp
                         User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
                         if (ServiceModel.Instance.GroupChat.Blocked.Single(i => i.Email == blockEmail) == null)
                         {
+                            ServiceModel.Instance.GroupChat = DeserializeGroupChat();// deser
+
                             ServiceModel.Instance.GroupChat.Blocked.Add(u);
                             SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
                             retVal = true;
@@ -719,6 +722,11 @@ namespace ServiceApp
                             mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
 
                             client.Send(mm);
+
+                            //popuni observable liste
+                            ServiceModel.Instance.GroupChat = DeserializeGroupChat();
+
+
                         }
                         catch (Exception e)
                         {
@@ -728,7 +736,7 @@ namespace ServiceApp
                     }
                     else
                     {
-                        if (!u.Logged)
+                        if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(u.Email))==false)
                         {
                             u.Logged = true;
                             ServiceModel.Instance.LoggedIn.Add(u);
@@ -914,6 +922,7 @@ namespace ServiceApp
                         User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
                         if (u != null)
                         {
+                            ServiceModel.Instance.GroupChat = DeserializeGroupChat(); // deser
                             ServiceModel.Instance.GroupChat.Blocked.Remove(u);
                             SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
                             retVal = true;
@@ -1217,6 +1226,9 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     Message m = new Message(message, userName);
+
+                    ServiceModel.Instance.GroupChat = DeserializeGroupChat(); //deseral
+
                     ServiceModel.Instance.GroupChat.AllMessages.Add(m);
                     SerializeGroupChat(ServiceModel.Instance.GroupChat);   // serijal
                     NotifyAll();
