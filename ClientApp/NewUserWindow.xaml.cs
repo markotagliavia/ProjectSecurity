@@ -209,7 +209,7 @@ namespace ClientApp
             int countMonkey = textBox1.Text.Where(c => c == '@').Count();
             int countDot = textBox1.Text.Where(c => c == '.').Count();
 
-            if (pass.Equals(repass) && !user.Equals("admin") && user.Length >= 5 && pass.Length >= 5 &&
+            if (pass.Equals(repass) && user.Length >= 5 && pass.Length >= 5 &&
                 !user.Contains(" ") && !user.Contains("\t") && regexItem.IsMatch(user) &&
                 !pass.Contains(" ") && !pass.Contains("\t") &&
                 !repass.Contains(" ") && !repass.Contains("\t") && name.Length >= 2 && lastName.Length >= 2 && !String.IsNullOrWhiteSpace(dateTextBox.Text))
@@ -224,11 +224,6 @@ namespace ClientApp
             {
                 SystemSounds.Hand.Play();
                 MessageBox.Show("Passwords doesn't match!", "Error");
-            }
-            else if (user.Equals("admin"))  //precoded username, wil be deleted later
-            {
-                SystemSounds.Hand.Play();
-                MessageBox.Show("Forbidden username!", "Error");
             }
             else if (countMonkey <= 0 || countMonkey > 1)
             {

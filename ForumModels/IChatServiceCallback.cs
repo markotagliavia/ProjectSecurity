@@ -21,7 +21,7 @@ namespace ForumModels
             [OperationContract(IsOneWay = true)]
             void HandleGroupChat(ForumModels.GroupChat gr);
             [OperationContract(IsOneWay = true)]
-            void AllUsers(ObservableCollection<User> users);*/
+            void AllUsers(ObservableCollection<User> users);
     }
     
 }

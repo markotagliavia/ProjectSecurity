@@ -38,8 +38,35 @@ namespace ClientApp
         {
             string oldPass = oldPassTextBox.Password;
             string newPass = newPassTextBox.Password;
-
-            //TO DO
+            if (newPass.Length < 5)
+            {
+                MessageBox.Show("Too short new password!");
+            }
+            else if (newPass.Contains(" ") || newPass.Contains("\t"))
+            {
+                MessageBox.Show("Password should not contain white spaces!");
+            }
+            else if (String.IsNullOrWhiteSpace(newPass))
+            {
+                MessageBox.Show("You must fill this field!");
+            }
+            else if (newPass.Length > 30)
+            {
+                MessageBox.Show("Combination from 5 to 30 alphanumerics or/and special characters");
+            }
+            else
+            {
+                bool retVal = proxy.ChangePassword(email, oldPass, newPass);
+                if (retVal == false)
+                {
+                    MessageBox.Show("Something went wrong! Password is not changed.");
+                }
+                else
+                {
+                    MessageBox.Show("Password is succesfully changed.");
+                }
+            }
+            
         }
 
         /// <summary>

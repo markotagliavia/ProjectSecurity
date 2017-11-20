@@ -242,7 +242,6 @@ namespace ClientApp
         /// <param name="e"></param>
         private void loggedUsersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // TO DO
             if (loggedUsersListBox.SelectedIndex == -1)
             {
                 blockUserButton.IsEnabled = false;

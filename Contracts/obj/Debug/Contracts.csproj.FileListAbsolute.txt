@@ -117,3 +117,12 @@ C:\Users\Marko\Desktop\repo\Contracts\bin\Debug\ForumModels.dll
 C:\Users\Marko\Desktop\repo\Contracts\bin\Debug\SecurityManager.dll
 C:\Users\Marko\Desktop\repo\Contracts\bin\Debug\ForumModels.pdb
 C:\Users\Marko\Desktop\repo\Contracts\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\bin\Debug\Contracts.dll
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\obj\Debug\Contracts.dll
+C:\Users\Marko\Desktop\repoPonedeljak\Contracts\obj\Debug\Contracts.pdb
