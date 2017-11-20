@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DecryptSymmetricKey.cs" />
+    <Compile Include="EncryptDecrypt.cs" />
+    <Compile Include="GenerateAesKey.cs" />
+    <Compile Include="GennerateRsaKey.cs" />
     <Compile Include="RolesConfiguration.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
