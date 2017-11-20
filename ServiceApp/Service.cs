@@ -960,11 +960,12 @@ namespace ServiceApp
                 {
                     if (user.Email != unblockEmail)
                     {
-                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
-                        if (u != null)
+                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();
+                        //User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
+                        int index = ServiceModel.Instance.GroupChat.Blocked.IndexOf(ServiceModel.Instance.GroupChat.Blocked.Single(x => x.Email.Equals(unblockEmail)));
+                        if (index > -1)
                         {
-                            ServiceModel.Instance.GroupChat = DeserializeGroupChat(); // deser
-                            ServiceModel.Instance.GroupChat.Blocked.Remove(u);
+                            ServiceModel.Instance.GroupChat.Blocked.RemoveAt(index);
                             SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
                             retVal = true;
                         }
@@ -1351,9 +1352,12 @@ namespace ServiceApp
                     Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
                     if(room != null)
                     {
-                        ok = true;
-                        CloseupRoom(room);   // Obrisi taj fajl kompletno
+                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                         ServiceModel.Instance.RoomList.Remove(room);
+                        ServiceModel.Instance.GroupChat.ThemeRooms.Remove(room.Theme);
+                        SerializeGroupChat(ServiceModel.Instance.GroupChat);
+                        CloseupRoom(room);   // Obrisi taj fajl kompletno
+                        ok = true;
                     }
                     else
                     {
