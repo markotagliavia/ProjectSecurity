@@ -9,16 +9,16 @@
     <Grid >
         <!-->****************Admins**********<-->
         <Label x:Name="labelAdmins" Content="Admins: " HorizontalAlignment="Left" Margin="2,25,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="90"/>
-        <ScrollViewer x:Name="allAdmins" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="10,51,250,190">
+        <ScrollViewer x:Name="allAdmins" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="10,51,250,10">
             <ListBox x:Name="AdminsListBox" ItemsSource="{Binding Path=Admins}"  HorizontalAlignment="Left" Height="431" VerticalAlignment="Top" Width="158" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionChanged="AdminsListBox_SelectionChanged"/>
         </ScrollViewer>
         <!-->****************End of Admins part*<-->
-        <Button Margin="160,150,160,300" Name="AddADMIN" Click="AddAdminClick">Add Admin</Button>
-        <Button Margin="160,180,160,270" Name="AddUSER" Click="AddUserClick">Add User</Button>
+        <Button Margin="160,150,160,150" Height="20" Name="AddADMIN" Click="AddAdminClick">Add Admin</Button>
+        <Button Margin="160,180,160,250" Height="20" Name="AddUSER" Click="AddUserClick">Add User</Button>
         <!--> ****************Users**********<-->
         <Label x:Name="labelUsers" Content="Users: " HorizontalAlignment="Right" Margin="2,25,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="90"/>
-        <ScrollViewer x:Name="allUsers" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="250,51,10,190">
-            <ListBox x:Name="loggedUsersListBox" ItemsSource="{Binding Path=Users}"  HorizontalAlignment="Left" Height="431" VerticalAlignment="Top" Width="158" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionChanged="loggedUsersListBox_SelectionChanged"/>
+        <ScrollViewer x:Name="allUsers" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="250,51,10,10">
+            <ListBox x:Name="UsersListBox" ItemsSource="{Binding Path=Users}"  HorizontalAlignment="Left" Height="431" VerticalAlignment="Top" Width="158" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionChanged="loggedUsersListBox_SelectionChanged"/>
         </ScrollViewer>
         <!-->****************End of Users part**********<-->
 

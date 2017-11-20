@@ -60,8 +60,8 @@ namespace ClientApp
         private void ChatServiceCallback_AllUsersNotified(object sender, AllUsersNotifiedEventArgs e)
         {
             AllUsers = e.AllUsers;
-            Admins = new ObservableCollection<User>(); //ne mora bas sve da se optimizuje :D 
-            Users = new ObservableCollection<User>();
+            Admins.Clear();
+            Users.Clear();
             foreach (User u in AllUsers)
             {
                 if (u.Role == Roles.Admin)
@@ -88,7 +88,7 @@ namespace ClientApp
             this.proxy.Abort();
 
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-            allusers = this.proxy.GetAllUsers(); //kad ovo sredis, radice
+            allusers = this.proxy.GetAllUsers(this.email); //kad ovo sredis, radice
             foreach (User u in allusers)
             {
                 if (u.Role == Roles.Admin)
@@ -138,14 +138,14 @@ namespace ClientApp
 
         private void AddAdminClick(object sender, RoutedEventArgs e)
         {
-            if (!loggedUsersListBox.SelectedItem.ToString().Equals(email))
+            if (!UsersListBox.SelectedItem.ToString().Equals(email))
             {
-                this.proxy.AddAdmin(loggedUsersListBox.SelectedItem.ToString());
-                Admins.Add((User)loggedUsersListBox.SelectedItem);
-                Users.Remove((User)loggedUsersListBox.SelectedItem);
+                this.proxy.AddAdmin(UsersListBox.SelectedItem.ToString());
+                Admins.Add((User)UsersListBox.SelectedItem);
+                Users.Remove((User)UsersListBox.SelectedItem);
                 
             }
-            loggedUsersListBox.SelectedItems.Clear();
+            
             AddADMIN.IsEnabled = false;
             AddUSER.IsEnabled = false;
 
@@ -155,12 +155,20 @@ namespace ClientApp
         {
             if (!AdminsListBox.SelectedItem.ToString().Equals(email))
             {
-                this.proxy.DeleteAdmin(AdminsListBox.SelectedItem.ToString());
-                Users.Add((User)AdminsListBox.SelectedItem);
-                Admins.Remove((User)AdminsListBox.SelectedItem);
+                bool ret = this.proxy.DeleteAdmin(AdminsListBox.SelectedItem.ToString());
+                if (ret)
+                {
+                    Users.Add((User)AdminsListBox.SelectedItem);
+                    Admins.Remove((User)AdminsListBox.SelectedItem);
+                }
+                else
+                {
+                    //to do neka greska
+                }
+                
                 
             }
-            AdminsListBox.SelectedItems.Clear();
+            
             AddADMIN.IsEnabled = false;
             AddUSER.IsEnabled = false;
         }

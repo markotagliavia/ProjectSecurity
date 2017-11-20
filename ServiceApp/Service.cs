@@ -506,6 +506,7 @@ namespace ServiceApp
                             }
                             SerializeUsers(lista); // ser user
                             SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser group
+                            NotifyAll();
                             retVal = true;
                             break;
                         }
@@ -809,23 +810,36 @@ namespace ServiceApp
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.DeleteAdmin.ToString()))
             {
-                //TODO fje
+                
                 if (user.Logged)
                 {
-                    User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == email);
-                    u.Role = Roles.User;
+                    if (ServiceModel.Instance.LoggedIn.Any(i => i.Email == email))
+                    {
+                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == email);
+                        u.Role = Roles.User;
+                    }
+                    
 
                     List<User> lista = DeserializeUsers(); //deser user
-                    foreach (User ur in lista)
+                    if (lista.Any(i => i.Email == email))
                     {
-                        if (ur.Email == email)
+                        foreach (User ur in lista)
                         {
-                            ur.Role = Roles.User;
-                            SerializeUsers(lista); // upisi u fajl
-                        }
+                            if (ur.Email == email)
+                            {
+                                ur.Role = Roles.User;
+                                SerializeUsers(lista); // upisi u fajl
+                            }
 
+                        }
+                        NotifyAll();
+                        retVal = true;
                     }
-                    retVal = true;
+                    else
+                    {
+                        return false;
+                    }
+                    
                 }
                 else
                 {
@@ -1136,6 +1150,7 @@ namespace ServiceApp
                     try
                     {
                         lista.Add(u1);
+                        
                         bf.Serialize(s, lista);
                     }
                     catch (SerializationException e)
@@ -1149,6 +1164,8 @@ namespace ServiceApp
                     }
                 }
             }
+
+            NotifyViewforAdmins();
 
             return exists;
         }   //DONE
@@ -1633,13 +1650,22 @@ namespace ServiceApp
             }
         }  //ne treba
 
-        public ObservableCollection<User> GetAllUsers()
+        public ObservableCollection<User> GetAllUsers(string email)
         {
             List<User> lista = DeserializeUsers();
             ObservableCollection<User> obs = new ObservableCollection<User>();
             foreach (User u in lista)
             {
                 obs.Add(u);
+            }
+
+            if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
+            {
+                userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+            }
+            else
+            {
+                return null;
             }
 
             if(userOnSession.IsInRole(Permissions.GetAllUsers.ToString()))

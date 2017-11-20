@@ -137,3 +137,10 @@ C:\Users\Marko\Desktop\pppa\ForumModels\bin\Debug\SecurityManager.pdb
 C:\Users\Marko\Desktop\pppa\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
 C:\Users\Marko\Desktop\pppa\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\Marko\Desktop\pppa\ForumModels\obj\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat3\ForumModels\bin\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat3\ForumModels\bin\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat3\ForumModels\bin\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat3\ForumModels\bin\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat3\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+D:\cetvrta godina\blok2\Projekat3\ForumModels\obj\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat3\ForumModels\obj\Debug\ForumModels.pdb

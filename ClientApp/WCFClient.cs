@@ -436,11 +436,11 @@ namespace ClientApp
             }
         }
 
-        public ObservableCollection<User> GetAllUsers()
+        public ObservableCollection<User> GetAllUsers(string email)
         {
             try
             {
-                return factory.GetAllUsers();
+                return factory.GetAllUsers(email);
             }
             catch (Exception e)
             {

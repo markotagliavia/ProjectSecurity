@@ -95,7 +95,7 @@ namespace Contracts
         void SubscribeAllUsers(string email);
 
         [OperationContract]
-        ObservableCollection<User> GetAllUsers();
+        ObservableCollection<User> GetAllUsers(string email);
     }
 
    
