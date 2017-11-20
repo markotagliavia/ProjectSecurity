@@ -296,9 +296,10 @@ namespace ServiceApp
                     {
                         if (u.Email == email)
                         {
-                            u.Role = Roles.Admin;
+                            u.Role = Roles.Admin;//?proveriti da li se menja i u group cjhatu obj
                             SerializeUsers(lista); // dodaj u fajl
                             retVal = true;
+                            break;
                         }
                     }
 
@@ -392,6 +393,11 @@ namespace ServiceApp
                             if (blokirani.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
                             {
                                 blokator.Blocked.Add(blokirani);
+                                if (ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)) != null)
+                                {
+                                    ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)).Blocked.Add(ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(blockEmail)));
+                                    SerializeGroupChat(ServiceModel.Instance.GroupChat);
+                                }
                                 SerializeUsers(lista); // dodaj u fajl
                                 retVal = true;
 
@@ -433,7 +439,9 @@ namespace ServiceApp
                         Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
                         User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
                         room.Blocked.Add(u);
+
                         SerializeRoom(room);
+
                         retVal = true;
                     }
                     else
