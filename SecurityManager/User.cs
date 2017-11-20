@@ -42,8 +42,8 @@ namespace SecurityManager
         public User(string firstname, string lastname, DateTime birthDate, string email, string password, Roles role, string gender)
         {
             this.Logged = false;
-           
-            this.code = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
+
+            this.code = Guid.NewGuid();//System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
             this.firstName = firstname;
             this.LastName = lastName;
             this.gender = gender;

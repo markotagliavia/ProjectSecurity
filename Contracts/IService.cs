@@ -94,8 +94,16 @@ namespace Contracts
         [OperationContract(IsOneWay = true)]
         void SubscribeAllUsers(string email);
 
+        [OperationContract(IsOneWay = true)]
+        void SubscribeUserTheme(string email, string theme);
+
         [OperationContract]
         ObservableCollection<User> GetAllUsers(string email);
+
+        [OperationContract(IsOneWay = true)]
+        void Unsubscribe(string email);
+
+
     }
 
    

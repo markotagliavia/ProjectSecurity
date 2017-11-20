@@ -74,6 +74,38 @@ namespace ServiceApp
             );
         }
 
+        private void NotifyViewforRoom(Room r)
+        {
+            
+            ThreadPool.QueueUserWorkItem
+            (
+                delegate
+                {
+                    lock (ServiceModel.Instance.ClientsForThemeRoom)
+                    {
+                        List<string> disconnectedClientGuids = new List<string>();
+
+                        foreach (KeyValuePair<string, IChatServiceCallback> client in ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(r.Theme)).Value)
+                        {
+                            try
+                            {
+                                client.Value.GetRoom(r);
+                            }
+                            catch (Exception)
+                            {
+                                disconnectedClientGuids.Add(client.Key);
+                            }
+                        }
+
+                        foreach (string clientGuid in disconnectedClientGuids)
+                        {
+                            ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(r.Theme)).Value.Remove(clientGuid);
+                        }
+                    }
+                }
+            );
+        }
+
         private void NotifyViewforAdmins()
         {
             List<User> lista = DeserializeUsers();
@@ -316,6 +348,7 @@ namespace ServiceApp
                     return;
                 }
             }
+            NotifyViewforRoom(null);
         }             // apsolutna putanja 
 
         public void SerializeRoom(Room room)     // Serialize Room
@@ -1530,6 +1563,7 @@ namespace ServiceApp
                         room.AllMessages.Add(m);
                         SerializeRoom(room);
                         SerializeFileRooms(room);
+                        NotifyViewforRoom(room);
                         ok = true;
                     }
                     else
@@ -1549,8 +1583,10 @@ namespace ServiceApp
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            
             return ok;
         }   //DONE
+
 
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -1682,6 +1718,26 @@ namespace ServiceApp
             return null;
         } //ne treba
 
+        void IService.Unsubscribe(string email)
+        {
+
+            if (!ServiceModel.Instance.Clients.ContainsKey(email))
+            {
+                
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+                {
+                    lock (ServiceModel.Instance.Clients)
+                    {
+                        if (ServiceModel.Instance.Clients.ContainsKey(email))
+                        {
+                            ServiceModel.Instance.Clients.Remove(email);
+                        }
+                    }
+                }
+
+            }
+        }
+
         public PrivateChat GetPrivateChat(Guid code)
         {
             if (userOnSession.Logged)
@@ -1710,5 +1766,37 @@ namespace ServiceApp
             }
             
         }     // ne treba
+
+        public void SubscribeUserTheme(string email, string theme)
+        {
+            if (!ServiceModel.Instance.ClientsForThemeRoom.Any(i => i.Key.Equals(theme)))
+            {
+                Dictionary<string, IChatServiceCallback> pom =  new Dictionary<string, IChatServiceCallback>();
+        
+                lock (ServiceModel.Instance.ClientsForThemeRoom)
+                {
+                    ServiceModel.Instance.ClientsForThemeRoom.Add(theme,pom);
+                }
+            }
+            
+            if (!ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(theme)).Value.ContainsKey(email))
+            {
+                
+                IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
+
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+                {
+                  
+                    lock (ServiceModel.Instance.ClientsForThemeRoom)
+                    {
+                        ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(theme)).Value.Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
+                        userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                    }
+                }
+
+            }
+        }
+
+
     }
 }

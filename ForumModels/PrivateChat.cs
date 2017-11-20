@@ -21,7 +21,7 @@ namespace ForumModels
         {
             this.User1 = user1;
             this.user2 = user2;
-            this.uid = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
+            this.uid =  Guid.NewGuid();//System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
             messages = new ObservableCollection<Message>();
         }
 

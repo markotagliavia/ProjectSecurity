@@ -461,5 +461,31 @@ namespace ClientApp
                 return null;
             }
         }
+
+        public void Unsubscribe(string email)
+        {
+            try
+            {
+                factory.Unsubscribe(email);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to Unsubscribe(). {0}", e.Message);
+                
+            }
+        }
+
+        public void SubscribeUserTheme(string email, string theme)
+        {
+            try
+            {
+                factory.SubscribeUserTheme(email, theme);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to SubscribeUserTheme(). {0}", e.Message);
+
+            }
+        }
     }
 }

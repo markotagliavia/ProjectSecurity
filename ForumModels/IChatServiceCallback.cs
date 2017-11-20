@@ -22,6 +22,10 @@ namespace ForumModels
             void HandleGroupChat(ForumModels.GroupChat gr);
             [OperationContract(IsOneWay = true)]
             void AllUsers(ObservableCollection<User> users);
+            [OperationContract(IsOneWay = true)]
+            void GetRoom(Room room);
+            [OperationContract(IsOneWay = true)]
+            void GetPrivateChat(PrivateChat pc);
     }
     
 }

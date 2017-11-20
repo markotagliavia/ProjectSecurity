@@ -8,6 +8,7 @@ using System.Windows.Input;
 using ForumModels;
 using System.ServiceModel;
 using System.Timers;
+using static ClientApp.ThemeRoom;
 
 namespace ClientApp
 {
@@ -19,6 +20,7 @@ namespace ClientApp
         private WCFClient proxy;
         public ForumModels.GroupChat groupChat;
         private string email;
+        private int i = 0;
         private ObservableCollection<User> logged;
         private ObservableCollection<Message> msg;
         private ObservableCollection<string> themeRooms;
@@ -270,8 +272,10 @@ namespace ClientApp
                 {
                     if (Logged.Single(x => x.Email.Equals(email)).Role.Equals(Roles.Admin))
                     {
+                        this.i = 1;
                         var s = new ChangeRole(this.proxy, email);
                         s.Show();
+                        this.Close();
                     }
                 }
             }
@@ -284,9 +288,9 @@ namespace ClientApp
         /// <param name="e"></param>
         private void logOutMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            proxy.LogOut(email);
-            var s = new MainWindow();
-            s.Show();
+            //proxy.LogOut(email);
+            //proxy.Unsubscribe(email);
+            
             this.Close();
         }
 
@@ -445,7 +449,20 @@ namespace ClientApp
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            proxy.LogOut(email);
+            if (i == 0)
+            {
+                var s = new MainWindow();
+                s.Show();
+                proxy.LogOut(email);
+                proxy.Unsubscribe(email);
+                
+                //unsubscribe
+            }
+            else
+            {
+                proxy.Unsubscribe(email);
+            }
+            
         }
 
         /// <summary>
@@ -484,6 +501,7 @@ namespace ClientApp
     {
         public event ClientNotifiedEventHandler ClientNotified;
         public event AllUsersNotifiedEventHandler UserNotified;
+        public event ThemeRoomEventHandler ThemeNotified;
 
         /// <summary>
         /// Notifies the client of the message by raising an event.
@@ -503,6 +521,19 @@ namespace ClientApp
             {
                 UserNotified(this, new AllUsersNotifiedEventArgs(users));
             }
+        }
+
+        void IChatServiceCallback.GetRoom(Room room)
+        {
+            if (ThemeNotified != null)
+            {
+                ThemeNotified(this, new ThemeRoomEventArgs(room));
+            }
+        }
+
+        void IChatServiceCallback.GetPrivateChat(PrivateChat pc)
+        {
+            throw new NotImplementedException();
         }
     }
 

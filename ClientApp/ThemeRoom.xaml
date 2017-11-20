@@ -21,7 +21,7 @@
         <!-->****************End of Messages part**********<-->
 
 
-        <Label Content="Title" x:Name="loggedAsLabel" HorizontalAlignment="Left" Margin="519,25,0,0" VerticalAlignment="Top"/>
+        <Label Content="Title" x:Name="loggedAsLabel1" HorizontalAlignment="Left" Margin="519,25,0,0" VerticalAlignment="Top"/>
         <!-->****************Button cntrl**********<-->
         <Button x:Name="enterMsgButton" Content="Enter message" HorizontalAlignment="Left" Margin="632,518,0,0" VerticalAlignment="Top" Width="132" Height="30" Click="enterMsgButton_Click"/>
         <Button x:Name="leaveRoomButton" Content="Leave room" HorizontalAlignment="Left" Margin="10,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="leaveRoomButton_Click"/>

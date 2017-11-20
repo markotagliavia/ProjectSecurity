@@ -7,6 +7,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -42,7 +43,7 @@ namespace ClientApp
             label.Content = room.Theme;
             blockUserButton.IsEnabled = false;
             removeUserButton.IsEnabled = false;
-            loggedAsLabel.Content = $"You are logged as {email}";
+            loggedAsLabel1.Content = $"You are logged as {email}";
         }
 
         public ObservableCollection<User> Logged 
@@ -100,14 +101,68 @@ namespace ClientApp
         {
             //TO DO check admin rigths
         }
+        private void ChatServiceCallback_ThemeNotified(object sender, ThemeRoomEventArgs e)
+        {
+            if (e.Room == null)
+            {
+                //TO DO zatvori
+            }
+            else
+            {
+                //hendlaj view
+            }
+
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            ChatServiceCallback chatServiceCallback = new ChatServiceCallback();
+            chatServiceCallback.ThemeNotified += ChatServiceCallback_ThemeNotified;
+            instanceContext = new InstanceContext(chatServiceCallback);
+
+            EndpointAddress adr = this.proxy.Address;
+            NetTcpBinding tcp = this.proxy.Binding;
+            this.proxy.InstanceContext = instanceContext;
+            this.proxy.Abort();
+
+            this.proxy = new WCFClient(instanceContext, tcp, adr);
             if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
             {
                 removeUserButton.Visibility = Visibility.Visible;
                 closeRoomButton.Visibility = Visibility.Visible;
             }
+            try
+            {
+                this.proxy.SubscribeUserTheme(email,room.Theme);
+            }
+            catch
+            {
+                // TODO: Handle exception.
+            }
+
+            Timer timer = new Timer(300000);
+            timer.Elapsed +=
+            (
+                (object o, ElapsedEventArgs args) =>
+                {
+                    try
+                    {
+                        if (this.proxy.State == CommunicationState.Faulted)
+                        {
+                            NetTcpBinding tb = this.proxy.Binding;
+                            EndpointAddress ad = this.proxy.Address;
+                            this.proxy.Abort();
+                            this.proxy = new WCFClient(instanceContext, tb, ad);
+                        }
+
+                        this.proxy.KeepConnection();
+                    }
+                    catch
+                    {
+                        // TODO: Handle exception.
+                    }
+                }
+            );
         }
 
         /// <summary>
@@ -142,6 +197,27 @@ namespace ClientApp
         private void removeUserButton_Click(object sender, RoutedEventArgs e)
         {
             //TO DO check admin rights
+        }
+
+        public delegate void ThemeRoomEventHandler(object sender, ThemeRoomEventArgs e);
+
+        public class ThemeRoomEventArgs : EventArgs
+        {
+            private Room room;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="message">Message from server.</param>
+            public ThemeRoomEventArgs(Room room)
+            {
+                this.room = room;
+            }
+
+            /// <summary>
+            /// Gets the message.
+            /// </summary>
+            public Room Room { get { return room; } }
         }
     }
 }
