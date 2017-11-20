@@ -13,7 +13,7 @@
         <Label x:Name="labelLoggedUsers" Content="Logged users: " HorizontalAlignment="Left" Margin="2,25,0,0" VerticalAlignment="Top" Width="88"/>
         <ListBox x:Name="loggedUsersListBox" ItemsSource="{Binding Logged}" HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="120" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
         <ScrollViewer x:Name="allMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,51,0,187">
-            <ListBox x:Name="ChatBox" ItemsSource="{Binding Msg}" Background="#FFE2A1A1" IsEnabled="False"/>
+            <ListBox x:Name="ChatBox" Background="#FFE2A1A1" IsEnabled="False"/>
         </ScrollViewer>
         <ScrollViewer x:Name="entryMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,397,0,87">
             <TextBox x:Name="entryMessageTextbox" Background="#FFE2A1A1"/>
@@ -28,7 +28,7 @@
         <Button x:Name="blockUserButton" Content="Block user" HorizontalAlignment="Left" Margin="155,518,0,0" VerticalAlignment="Top" Width="110" Height="30"/>
         <Button x:Name="closeRoomButton" Content="Close room" HorizontalAlignment="Left" Margin="446,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Hidden"/>
         <Button x:Name="removeUserButton" Content="Ban user from chat" HorizontalAlignment="Left" Margin="301,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Hidden"/>
-        
+
         <!-->****************End of Button cntrl part**********<-->
     </Grid>
 </Window>

@@ -130,3 +130,10 @@ C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\obj\Debug\ForumModels.csprojR
 C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\obj\Debug\ForumModels.csproj.CoreCompileInputs.cache
 C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\pppa\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\pppa\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\pppa\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\pppa\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\pppa\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\pppa\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\pppa\ForumModels\obj\Debug\ForumModels.pdb
