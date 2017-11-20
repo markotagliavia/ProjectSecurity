@@ -60,8 +60,8 @@ namespace ClientApp
         private void ChatServiceCallback_AllUsersNotified(object sender, AllUsersNotifiedEventArgs e)
         {
             AllUsers = e.AllUsers;
-            //Admins = new ObservableCollection<User>(); //ne mora bas sve da se optimizuje :D 
-            //Users = new ObservableCollection<User>();
+            Admins = new ObservableCollection<User>(); //ne mora bas sve da se optimizuje :D 
+            Users = new ObservableCollection<User>();
             foreach (User u in AllUsers)
             {
                 if (u.Role == Roles.Admin)
@@ -79,7 +79,7 @@ namespace ClientApp
         private void LoadedChangeRoll(object sender, RoutedEventArgs e)
         {
             ChatServiceCallback chatServiceCallback = new ChatServiceCallback();
-            //chatServiceCallback.UserNotified += ChatServiceCallback_AllUsersNotified;
+            chatServiceCallback.UserNotified += ChatServiceCallback_AllUsersNotified;
             instanceContext = new InstanceContext(chatServiceCallback);
 
             EndpointAddress adr = this.proxy.Address;

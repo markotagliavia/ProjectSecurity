@@ -380,18 +380,25 @@ namespace ClientApp
     public class ChatServiceCallback : IChatServiceCallback
     {
         public event ClientNotifiedEventHandler ClientNotified;
-
+        public event AllUsersNotifiedEventHandler UserNotified;
 
         /// <summary>
         /// Notifies the client of the message by raising an event.
         /// </summary>
         /// <param name="message">Message from the server.</param>
-       
+
         void IChatServiceCallback.HandleGroupChat(ForumModels.GroupChat gr)
         {
             if (ClientNotified != null)
             {
                 ClientNotified(this, new ClientNotifiedEventArgs(gr));
+            }
+        }
+        void IChatServiceCallback.AllUsers(ObservableCollection<User> users)
+        {
+            if (ClientNotified != null)
+            {
+                UserNotified(this, new AllUsersNotifiedEventArgs(users));
             }
         }
     }
