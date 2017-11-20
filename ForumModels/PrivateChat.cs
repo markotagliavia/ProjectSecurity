@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace ForumModels
 {
-
+    [Serializable]
     public class PrivateChat
     {
         

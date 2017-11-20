@@ -7,11 +7,12 @@
         mc:Ignorable="d"
         Title="Login Page" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="Gray" Height="248" Width="380">
     <Grid KeyDown="Grid_KeyDown">
-        <Label Content="E-mail:" Height="25" HorizontalAlignment="Left" Margin="57,48,0,0" Name="label1" VerticalAlignment="Top" Width="102" />
-        <Label Content="Password:" Height="25" HorizontalAlignment="Left" Margin="57,92,0,0" Name="label2" VerticalAlignment="Top" Width="102" />
-        <TextBox Height="25" HorizontalAlignment="Left" Margin="165,48,0,0" Name="textBox1" VerticalAlignment="Top" Width="143" MaxLength="30" />
-        <PasswordBox Height="25" HorizontalAlignment="Left" Margin="165,92,0,0" Name="passwordBox1" VerticalAlignment="Top" Width="143" MaxLength="30" />
-        <Button Content="Log in" Height="25" HorizontalAlignment="Center" Margin="208,154,55,0" Name="button1" VerticalAlignment="Top" Width="95" Click="button1_Click"/>
-        <Button Content="Register" Height="25" HorizontalAlignment="Center" Margin="53,154,211,0" Name="button2" VerticalAlignment="Top" Width="95" Click="button2_Click" ToolTip="Register as a new user"/>
+        <Label Content="E-mail:" Height="25" HorizontalAlignment="Left" Margin="57,58,0,0" Name="label1" VerticalAlignment="Top" Width="102" />
+        <Label Content="Password:" Height="25" HorizontalAlignment="Left" Margin="57,102,0,0" Name="label2" VerticalAlignment="Top" Width="102" />
+        <TextBox Height="25" HorizontalAlignment="Left" Margin="165,58,0,0" Name="textBox1" VerticalAlignment="Top" Width="143" MaxLength="30" />
+        <PasswordBox Height="25" HorizontalAlignment="Left" Margin="165,102,0,0" Name="passwordBox1" VerticalAlignment="Top" Width="143" MaxLength="30" />
+        <Button Content="Log in" Height="25" HorizontalAlignment="Center" Margin="216,164,63,0" Name="button1" VerticalAlignment="Top" Width="95" Click="button1_Click"/>
+        <Button Content="Register" Height="25" HorizontalAlignment="Center" Margin="60,164,218,0" Name="button2" VerticalAlignment="Top" Width="96" Click="button2_Click" ToolTip="Register as a new user"/>
+        <Button Content="Reset password" HorizontalAlignment="Left" VerticalAlignment="Top" Width="95" Margin="257,10,0,0" Name="resetPassButton" Click="resetPassButton_Click"/>
     </Grid>
 </Window>

@@ -5,44 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientApp"
         mc:Ignorable="d"
-        Title="Forum" Height="600" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
-    <Grid Background="Gray">
+        Title="Forum" Height="600" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Grid Background="Gray" KeyDown="Grid_KeyDown" >
 
         <!--> **************Menu************ <-->
         <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Width="792">
             <MenuItem Header="Options">
                 <MenuItem x:Name="newRoomMenuItem" Header="New room" HorizontalAlignment="Left" Width="190" Click="newRoomMenuItem_Click"/>
-                <!--<MenuItem Header="Block user" HorizontalAlignment="Left" Width="190"/>
-                <MenuItem Header="Unblock user" HorizontalAlignment="Left" Width="190"/>-->
                 <Separator HorizontalAlignment="Left" Width="190"/>
                 <MenuItem x:Name="pswChangeMenuItem" Header="Change password" HorizontalAlignment="Left" Width="190" Click="pswChangeMenuItem_Click"/>
-                <!--><MenuItem Header="Reset password" HorizontalAlignment="Left" Width="190"/><-->
                 <MenuItem x:Name="changePrivsMenuItem" Header="Change privilegies" HorizontalAlignment="Left" Width="190" Visibility="Hidden" Click="changePrivsMenuItem_Click"/>
                 <Separator HorizontalAlignment="Left" Width="190"/>
                 <MenuItem x:Name="logOutMenuItem" Header="Log out" HorizontalAlignment="Left" Width="190" Click="logOutMenuItem_Click"/>
             </MenuItem>
-            <MenuItem Header="Rooms" >
-                <!-->ItemsSource="{Binding GraphMenuItems}" ovo je atribut za iznad kada napravimo kolekciju<-->
-                <!-->
-                        <MenuItem.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding SubItems}">
-                        <TextBlock Text="{Binding Header}" />
-                    </HierarchicalDataTemplate>
-                </MenuItem.ItemTemplate><-->
+            <MenuItem Header="Rooms" x:Name="roomsMenuItem">
             </MenuItem>
         </Menu>
         <!--> **************End of Menu************ <-->
 
 
 
-
+        <Label Content="Title" x:Name="loggedAsLabel" HorizontalAlignment="Left" Margin="519,25,0,0" VerticalAlignment="Top"/>
         <!-->****************Messages part**********<-->
         <Label x:Name="labelLoggedUsers" Content="Logged users: " HorizontalAlignment="Left" Margin="2,25,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="88"/>
-        <ListBox x:Name="loggedUsersListBox" ItemsSource="{Binding Path=Logged}"  HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="120" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionChanged="loggedUsersListBox_SelectionChanged"/>
-        <ScrollViewer x:Name="allMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,51,0,187">
+        <ListBox x:Name="loggedUsersListBox" ItemsSource="{Binding Path=Logged}"  HorizontalAlignment="Left" Height="422" Margin="0,51,0,0" VerticalAlignment="Top" Width="178" Background="#FFE2A1A1" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectionChanged="loggedUsersListBox_SelectionChanged"/>
+        <ScrollViewer x:Name="allMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="199,51,0,187">
             <ListBox x:Name="ChatBox" ItemsSource="{Binding Path=Msg}" Background="#FFE2A1A1" IsEnabled="False"/>
         </ScrollViewer>
-        <ScrollViewer x:Name="entryMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="137,397,0,87">
+        <ScrollViewer x:Name="entryMessagesScrollViewer" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="199,397,0,87">
             <TextBox x:Name="entryMessageTextbox" Background="#FFE2A1A1"/>
         </ScrollViewer>
         <!-->****************End of Messages part**********<-->
@@ -54,6 +44,7 @@
         <Button x:Name="logOutButton" Content="Log out" HorizontalAlignment="Left" Margin="10,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="logOutButton_Click"/>
         <Button x:Name="blockUserButton" Content="Block user" HorizontalAlignment="Left" Margin="155,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="blockUserButton_Click"/>
         <Button x:Name="removeUserButton" Content="Ban user from chat" HorizontalAlignment="Left" Margin="301,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Hidden" Click="removeUserButton_Click"/>
+        
         <!-->****************End of Button cntrl part**********<-->
     </Grid>
 </Window>

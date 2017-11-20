@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ForumModels
 {
-
+    [Serializable]
     public class Message
     {
         private string text;
@@ -22,7 +22,8 @@ namespace ForumModels
         {
             this.Text = text;
             this.User = user;
-            this.Code = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
+            //this.Code = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
+            this.Code = Guid.NewGuid();
             this.CreationTime = DateTime.Now;
         }
 
@@ -80,7 +81,7 @@ namespace ForumModels
 
         public override string ToString()
         {
-            return $"{User} wrote on {CreationTime.ToString()} :\n{Text}\n\n";
+            return $"****************************************************************************\n{User} wrote on {CreationTime.ToString()} :\n------------------------------------------------------------------------------------------\n{Text}\n****************************************************************************\n";
         }
     }
 }

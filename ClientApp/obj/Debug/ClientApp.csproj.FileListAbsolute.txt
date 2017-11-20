@@ -380,3 +380,15 @@ D:\cetvrta godina\blok2\Projekat2\ClientApp\obj\Debug\VerificationKey.baml
 D:\cetvrta godina\blok2\Projekat2\ClientApp\obj\Debug\ClientApp.g.resources
 D:\cetvrta godina\blok2\Projekat2\ClientApp\obj\Debug\ClientApp.Properties.Resources.resources
 D:\cetvrta godina\blok2\Projekat2\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
+C:\Users\Marko\Desktop\repo\ClientApp\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repo\ClientApp\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repo\ClientApp\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repo\ClientApp\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\ChangeRole.g.cs
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\ThemeRoom.g.cs
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\ChangeRole.baml
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\ThemeRoom.baml
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\ChangePasswordWindow.g.cs
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\NewRoomWindow.g.cs
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\ChangePasswordWindow.baml
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\NewRoomWindow.baml

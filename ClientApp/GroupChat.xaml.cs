@@ -1,19 +1,10 @@
 ﻿using SecurityManager;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ForumModels;
 using System.ServiceModel;
 using System.Timers;
@@ -30,6 +21,7 @@ namespace ClientApp
         private string email;
         private ObservableCollection<User> logged;
         private ObservableCollection<Message> msg;
+        private ObservableCollection<string> themeRooms;
 
         private InstanceContext instanceContext;
 
@@ -38,21 +30,23 @@ namespace ClientApp
             this.DataContext = this;
             logged = new ObservableCollection<User>();
             msg = new ObservableCollection<Message>();
+            themeRooms = new ObservableCollection<string>();
             this.proxy = proxy;
             proxy.Abort();
             this.email = email;
             InitializeComponent();
+            blockUserButton.IsEnabled = false;
+            removeUserButton.IsEnabled = false;
+            loggedAsLabel.Content = $"You are logged as {email}";
         }
 
         private void ChatServiceCallback_ClientNotified(object sender, ClientNotifiedEventArgs e)
         {
             groupChat = e.GroupChat;
+            Logged.Clear();
             foreach (User u in groupChat.Logged)
             {
-                if (Logged.Any(x => x.Email.Equals(u.Email)) == false)
-                {
-                    Logged.Add(u);
-                }
+                Logged.Add(u);
             }
 
             foreach (Message m in groupChat.AllMessages)
@@ -61,6 +55,15 @@ namespace ClientApp
                 {
                     Msg.Add(m);
                 }
+            }
+            allMessagesScrollViewer.ScrollToBottom();
+
+            roomsMenuItem.Items.Clear();
+            foreach (string s in groupChat.ThemeRooms)
+            {
+                MenuItem mi = new MenuItem();
+                mi.Header = s;
+                roomsMenuItem.Items.Add(mi);
             }
             //Logged = groupChat.Logged;
             //Msg = groupChat.AllMessages;
@@ -79,6 +82,12 @@ namespace ClientApp
             set { msg = value; }
         }
 
+        public ObservableCollection<string> ThemeRooms
+        {
+            get { return themeRooms; }
+            set { themeRooms = value; }
+        }
+
         /// <summary>
         /// Sending entered message to server
         /// </summary>
@@ -92,7 +101,8 @@ namespace ClientApp
                 {
                     if (groupChat.Logged.Single(x => x.Email.Equals(email)) != null)
                     {
-                        proxy.SendGroupMessage(email, entryMessageTextbox.Text);
+                        bool poslato = proxy.SendGroupMessage(email, entryMessageTextbox.Text);
+                        entryMessageTextbox.Clear();
                     }
                     else
                     {
@@ -162,7 +172,17 @@ namespace ClientApp
         /// <param name="e"></param>
         private void newRoomMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            // TO DO
+            if (Logged.Any(x => x.Email.Equals(email)))
+            {
+                if (Logged.Single(x => x.Email.Equals(email)).Logged)
+                {
+                    if (Logged.Single(x => x.Email.Equals(email)).Role.Equals(Roles.Admin))
+                    {
+                        var s = new NewRoomWindow(this.proxy, email);
+                        s.Show();
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -172,7 +192,14 @@ namespace ClientApp
         /// <param name="e"></param>
         private void pswChangeMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            //TO DO
+            if (Logged.Any(x => x.Email.Equals(email)))
+            {
+                if (Logged.Single(x => x.Email.Equals(email)).Logged)
+                {
+                    var s = new ChangePasswordWindow(this.proxy, email);
+                    s.Show();
+                }               
+            }
         }
 
         /// <summary>
@@ -184,10 +211,13 @@ namespace ClientApp
         {
             if (Logged.Any(x => x.Email.Equals(email)))
             {
-                if (Logged.Single(x => x.Email.Equals(email)).Role.Equals(Roles.Admin))
+                if (Logged.Single(x => x.Email.Equals(email)).Logged)
                 {
-                    var s = new ChangeRoll(this.proxy, email);
-                    s.Show();
+                    if (Logged.Single(x => x.Email.Equals(email)).Role.Equals(Roles.Admin))
+                    {
+                        var s = new ChangeRole(this.proxy, email);
+                        s.Show();
+                    }
                 }
             }
         }
@@ -213,6 +243,26 @@ namespace ClientApp
         private void loggedUsersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // TO DO
+            if (loggedUsersListBox.SelectedIndex == -1)
+            {
+                blockUserButton.IsEnabled = false;
+                removeUserButton.IsEnabled = false;
+            }
+            else
+            {
+                if (loggedUsersListBox.SelectedItem.ToString().Equals(email))
+                {
+                    blockUserButton.IsEnabled = false;
+                    removeUserButton.IsEnabled = false;
+                }
+                else
+                {
+                    //TO DO proveriti da li je vec blokiran, onda promeniti tekst na dugmetu u "Unblock"
+                    //TO DO proveriti da li je vec izbacen iz sobe od strane admina pa promeniti tekst dugmeta u "Add user to chat"
+                    blockUserButton.IsEnabled = true;
+                    removeUserButton.IsEnabled = true;
+                }
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -226,33 +276,15 @@ namespace ClientApp
 
             EndpointAddress adr = this.proxy.Address;
             NetTcpBinding tcp = this.proxy.Binding;
+            tcp.MaxConnections = 500;
+              tcp.OpenTimeout = new TimeSpan(0, 10, 0);
+              tcp.CloseTimeout = new TimeSpan(0, 10, 0);
+              tcp.SendTimeout = new TimeSpan(0, 0, 2);
+              tcp.ReceiveTimeout = new TimeSpan(0, 10, 0);
             this.proxy.InstanceContext = instanceContext;
             this.proxy.Abort();
             
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-            groupChat = this.proxy.GetGroupChat();
-            foreach (User u in groupChat.Logged)
-            {
-                if (Logged.Any(x => x.Email.Equals(u.Email)) == false)
-                {
-                    Logged.Add(u);
-                }
-            }
-
-            foreach (Message m in groupChat.AllMessages)
-            {
-                if (Msg.Any(x => x.Code.Equals(m.Code)) == false)
-                {
-                    Msg.Add(m);
-                }
-            }
-            if (groupChat.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
-            {
-                removeUserButton.Visibility = Visibility.Visible;
-                changePrivsMenuItem.Visibility = Visibility.Visible;
-            }
-
-
 
             try
             {
@@ -263,7 +295,38 @@ namespace ClientApp
                 // TODO: Handle exception.
             }
 
-            Timer timer = new Timer(300000);
+            groupChat = this.proxy.GetGroupChat();
+            Logged.Clear();
+            foreach (User u in groupChat.Logged)
+            {
+                Logged.Add(u);
+            }
+
+            foreach (Message m in groupChat.AllMessages)
+            {
+                if (Msg.Any(x => x.Code.Equals(m.Code)) == false)
+                {
+                    Msg.Add(m);
+                }
+            }
+            allMessagesScrollViewer.ScrollToBottom();
+
+            roomsMenuItem.Items.Clear();
+            foreach (string s in groupChat.ThemeRooms)
+            {
+                MenuItem mi = new MenuItem();
+                mi.Header = s;
+                roomsMenuItem.Items.Add(mi);
+            }
+
+            if (groupChat.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
+            {
+                removeUserButton.Visibility = Visibility.Visible;
+                changePrivsMenuItem.Visibility = Visibility.Visible;
+            }
+
+
+            Timer timer = new Timer(100);
             timer.Elapsed +=
             (
                 (object o, ElapsedEventArgs args) =>
@@ -273,6 +336,7 @@ namespace ClientApp
                         if (this.proxy.State == CommunicationState.Faulted)
                         {
                             NetTcpBinding tb = this.proxy.Binding;
+                            tb.MaxConnections = 500;
                             EndpointAddress ad = this.proxy.Address;
                             this.proxy.Abort();
                             this.proxy = new WCFClient(instanceContext, tb, ad);
@@ -287,8 +351,31 @@ namespace ClientApp
                 }
             );
         }
+
+        /// <summary>
+        /// On enter, send Message
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Grid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                 enterMsgButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
+
+        /// <summary>
+        /// on close, logout user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            proxy.LogOut(email);
+        }
     }
-    
+
 
     public class ChatServiceCallback : IChatServiceCallback
     {

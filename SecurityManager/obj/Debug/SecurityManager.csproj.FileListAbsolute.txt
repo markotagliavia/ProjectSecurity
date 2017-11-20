@@ -73,3 +73,8 @@ D:\cetvrta godina\blok2\Projekat2\SecurityManager\bin\Debug\SecurityManager.dll
 D:\cetvrta godina\blok2\Projekat2\SecurityManager\bin\Debug\SecurityManager.pdb
 D:\cetvrta godina\blok2\Projekat2\SecurityManager\obj\Debug\SecurityManager.dll
 D:\cetvrta godina\blok2\Projekat2\SecurityManager\obj\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repo\SecurityManager\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repo\SecurityManager\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repo\SecurityManager\obj\Debug\SecurityManager.csproj.CoreCompileInputs.cache
+C:\Users\Marko\Desktop\repo\SecurityManager\obj\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repo\SecurityManager\obj\Debug\SecurityManager.pdb

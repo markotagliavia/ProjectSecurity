@@ -29,7 +29,7 @@ namespace ClientApp
         private ObservableCollection<User> users;
         private ObservableCollection<User> allusers;
         private InstanceContext instanceContext;
-        public ChangeRole()
+        public ChangeRole(WCFClient proxy, string email)
         {
             this.DataContext = this;
             Admins = new ObservableCollection<User>();
@@ -60,9 +60,9 @@ namespace ClientApp
         private void ChatServiceCallback_AllUsersNotified(object sender, AllUsersNotifiedEventArgs e)
         {
             AllUsers = e.AllUsers;
-            Admins = new ObservableCollection<User>(); //ne mora bas sve da se optimizuje :D 
-            Users = new ObservableCollection<User>();
-            foreach (User u in allusers)
+            //Admins = new ObservableCollection<User>(); //ne mora bas sve da se optimizuje :D 
+            //Users = new ObservableCollection<User>();
+            foreach (User u in AllUsers)
             {
                 if (u.Role == Roles.Admin)
                 {
@@ -88,7 +88,7 @@ namespace ClientApp
             this.proxy.Abort();
 
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-            //allusers = this.proxy.GetAllUsers();
+            //allusers = this.proxy.GetAllUsers(); kad ovo sredis, radice
             foreach (User u in allusers)
             {
                 if (u.Role == Roles.Admin)

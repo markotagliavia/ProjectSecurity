@@ -86,42 +86,6 @@ namespace ClientApp
             string pass = passwordBox1.Password;
             String cryptedPass = Sha256encrypt(pass);
 
-            if (user.Equals("admin") && pass.Equals("admin"))
-            {
-                SystemSounds.Asterisk.Play();
-                //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unese
-                int i = proxy.LogIn(user, cryptedPass);
-                if (i == 0)
-                {
-                    //prvi put se loguje i mora da se unese i kod
-                    var r = new VerificationKey(proxy, user);
-                    r.Show();
-                    this.Close();
-                    //dalje u verificationKey.cs uraditi proveru na taj response
-                }
-                else if (i == -1)
-                {
-                    MessageBox.Show("Email and password are incorrect! Try again or reset your password.");
-                }
-                else if (i == 1)
-                {
-                    //uspesan login
-                    //Send data to server
-                    var s1 = new GroupChat(proxy, "admin");    //Forum starting if data is ok
-                    SystemSounds.Asterisk.Play();
-                    s1.Show();
-                    this.Close();
-                }
-            }
-            else
-            {
-                if (user.Equals("admin") && !pass.Equals("admin"))      //Delete later, precoded user and pass
-                {
-                    SystemSounds.Hand.Play();
-                    MessageBox.Show("Wrong password!");
-                    return;
-                }
-
                 if (String.IsNullOrWhiteSpace(user) || String.IsNullOrWhiteSpace(pass))
                 {
                     SystemSounds.Hand.Play();
@@ -137,7 +101,6 @@ namespace ClientApp
                     var r = new VerificationKey(proxy, user);
                     r.Show();
                     this.Close();
-                    //dalje u verificationKey.cs uraditi proveru na taj response
                 }
                 else if (i == -1)
                 {
@@ -152,7 +115,7 @@ namespace ClientApp
                     s1.Show();
                     this.Close();
                 }
-            }
+            
         }
 
         /// <summary>
@@ -166,6 +129,23 @@ namespace ClientApp
             System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
             byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
             return Convert.ToBase64String(hashedDataBytes);
+        }
+
+        /// <summary>
+        /// Reset password for enetered email
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void resetPassButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(!String.IsNullOrWhiteSpace(textBox1.Text))
+            {
+                int i = proxy.ResetPassword(textBox1.Text);
+                if (i == -1)
+                {
+                    MessageBox.Show("Please provide correct email address.");
+                }
+            }
         }
     }
 }

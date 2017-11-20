@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Marko\Desktop\repoNedelja\ClientApp\obj\Debug\
+C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\
 ClientApp
 none
 false
 DEBUG;TRACE
-C:\Users\Marko\Desktop\repoNedelja\ClientApp\App.xaml
-6-1434754820
+C:\Users\Marko\Desktop\repo\ClientApp\App.xaml
+81527583956
 
-15-1768937979
-17935444489
-ChangeRoll.xaml;GroupChat.xaml;MainWindow.xaml;NewUserWindow.xaml;ThemeRoom.xaml;VerificationKey.xaml;
+17-589525913
+171693408632
+ChangePasswordWindow.xaml;ChangeRole.xaml;GroupChat.xaml;MainWindow.xaml;NewRoomWindow.xaml;NewUserWindow.xaml;ThemeRoom.xaml;VerificationKey.xaml;
 
-True
+False
 

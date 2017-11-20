@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ForumModels
 {
-
+    [Serializable]
     public class GroupChat
     {
         private ObservableCollection<User> blocked;
@@ -18,12 +18,15 @@ namespace ForumModels
 
         private ObservableCollection<Message> allMessages;
 
+        private ObservableCollection<string> themeRooms;
+
 
         public GroupChat()
         {
             Blocked = new ObservableCollection<User>();
             Logged = new ObservableCollection<User>();
             allMessages = new ObservableCollection<Message>();
+            themeRooms = new ObservableCollection<string>();
         }
 
         public ObservableCollection<User> Blocked
@@ -62,6 +65,19 @@ namespace ForumModels
             set
             {
                 allMessages = value;
+            }
+        }
+
+        public ObservableCollection<string> ThemeRooms
+        {
+            get
+            {
+                return themeRooms;
+            }
+
+            set
+            {
+                themeRooms = value;
             }
         }
     }

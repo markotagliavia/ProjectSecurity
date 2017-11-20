@@ -34,18 +34,15 @@ namespace ServiceApp
             host.Open();
 
             List<User> lista = new List<User>();
-            if(!File.Exists("Users.dat"))
+            if (!File.Exists("Users.dat"))
             {
                 Program p = new Program();
-                string pass = p.Sha256encrypt("admin");
-                User u1 = new User("admin", "adminovic", DateTime.Now, "admin@gmail.com", pass, Roles.Admin, "Male");
+                User u1 = new User("Adminko", "Adminic", DateTime.Now, "forumblok@gmail.com", p.Sha256encrypt("sifra123"), Roles.Admin, "Male");
                 u1.Verify = true;
-                lista.Add(u1);
-                User u2 = new User("Tijana", "Tagliavia", DateTime.Now, "titagli@gmail.com", pass, Roles.Admin, "Female");
+                User u2 = new User("Adminica", "Adminska", DateTime.Now, "forumblok1@gmail.com", p.Sha256encrypt("sifra1234"), Roles.Admin, "Female");
                 u2.Verify = true;
+                lista.Add(u1);
                 lista.Add(u2);
-
-                //Sha256Encrypt
 
 
                 BinaryFormatter bf = new BinaryFormatter();
@@ -86,17 +83,17 @@ namespace ServiceApp
 
                 foreach (User u in lista)
                 {
-                    Console.WriteLine("{0} ovo je mail", u.Email);
+                    Console.WriteLine("{0} ovo je adminski mail", u.Email);
                 }
 
 
             }
-           
+
             Console.WriteLine("WCFService is opened. Press <enter> to finish...");
             Console.ReadLine();
             host.Close();
         }
-        
+
     }
 
 }

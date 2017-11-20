@@ -25,6 +25,11 @@ namespace ClientApp
         {
             this.address = address;
             this.binding = binding;
+            this.binding.MaxConnections = 500;
+            this.binding.OpenTimeout = new TimeSpan(0, 10, 0);
+            this.binding.CloseTimeout = new TimeSpan(0, 10, 0);
+            this.binding.SendTimeout = new TimeSpan(0, 0, 2);
+            this.binding.ReceiveTimeout = new TimeSpan(0, 10, 0);
             this.instanceContext = instanceContext;
            factory = this.CreateChannel();    
         }

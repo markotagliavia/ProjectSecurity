@@ -556,11 +556,13 @@ namespace ServiceApp
                 //TODO fje
                 if (user.Logged)
                 {
-                    if (ServiceModel.Instance.RoomList.Single(i => i.Theme == roomName) == null)
+                    if (!ServiceModel.Instance.RoomList.Any(i => i.Theme == roomName))
                     {
                         Room room = new Room(roomName);
                         ServiceModel.Instance.RoomList.Add(room);
+                        ServiceModel.Instance.GroupChat.ThemeRooms.Add(room.Theme);
                         SerializeRoom(room);
+                        NotifyAll();
                         retVal = true;
                     }
                 }
@@ -734,6 +736,7 @@ namespace ServiceApp
                         if (ServiceModel.Instance.Clients.ContainsKey(user.Email))
                         {
                             ServiceModel.Instance.Clients.Remove(user.Email);
+                            NotifyAll();
                         }
                     }
                     return true;
@@ -981,69 +984,71 @@ namespace ServiceApp
         public int ResetPassword(string email)
         {
             //User user = Thread.CurrentPrincipal as User;
-            User user = userOnSession;
+            //User user = userOnSession;
             /// audit both successfull and failed authorization checks
-            if (user.IsInRole(Permissions.ResetPassword.ToString()))
+            // if (user.IsInRole(Permissions.ResetPassword.ToString()))
+            // {
+            //TODO fje
+
+            // if (user.Logged)
+            // {
+
+            List<User> lista;
+            lista = DeserializeUsers();
+            if (lista.Any(x => x.Email.Equals(email)))
             {
-                //TODO fje
-
-                if (user.Logged)
+                User user = lista.Single(x => x.Email.Equals(email));
+                string pass = Guid.NewGuid().ToString().Substring(0, 30);
+                user.Password = Sha256encrypt(pass);
+                string your_id = "forumblok@gmail.com";
+                string your_password = "sifra123";
+                try
                 {
-                    string pass = Guid.NewGuid().ToString().Substring(0,30);
-                    user.Password = Sha256encrypt(pass);
-                    string your_id = "forumblok@gmail.com";
-                    string your_password = "sifra123";
-                    try
-                    {
-                        SmtpClient client = new SmtpClient();
-                        client.Port = 587;
-                        client.Host = "smtp.gmail.com";
-                        client.EnableSsl = true;
-                        client.Timeout = 10000;
-                        client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        client.UseDefaultCredentials = false;
-                        client.Credentials = new System.Net.NetworkCredential(your_id, your_password);
+                    SmtpClient client = new SmtpClient();
+                    client.Port = 587;
+                    client.Host = "smtp.gmail.com";
+                    client.EnableSsl = true;
+                    client.Timeout = 10000;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new System.Net.NetworkCredential(your_id, your_password);
 
-                        MailMessage mm = new MailMessage(your_id, user.Email);
-                        mm.BodyEncoding = UTF8Encoding.UTF8;
-                        mm.Subject = "CODE FOR FORUM";
-                        mm.Body = "New password :" + pass;
-                        mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+                    MailMessage mm = new MailMessage(your_id, user.Email);
+                    mm.BodyEncoding = UTF8Encoding.UTF8;
+                    mm.Subject = "CODE FOR FORUM";
+                    mm.Body = "New password : " + pass;
+                    mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
 
-                        client.Send(mm);
-
-                        List<User> lista;
-                        lista = DeserializeUsers();
-                        foreach(User u in lista)
-                        {
-                            if(u.Email==email)
-                            {
-                                u.Password = user.Password;
-                            }
-
-                        }
-
-                        SerializeUsers(lista);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Could not end email\n\n" + e.ToString());
-                    }
-                    return 0;
-
+                    client.Send(mm);
+                    lista.Single(x => x.Email.Equals(email)).Password = user.Password;
+                    SerializeUsers(lista);
                 }
-                else
+                catch (Exception e)
                 {
-                    return -2; // neulogovan je
+                    Console.WriteLine("Could not end email\n\n" + e.ToString());
                 }
-
+                return 0;
             }
             else
             {
-                //TODO greske
+                return -1;
             }
 
-            return -1;
+
+
+              //  }
+              //  else
+               // {
+               //     return -2; // neulogovan je
+              //  }
+
+           // }
+           // else
+           // {
+                //TODO greske
+           // }
+
+            //return -1;
         }      // DONE
 
         public bool SendVerificationKey(string key)
@@ -1162,6 +1167,7 @@ namespace ServiceApp
                     Message m = new Message(message, userName);
                     ServiceModel.Instance.GroupChat.AllMessages.Add(m);
                     SerializeGroupChat(ServiceModel.Instance.GroupChat);   // serijal
+                    NotifyAll();
                     ok = true;
                 }
                 else
@@ -1273,18 +1279,20 @@ namespace ServiceApp
 
         public void Subscribe(string email)
         {
-            IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
-
-            if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+            if (!ServiceModel.Instance.Clients.ContainsKey(email))
             {
-                lock (ServiceModel.Instance.Clients)
-                {
-                    ServiceModel.Instance.Clients.Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
-                    userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
-                }
-            }
+                IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
 
-            
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+                {
+                    lock (ServiceModel.Instance.Clients)
+                    {
+                        ServiceModel.Instance.Clients.Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
+                        userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                    }
+                }
+
+            }
 
         }   //subscrubuje se user na grupni chat
     }
