@@ -123,6 +123,7 @@ namespace ServiceApp
                 }
             );
         }
+
         public void SerializeGroupChat(GroupChat gc)
         {
             Stream s = File.Open("GroupChat.dat", FileMode.Create);
@@ -147,7 +148,7 @@ namespace ServiceApp
         {
             GroupChat gc = new GroupChat();
 
-            FileStream fs = new FileStream("GroupChat.dat", FileMode.Open);
+            FileStream fs = new FileStream("GroupChat.dat", FileMode.OpenOrCreate);
 
             try
             {
@@ -158,7 +159,6 @@ namespace ServiceApp
             catch (SerializationException e)
             {
                 Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                throw;
             }
             finally
             {

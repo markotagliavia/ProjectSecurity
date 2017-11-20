@@ -217,3 +217,16 @@ C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\SecurityManager.pdb
 C:\Users\Tijana\Desktop\Projekat2\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
 C:\Users\Tijana\Desktop\Projekat2\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\Tijana\Desktop\Projekat2\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\obj\Debug\ServiceApp.csproj.CoreCompileInputs.cache
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\Marko\Desktop\repoPOnedeljak2\ServiceApp\obj\Debug\ServiceApp.pdb

@@ -122,3 +122,11 @@ C:\Users\Tijana\Desktop\Projekat2\ForumModels\bin\Debug\SecurityManager.pdb
 C:\Users\Tijana\Desktop\Projekat2\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
 C:\Users\Tijana\Desktop\Projekat2\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\Tijana\Desktop\Projekat2\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\obj\Debug\ForumModels.csproj.CoreCompileInputs.cache
+C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoPOnedeljak2\ForumModels\obj\Debug\ForumModels.pdb

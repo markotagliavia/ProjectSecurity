@@ -378,6 +378,11 @@ namespace ClientApp
             proxy.LogOut(email);
         }
 
+        private void openPrivateChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            //TO DO
+        }
+
         /*private void Window_Closed(object sender, EventArgs e)
         {
             if (proxy != null)
