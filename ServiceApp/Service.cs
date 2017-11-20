@@ -71,6 +71,50 @@ namespace ServiceApp
             );
         }
 
+        private void NotifyViewforAdmins()
+        {
+            ThreadPool.QueueUserWorkItem
+            (
+                delegate
+                {
+                    lock (ServiceModel.Instance.Clients)
+                    {
+                        List<string> disconnectedClientGuids = new List<string>();
+
+                        foreach (KeyValuePair<string, IChatServiceCallback> client in ServiceModel.Instance.Clients)
+                        {
+                            try
+                            {
+                                client.Value.HandleGroupChat(ServiceModel.Instance.GroupChat);
+                            }
+                            catch (Exception)
+                            {
+                                // TODO: Better to catch specific exception types.                     
+
+                                // If a timeout exception occurred, it means that the server
+                                // can't connect to the client. It might be because of a network
+                                // error, or the client was closed  prematurely due to an exception or
+                                // and was unable to unregister from the server. In any case, we 
+                                // must remove the client from the list of clients.
+
+                                // Another type of exception that might occur is that the communication
+                                // object is aborted, or is closed.
+
+                                // Mark the key for deletion. We will delete the client after the 
+                                // for-loop because using foreach construct makes the clients collection
+                                // non-modifiable while in the loop.
+                                disconnectedClientGuids.Add(client.Key);
+                            }
+                        }
+
+                        foreach (string clientGuid in disconnectedClientGuids)
+                        {
+                            ServiceModel.Instance.Clients.Remove(clientGuid);
+                        }
+                    }
+                }
+            );
+        }
         public void SerializeGroupChat(GroupChat gc)
         {
             Stream s = File.Open("GroupChat.dat", FileMode.Create);
@@ -518,11 +562,11 @@ namespace ServiceApp
                     User user2 = ServiceModel.Instance.LoggedIn.Single(i => i.Email == secondEmail);
                     if (user2 != null)
                     {
-                        if (ServiceModel.Instance.PrivateChats.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))) == null)
+                        if (ServiceModel.Instance.PrivateChatList.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))) == null)
                         {
                             PrivateChat pc = new PrivateChat(user.Email, user2.Email);
                             SerializePrivateChat(pc);  // kreiraj fajl
-                            ServiceModel.Instance.PrivateChats.Add(pc);
+                            ServiceModel.Instance.PrivateChatList.Add(pc);
                             return 0;
                         }
                         else

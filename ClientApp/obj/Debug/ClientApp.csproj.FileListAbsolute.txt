@@ -392,3 +392,9 @@ C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\ChangePasswordWindow.g.cs
 C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\NewRoomWindow.g.cs
 C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\ChangePasswordWindow.baml
 C:\Users\Marko\Desktop\repo\ClientApp\obj\Debug\NewRoomWindow.baml
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ChangePasswordWindow.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ChangeRole.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\NewRoomWindow.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ChangePasswordWindow.baml
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ChangeRole.baml
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\NewRoomWindow.baml
