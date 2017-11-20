@@ -1347,5 +1347,15 @@ namespace ServiceApp
             }
 
         }   //subscrubuje se user na grupni chat
+
+        public void SubscribeAllUsers(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ObservableCollection<User> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

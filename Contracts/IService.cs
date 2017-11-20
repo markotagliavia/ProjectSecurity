@@ -6,6 +6,8 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using ForumModels;
+using System.Collections.ObjectModel;
+using SecurityManager;
 
 namespace Contracts
 {
@@ -84,6 +86,13 @@ namespace Contracts
 
         [OperationContract(IsOneWay = true)]
         void Subscribe(string email);
+
+
+        [OperationContract(IsOneWay = true)]
+        void SubscribeAllUsers(string email);
+
+        [OperationContract]
+        ObservableCollection<User> GetAllUsers();
     }
 
    

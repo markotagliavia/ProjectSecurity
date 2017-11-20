@@ -6,6 +6,8 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using SecurityManager;
+using System.Collections.ObjectModel;
 
 namespace ClientApp
 {
@@ -415,11 +417,37 @@ namespace ClientApp
             try
             {
                 factory.Subscribe(email);
-                Console.WriteLine("ubscribe executed");
+                Console.WriteLine("subscribe executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to Subscribe(). {0}", e.Message);
+            }
+        }
+
+        public void SubscribeAllUsers(string email)
+        {
+            try
+            {
+                factory.SubscribeAllUsers(email);
+                Console.WriteLine("SubscribeAllUsers executed");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to SubscribeAllUsers(). {0}", e.Message);
+            }
+        }
+
+        public ObservableCollection<User> GetAllUsers()
+        {
+            try
+            {
+                return factory.GetAllUsers();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to GetAllUsers(). {0}", e.Message);
+                return null;
             }
         }
     }

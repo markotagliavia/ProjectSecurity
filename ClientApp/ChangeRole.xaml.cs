@@ -88,7 +88,7 @@ namespace ClientApp
             this.proxy.Abort();
 
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-            //allusers = this.proxy.GetAllUsers(); kad ovo sredis, radice
+            allusers = this.proxy.GetAllUsers(); //kad ovo sredis, radice
             foreach (User u in allusers)
             {
                 if (u.Role == Roles.Admin)
@@ -103,7 +103,7 @@ namespace ClientApp
 
             try
             {
-                //this.proxy.SubscribeAllUsers(email);
+                this.proxy.SubscribeAllUsers(email);
             }
             catch
             {
