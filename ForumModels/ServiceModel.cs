@@ -27,7 +27,11 @@ namespace ForumModels
 
         private ObservableCollection<PrivateChat> privateChatList;
 
-        
+        private object lockGroupChat;
+
+        private object lockPrivateChat;
+
+        private object lockUsers;
 
         private ServiceModel()
         {
@@ -44,6 +48,32 @@ namespace ForumModels
             clients = new Dictionary<string, IChatServiceCallback>();//ne cuvaj u fajl, to mi cuva proxyje u runtime-u
 
             clientsforViewAdmins = new Dictionary<string, IChatServiceCallback>();//ne cuvaj u fajl, to mi cuva proxyje u runtime-u
+
+            lockGroupChat = new object();
+
+            lockPrivateChat = new object();
+
+            lockUsers = new object();
+        }
+        [DataMember]
+        public object LockUsers
+        {
+            get { return lockUsers; }
+            set { lockUsers = value; }
+        }
+
+        [DataMember]
+        public object LockGroupChat
+        {
+            get { return lockGroupChat; }
+            set { lockGroupChat = value; }
+        }
+
+        [DataMember]
+        public object LockPrivateChat
+        {
+            get { return lockPrivateChat; }
+            set { lockPrivateChat = value; }
         }
         [DataMember]
         public Dictionary<string, IChatServiceCallback> Clients

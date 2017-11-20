@@ -25,6 +25,7 @@ namespace ServiceApp
         private User userOnSession;     //logged user
         public static string AppRoot;
         
+
         /// <summary>
         /// THis function notifies all logged clients about changes in forum
         /// </summary>
@@ -126,47 +127,51 @@ namespace ServiceApp
 
         public void SerializeGroupChat(GroupChat gc)
         {
-            Stream s = File.Open("GroupChat.dat", FileMode.Create);
-            try
-            {         
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(s, gc);
-            }
-            catch (SerializationException e)
+            lock (ServiceModel.Instance.LockGroupChat)
             {
-                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                throw;
-            }
-            finally
-            {
-                s.Close();
+                Stream s = File.Open("GroupChat.dat", FileMode.Create);
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(s, gc);
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    s.Close();
+                }
             }
 
         }   // serialize GroupChat
 
         public GroupChat DeserializeGroupChat()
         {
-            GroupChat gc = new GroupChat();
-
-            FileStream fs = new FileStream("GroupChat.dat", FileMode.OpenOrCreate);
-
-            try
+            lock (ServiceModel.Instance.LockGroupChat)
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                gc = (GroupChat)formatter.Deserialize(fs);
+                GroupChat gc = new GroupChat();
 
-            }
-            catch (SerializationException e)
-            {
-                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-            }
-            finally
-            {
-                fs.Close();
-            }
+                FileStream fs = new FileStream("GroupChat.dat", FileMode.OpenOrCreate);
 
-            return gc;
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    gc = (GroupChat)formatter.Deserialize(fs);
 
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                }
+                finally
+                {
+                    fs.Close();
+                }
+                return gc;
+            }
         }        // deserialize GroupChat
 
         public void CloseupRoom(Room room)
@@ -237,8 +242,10 @@ namespace ServiceApp
         }
 
         public void SerializePrivateChat(PrivateChat pc)
-        {        
-                Stream s = File.Open(pc.Uid.ToString()+".dat", FileMode.Create);
+        {
+            lock (ServiceModel.Instance.LockPrivateChat)
+            {
+                Stream s = File.Open(pc.Uid.ToString() + ".dat", FileMode.Create);
                 try
                 {
                     BinaryFormatter bf = new BinaryFormatter();
@@ -253,81 +260,91 @@ namespace ServiceApp
                 {
                     s.Close();
                 }
+            }
         }             // serialize PrivateChat datoteka
 
         public PrivateChat DeserializePrivateChat(Guid code)
         {
-            PrivateChat pc1 = null;
-
-            FileStream fs = new FileStream(code.ToString()+".dat", FileMode.Open);
-
-            try
+            lock (ServiceModel.Instance.LockPrivateChat)
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                pc1 = (PrivateChat)formatter.Deserialize(fs);
+                PrivateChat pc1 = null;
 
-            }
-            catch (SerializationException e)
-            {
-                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                throw;
-            }
-            finally
-            {
-                fs.Close();
-            }
+                FileStream fs = new FileStream(code.ToString() + ".dat", FileMode.Open);
 
-            return pc1;
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    pc1 = (PrivateChat)formatter.Deserialize(fs);
+
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    fs.Close();
+                }
+
+                return pc1;
+            }
         }    // deserialize PrivateChat datoteka
 
         public void SerializeUsers(List<User> lista)
         {
-            Stream s = File.Open("Users.dat", FileMode.Create);
-            try
+            lock (ServiceModel.Instance.LockUsers)
             {
-                BinaryFormatter bf = new BinaryFormatter();
-               /* foreach(User u in lista)
+                Stream s = File.Open("Users.dat", FileMode.Create);
+                try
                 {
-                    Sha256encrypt(u.Password);
-                }*/
+                    BinaryFormatter bf = new BinaryFormatter();
+                    /* foreach(User u in lista)
+                     {
+                         Sha256encrypt(u.Password);
+                     }*/
 
-                bf.Serialize(s, lista);
-            }
-            catch (SerializationException e)
-            {
-                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                throw;
-            }
-            finally
-            {
-                s.Close();
+                    bf.Serialize(s, lista);
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    s.Close();
+                }
             }
         }        // serialize user datoteka
 
         public List<User> DeserializeUsers()
         {
-            List<User> lista = new List<User>();
-
-            FileStream fs = new FileStream("Users.dat", FileMode.Open);
-
-            try
+            lock (ServiceModel.Instance.LockUsers)
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                lista = (List<User>)formatter.Deserialize(fs);
+                List<User> lista = new List<User>();
 
-            }
-            catch (SerializationException e)
-            {
-                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                throw;
-            }
-            finally
-            {
-                fs.Close();
-            }
+                FileStream fs = new FileStream("Users.dat", FileMode.Open);
+
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    lista = (List<User>)formatter.Deserialize(fs);
+
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                    throw;
+                }
+                finally
+                {
+                    fs.Close();
+                }
 
 
-            return lista;
+                return lista;
+            }
         }               // deserialize user datoteka
 
         public bool AddAdmin(string email)
@@ -393,6 +410,7 @@ namespace ServiceApp
                     if (user.Email != blockEmail)
                     {
                         //TODO fje
+                       
                         User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
                         if (ServiceModel.Instance.GroupChat.Blocked.Single(i => i.Email == blockEmail) == null)
                         {
@@ -456,6 +474,7 @@ namespace ServiceApp
                             if (blokirani.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
                             {
                                 blokator.Blocked.Add(blokirani);
+                                ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                                 if (ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)) != null)
                                 {
                                     ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)).Blocked.Add(ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(blockEmail)));
@@ -629,10 +648,12 @@ namespace ServiceApp
                 {
                     if (!ServiceModel.Instance.RoomList.Any(i => i.Theme == roomName))
                     {
+                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                         Room room = new Room(roomName);
                         ServiceModel.Instance.RoomList.Add(room);
                         ServiceModel.Instance.GroupChat.ThemeRooms.Add(room.Theme);
                         SerializeRoom(room);
+                        SerializeGroupChat(ServiceModel.Instance.GroupChat);
                         NotifyAll();
                         retVal = true;
                     }
@@ -798,7 +819,7 @@ namespace ServiceApp
                     {
                         int index = ServiceModel.Instance.LoggedIn.IndexOf(ServiceModel.Instance.LoggedIn.Single(x => x.Email.Equals(email)));
                         ServiceModel.Instance.LoggedIn.RemoveAt(index);
-
+                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                         if (ServiceModel.Instance.GroupChat.Logged.Any(x => x.Email.Equals(email)))
                         {
                             index = ServiceModel.Instance.GroupChat.Logged.IndexOf(ServiceModel.Instance.GroupChat.Logged.Single(x => x.Email.Equals(email)));
@@ -1145,6 +1166,7 @@ namespace ServiceApp
 
                     if (!user.Logged)
                     {
+                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                         ok = true;
                         user.Logged = true;
                         user.Verify = true;
@@ -1306,7 +1328,8 @@ namespace ServiceApp
 
         public GroupChat GetGroupChat()
         {
-            return ServiceModel.Instance.GroupChat;
+            //ServiceModel.Instance.GroupChat = DeserializeGroupChat();
+            return DeserializeGroupChat();
         }   //vraca grupni chat sa singletona
 
         public Room GetThemeRoom(string roomName)
