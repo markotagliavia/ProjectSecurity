@@ -31,7 +31,7 @@ namespace ServiceApp
             ServiceHost host = new ServiceHost(typeof(Service));
             host.AddServiceEndpoint(typeof(IService), binding, address);
 
-            
+            host.Open();
 
             List<User> lista = new List<User>();
             if (!File.Exists("Users.dat"))
@@ -91,7 +91,7 @@ namespace ServiceApp
 
 
 
-            host.Open();
+            
             Console.WriteLine("WCFService is opened. Press <enter> to finish...");
             Console.ReadLine();
             host.Close();

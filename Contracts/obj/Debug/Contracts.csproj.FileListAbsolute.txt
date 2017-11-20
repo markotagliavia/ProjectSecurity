@@ -135,3 +135,12 @@ C:\Users\Kristijan\Desktop\Repo\Contracts\bin\Debug\SecurityManager.pdb
 C:\Users\Kristijan\Desktop\Repo\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
 C:\Users\Kristijan\Desktop\Repo\Contracts\obj\Debug\Contracts.dll
 C:\Users\Kristijan\Desktop\Repo\Contracts\obj\Debug\Contracts.pdb
+C:\Users\Tijana\Desktop\Projekat2\Contracts\bin\Debug\Contracts.dll
+C:\Users\Tijana\Desktop\Projekat2\Contracts\bin\Debug\Contracts.pdb
+C:\Users\Tijana\Desktop\Projekat2\Contracts\bin\Debug\ForumModels.dll
+C:\Users\Tijana\Desktop\Projekat2\Contracts\bin\Debug\SecurityManager.dll
+C:\Users\Tijana\Desktop\Projekat2\Contracts\bin\Debug\ForumModels.pdb
+C:\Users\Tijana\Desktop\Projekat2\Contracts\bin\Debug\SecurityManager.pdb
+C:\Users\Tijana\Desktop\Projekat2\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+C:\Users\Tijana\Desktop\Projekat2\Contracts\obj\Debug\Contracts.dll
+C:\Users\Tijana\Desktop\Projekat2\Contracts\obj\Debug\Contracts.pdb

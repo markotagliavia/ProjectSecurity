@@ -28,7 +28,7 @@ namespace ClientApp
         public ThemeRoom(WCFClient proxy)
         {
             this.proxy = proxy;
-            this.room = this.proxy.GetPrivateRoom(room.Theme);
+            //this.room = this.proxy.GetPrivateRoom(room.Theme);
             InitializeComponent();
             label.Content = room.Theme;
             DataContext = this;

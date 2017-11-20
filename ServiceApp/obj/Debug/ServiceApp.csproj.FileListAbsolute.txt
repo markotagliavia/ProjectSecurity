@@ -205,3 +205,15 @@ C:\Users\Kristijan\Desktop\Repo\ServiceApp\bin\Debug\SecurityManager.pdb
 C:\Users\Kristijan\Desktop\Repo\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
 C:\Users\Kristijan\Desktop\Repo\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\Kristijan\Desktop\Repo\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\ForumModels.dll
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\SecurityManager.dll
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\ForumModels.pdb
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\bin\Debug\SecurityManager.pdb
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\Tijana\Desktop\Projekat2\ServiceApp\obj\Debug\ServiceApp.pdb

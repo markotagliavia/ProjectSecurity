@@ -31,6 +31,8 @@ namespace SecurityManager
         GetGroupChat = 19,
         GetPrivateRoom = 20,
         CloseRoom = 21,
+        GetAllUsers = 22,
+        GetPrivateChat = 23,
     }
 
     public enum Roles
@@ -41,8 +43,8 @@ namespace SecurityManager
 
     class RolesConfiguration
     {
-        static string[] AppAdminPermissions = new string[] { Permissions.GetPrivateRoom.ToString(), Permissions.GetGroupChat.ToString(), Permissions.SendRoomMessage.ToString(), Permissions.SendGroupMessage.ToString(), Permissions.SendPrivateMessage.ToString(), Permissions.SendVerificationKey.ToString(), Permissions.LogIn.ToString(), Permissions.LogOut.ToString(), Permissions.Registration.ToString(), Permissions.ChangePassword.ToString(), Permissions.ResetPassword.ToString(), Permissions.AddAdmin.ToString(), Permissions.DeleteAdmin.ToString(), Permissions.BlockGroupChat.ToString(), Permissions.BlockUser.ToString(), Permissions.RemoveBlockUser.ToString(), Permissions.BlockUserFromRoom.ToString(), Permissions.RemoveBlockRoom.ToString(), Permissions.CreateRoom.ToString(), Permissions.CreatePrivateChat.ToString(), Permissions.CloseRoom.ToString() };
-        static string[] UserPermissions = new string[] { Permissions.GetPrivateRoom.ToString(), Permissions.GetGroupChat.ToString(), Permissions.SendRoomMessage.ToString(), Permissions.SendGroupMessage.ToString(), Permissions.SendPrivateMessage.ToString(), Permissions.SendVerificationKey.ToString(), Permissions.LogIn.ToString(), Permissions.LogOut.ToString(), Permissions.Registration.ToString(), Permissions.ChangePassword.ToString(), Permissions.ResetPassword.ToString(), Permissions.BlockUser.ToString(), Permissions.RemoveBlockUser.ToString(), Permissions.CreateRoom.ToString(), Permissions.CreatePrivateChat.ToString() };
+        static string[] AppAdminPermissions = new string[] { Permissions.GetPrivateChat.ToString(), Permissions.GetAllUsers.ToString(), Permissions.GetPrivateRoom.ToString(), Permissions.GetGroupChat.ToString(), Permissions.SendRoomMessage.ToString(), Permissions.SendGroupMessage.ToString(), Permissions.SendPrivateMessage.ToString(), Permissions.SendVerificationKey.ToString(), Permissions.LogIn.ToString(), Permissions.LogOut.ToString(), Permissions.Registration.ToString(), Permissions.ChangePassword.ToString(), Permissions.ResetPassword.ToString(), Permissions.AddAdmin.ToString(), Permissions.DeleteAdmin.ToString(), Permissions.BlockGroupChat.ToString(), Permissions.BlockUser.ToString(), Permissions.RemoveBlockUser.ToString(), Permissions.BlockUserFromRoom.ToString(), Permissions.RemoveBlockRoom.ToString(), Permissions.CreateRoom.ToString(), Permissions.CreatePrivateChat.ToString(), Permissions.CloseRoom.ToString() };
+        static string[] UserPermissions = new string[] { Permissions.GetPrivateChat.ToString(), Permissions.GetPrivateRoom.ToString(), Permissions.GetGroupChat.ToString(), Permissions.SendRoomMessage.ToString(), Permissions.SendGroupMessage.ToString(), Permissions.SendPrivateMessage.ToString(), Permissions.SendVerificationKey.ToString(), Permissions.LogIn.ToString(), Permissions.LogOut.ToString(), Permissions.Registration.ToString(), Permissions.ChangePassword.ToString(), Permissions.ResetPassword.ToString(), Permissions.BlockUser.ToString(), Permissions.RemoveBlockUser.ToString(), Permissions.CreateRoom.ToString(), Permissions.CreatePrivateChat.ToString() };
         static string[] Empty = new string[] { };
 
         public static string[] GetPermissions(string role)

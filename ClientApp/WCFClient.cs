@@ -144,9 +144,9 @@ namespace ClientApp
             return retVal;
         }
 
-        public int CreatePrivateChat(string firstEmail, string secondEmail)
+        public PrivateChat CreatePrivateChat(string firstEmail, string secondEmail)
         {
-            int retVal = -1;
+            PrivateChat retVal = null;
             try
             {
                 retVal = factory.CreatePrivateChat(firstEmail, secondEmail);
@@ -209,17 +209,17 @@ namespace ClientApp
 
         }
 
-        public Room GetPrivateRoom(string roomName)
+        public Room GetThemeRoom(string roomName)
         {
             Room room = new Room("");
             try
             {
-                room = factory.GetPrivateRoom(roomName);
-                Console.WriteLine("GetPrivateRoom executed");
+                room = factory.GetThemeRoom(roomName);
+                Console.WriteLine("GetThemeRoom executed");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error while trying to GetPrivateRoom(). {0}", e.Message);
+                Console.WriteLine("Error while trying to GetThemeRoom(). {0}", e.Message);
             }
 
             return room;
@@ -445,6 +445,19 @@ namespace ClientApp
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to GetAllUsers(). {0}", e.Message);
+                return null;
+            }
+        }
+
+        public PrivateChat GetPrivateChat(Guid code)
+        {
+            try
+            {
+                return factory.GetPrivateChat(code);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to GetPrivateChat(). {0}", e.Message);
                 return null;
             }
         }

@@ -24,6 +24,7 @@ namespace ServiceApp
     {
         private User userOnSession;     //logged user
         public static string AppRoot;
+        
         /// <summary>
         /// THis function notifies all logged clients about changes in forum
         /// </summary>
@@ -74,19 +75,25 @@ namespace ServiceApp
 
         private void NotifyViewforAdmins()
         {
+            List<User> lista = DeserializeUsers();
+            ObservableCollection<User> obs = new ObservableCollection<User>();
+            foreach (User u in lista)
+            {
+                obs.Add(u);
+            }
             ThreadPool.QueueUserWorkItem
             (
                 delegate
                 {
-                    lock (ServiceModel.Instance.Clients)
+                    lock (ServiceModel.Instance.ClientsForViewAdmins)
                     {
                         List<string> disconnectedClientGuids = new List<string>();
 
-                        foreach (KeyValuePair<string, IChatServiceCallback> client in ServiceModel.Instance.Clients)
+                        foreach (KeyValuePair<string, IChatServiceCallback> client in ServiceModel.Instance.ClientsForViewAdmins)
                         {
                             try
                             {
-                                client.Value.HandleGroupChat(ServiceModel.Instance.GroupChat);
+                                client.Value.AllUsers(obs);
                             }
                             catch (Exception)
                             {
@@ -110,7 +117,7 @@ namespace ServiceApp
 
                         foreach (string clientGuid in disconnectedClientGuids)
                         {
-                            ServiceModel.Instance.Clients.Remove(clientGuid);
+                            ServiceModel.Instance.ClientsForViewAdmins.Remove(clientGuid);
                         }
                     }
                 }
@@ -248,11 +255,11 @@ namespace ServiceApp
                 }
         }             // serialize PrivateChat datoteka
 
-        public PrivateChat DeserializePrivateChat(PrivateChat pc)
+        public PrivateChat DeserializePrivateChat(Guid code)
         {
-            PrivateChat pc1;
+            PrivateChat pc1 = null;
 
-            FileStream fs = new FileStream(pc.Uid.ToString()+".dat", FileMode.Open);
+            FileStream fs = new FileStream(code.ToString()+".dat", FileMode.Open);
 
             try
             {
@@ -329,7 +336,7 @@ namespace ServiceApp
             User user = userOnSession;
             bool retVal = false;
             /// audit both successfull and failed authorization checks
-            if (user.IsInRole(Permissions.AddAdmin.ToString()))
+            if (user.IsInRole(Permissions.AddAdmin.ToString()) && userOnSession.Logged && ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(userOnSession.Email)))
             {
                 //TODO fje
                 if (user.Logged)
@@ -338,10 +345,20 @@ namespace ServiceApp
 
                     foreach (User u in lista)
                     {
-                        if (u.Email == email)
+                        if (u.Email.Equals(email))
                         {
-                            u.Role = Roles.Admin;//?proveriti da li se menja i u group cjhatu obj
+                            u.Role = Roles.Admin;
+                            ServiceModel.Instance.GroupChat = DeserializeGroupChat();
+                            if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
+                            {
+                                ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Role = Roles.Admin;
+                            }
+                            if (ServiceModel.Instance.GroupChat.Logged.Any(i => i.Email.Equals(email)))
+                            {
+                                ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(email)).Role = Roles.Admin;
+                            }
                             SerializeUsers(lista); // dodaj u fajl
+                            SerializeGroupChat(ServiceModel.Instance.GroupChat);
                             retVal = true;
                             break;
                         }
@@ -552,7 +569,7 @@ namespace ServiceApp
             return retVal;
         }
 
-        public int CreatePrivateChat(string firstEmail, string secondEmail)
+        public PrivateChat CreatePrivateChat(string firstEmail, string secondEmail)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -569,24 +586,24 @@ namespace ServiceApp
                             PrivateChat pc = new PrivateChat(user.Email, user2.Email);
                             SerializePrivateChat(pc);  // kreiraj fajl
                             ServiceModel.Instance.PrivateChatList.Add(pc);
-                            return 0;
+                            return pc;
                         }
                         else
                         {
                             Console.WriteLine("Chat already exists!");
-                            return -4;
+                            return ServiceModel.Instance.PrivateChatList.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email)));
                         }
                     }
                     else
                     {
                         Console.WriteLine("User {0} is not logged in!", secondEmail);
-                        return -3;
+                        return null;
                     }
                 }
                 else
                 {
                     Console.WriteLine("User {0} is not logged in!", user.Name);
-                    return -2; //nije logovan user
+                    return null; //nije logovan user
                 }
             }
             else
@@ -595,7 +612,7 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
-            return -1;
+            return null;
         }        // kreiraj fajl sa privatnim chatom ako ne postoji DONE
 
         public bool CreateRoom(string roomName)
@@ -1292,7 +1309,7 @@ namespace ServiceApp
             return ServiceModel.Instance.GroupChat;
         }   //vraca grupni chat sa singletona
 
-        public Room GetPrivateRoom(string roomName)
+        public Room GetThemeRoom(string roomName)
         {
             Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
             return room;
@@ -1361,12 +1378,72 @@ namespace ServiceApp
 
         public void SubscribeAllUsers(string email)
         {
-            throw new NotImplementedException();
+            if (!ServiceModel.Instance.ClientsForViewAdmins.ContainsKey(email))
+            {
+                IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
+
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+                {
+                    lock (ServiceModel.Instance.ClientsForViewAdmins)
+                    {
+                        ServiceModel.Instance.ClientsForViewAdmins.Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
+                        userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                    }
+                }
+
+            }
         }
 
         public ObservableCollection<User> GetAllUsers()
         {
-            throw new NotImplementedException();
+            List<User> lista = DeserializeUsers();
+            ObservableCollection<User> obs = new ObservableCollection<User>();
+            foreach (User u in lista)
+            {
+                obs.Add(u);
+            }
+
+            if(userOnSession.IsInRole(Permissions.GetAllUsers.ToString()))
+            {
+                if (userOnSession.Logged)
+                {
+                    if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(userOnSession.Email)))
+                    {
+                        return obs;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public PrivateChat GetPrivateChat(Guid code)
+        {
+            if (userOnSession.Logged)
+            {
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(userOnSession.Email)))
+                {
+                    if (userOnSession.IsInRole(Permissions.GetPrivateChat.ToString()))
+                    {
+                        return DeserializePrivateChat(code);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                    
+                }
+                else
+                {
+                    return null;
+                }
+                
+            }
+            else
+            {
+                return null;
+            }
+            
         }
     }
 }

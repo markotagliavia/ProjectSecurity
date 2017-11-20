@@ -55,7 +55,10 @@ namespace Contracts
         bool RemoveBlockUserFromRoom(string unblockEmail, string roomName);
 
         [OperationContract]
-        int CreatePrivateChat(string firstEmail, string secondEmail);
+        PrivateChat CreatePrivateChat(string firstEmail, string secondEmail);
+
+        [OperationContract]
+        PrivateChat GetPrivateChat(Guid code);
 
         [OperationContract]
         bool CreateRoom(string roomName);
@@ -76,7 +79,7 @@ namespace Contracts
         GroupChat GetGroupChat();
 
         [OperationContract]
-        Room GetPrivateRoom(string roomName);
+        Room GetThemeRoom(string roomName);
 
         [OperationContract]
         bool CloseRoom(string roomName);
