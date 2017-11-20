@@ -66,8 +66,8 @@ namespace Contracts
         [OperationContract]
         bool SendPrivateMessage(string sendEmail, string reciveEmail, string message);
 
-        [OperationContract]
-        bool SendGroupMessage(string sender, string message);
+        [OperationContract(IsOneWay = true)]
+        void SendGroupMessage(string sender, string message);
 
         [OperationContract]
         bool SendRoomMessage(string sender, string roomName, string message);

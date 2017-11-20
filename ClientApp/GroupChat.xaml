@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientApp"
         mc:Ignorable="d"
-        Title="Forum" Height="600" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Forum" Height="600" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing" >
+    <!-->Closed="Window_Closed"<-->
     <Grid Background="Gray" KeyDown="Grid_KeyDown" >
 
         <!--> **************Menu************ <-->
@@ -43,8 +44,9 @@
         <Button x:Name="enterMsgButton" Content="Enter message" HorizontalAlignment="Left" Margin="632,518,0,0" VerticalAlignment="Top" Width="132" Height="30" Click="enterMsgButton_Click"/>
         <Button x:Name="logOutButton" Content="Log out" HorizontalAlignment="Left" Margin="10,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="logOutButton_Click"/>
         <Button x:Name="blockUserButton" Content="Block user" HorizontalAlignment="Left" Margin="155,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="blockUserButton_Click"/>
-        <Button x:Name="removeUserButton" Content="Ban user from chat" HorizontalAlignment="Left" Margin="301,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Hidden" Click="removeUserButton_Click"/>
-        
+        <Button x:Name="removeUserButton" Content="Ban user from chat" HorizontalAlignment="Left" Margin="301,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Visible" Click="removeUserButton_Click"/>
+        <Button x:Name="openPrivateChatButton" Content="Open private chat" HorizontalAlignment="Left" Margin="451,518,0,0" VerticalAlignment="Top" Width="121" Height="30" IsEnabled="False"/>
+
         <!-->****************End of Button cntrl part**********<-->
     </Grid>
 </Window>

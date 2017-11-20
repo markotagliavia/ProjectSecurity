@@ -101,7 +101,7 @@ namespace ClientApp
                 {
                     if (groupChat.Logged.Single(x => x.Email.Equals(email)) != null)
                     {
-                        bool poslato = proxy.SendGroupMessage(email, entryMessageTextbox.Text);
+                        proxy.SendGroupMessage(email, entryMessageTextbox.Text);
                         entryMessageTextbox.Clear();
                     }
                     else
@@ -246,6 +246,7 @@ namespace ClientApp
             {
                 blockUserButton.IsEnabled = false;
                 removeUserButton.IsEnabled = false;
+                openPrivateChatButton.IsEnabled = false;
             }
             else
             {
@@ -253,13 +254,16 @@ namespace ClientApp
                 {
                     blockUserButton.IsEnabled = false;
                     removeUserButton.IsEnabled = false;
+                    openPrivateChatButton.IsEnabled = false;
                 }
                 else
                 {
                     //TO DO proveriti da li je vec blokiran, onda promeniti tekst na dugmetu u "Unblock"
                     //TO DO proveriti da li je vec izbacen iz sobe od strane admina pa promeniti tekst dugmeta u "Add user to chat"
+                    //TO DO proveriti da li je vec blokiran taj user kod tog korisnika pa disablovati dugme ako jeste
                     blockUserButton.IsEnabled = true;
                     removeUserButton.IsEnabled = true;
+                    openPrivateChatButton.IsEnabled = true;
                 }
             }
         }
@@ -278,7 +282,7 @@ namespace ClientApp
             tcp.MaxConnections = 500;
               tcp.OpenTimeout = new TimeSpan(0, 10, 0);
               tcp.CloseTimeout = new TimeSpan(0, 10, 0);
-              tcp.SendTimeout = new TimeSpan(0, 0, 2);
+              tcp.SendTimeout = new TimeSpan(0, 1, 0);
               tcp.ReceiveTimeout = new TimeSpan(0, 10, 0);
             this.proxy.InstanceContext = instanceContext;
             this.proxy.Abort();
@@ -373,6 +377,25 @@ namespace ClientApp
         {
             proxy.LogOut(email);
         }
+
+        /*private void Window_Closed(object sender, EventArgs e)
+        {
+            if (proxy != null)
+            {
+                try
+                {
+                    if (proxy.State != CommunicationState.Faulted)
+                    {
+                        proxy.Unsubscribe(email);
+                        proxy.Close();
+                    }
+                }
+                catch
+                {
+                    proxy.Abort();
+                }
+            }
+        }*/
     }
 
 

@@ -30,7 +30,7 @@ namespace ClientApp
             this.binding.MaxConnections = 500;
             this.binding.OpenTimeout = new TimeSpan(0, 10, 0);
             this.binding.CloseTimeout = new TimeSpan(0, 10, 0);
-            this.binding.SendTimeout = new TimeSpan(0, 0, 2);
+            this.binding.SendTimeout = new TimeSpan(0, 1, 0);
             this.binding.ReceiveTimeout = new TimeSpan(0, 10, 0);
             this.instanceContext = instanceContext;
            factory = this.CreateChannel();    
@@ -348,12 +348,11 @@ namespace ClientApp
             return ret;
         }
 
-        public bool SendGroupMessage(string userName, string message)
+        public void SendGroupMessage(string userName, string message)
         {
-            bool retVal = false;
             try
             {
-                retVal = factory.SendGroupMessage(userName, message);
+                factory.SendGroupMessage(userName, message);
                 Console.WriteLine("SendGroupMessage executed");
             }
             catch (Exception e)
@@ -361,7 +360,6 @@ namespace ClientApp
                 Console.WriteLine("Error while trying to SendGroupMessage(). {0}", e.Message);
             }
 
-            return retVal;
         }
 
         public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)

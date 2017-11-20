@@ -158,7 +158,6 @@ namespace ServiceApp
                 fs.Close();
             }
 
-
             return gc;
 
         }        // deserialize GroupChat
@@ -738,23 +737,12 @@ namespace ServiceApp
                     {
                         if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(u.Email))==false)
                         {
+                            ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                             u.Logged = true;
                             ServiceModel.Instance.LoggedIn.Add(u);
                             ServiceModel.Instance.GroupChat.Logged.Add(u);
-                            //Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
                             userOnSession = u;
-                            /*IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
-
-                            Guid clientId = Guid.NewGuid();
-
-                            if (callback != null)
-                            {
-                                lock (ServiceModel.Instance.Clients)
-                                {
-                                    ServiceModel.Instance.Clients.Add(u.Email, callback);
-                                }
-                                
-                            }*/
+                            SerializeGroupChat(ServiceModel.Instance.GroupChat);
                             NotifyAll();
                             return 1;
                         }
@@ -789,17 +777,32 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     user.Logged = false;
-                    ServiceModel.Instance.LoggedIn.Remove(user);
-                    ServiceModel.Instance.GroupChat.Logged.Remove(user);
-                    lock (ServiceModel.Instance.Clients)
+                    if (ServiceModel.Instance.LoggedIn.Any(x => x.Email.Equals(email)))
                     {
-                        if (ServiceModel.Instance.Clients.ContainsKey(user.Email))
+                        int index = ServiceModel.Instance.LoggedIn.IndexOf(ServiceModel.Instance.LoggedIn.Single(x => x.Email.Equals(email)));
+                        ServiceModel.Instance.LoggedIn.RemoveAt(index);
+
+                        if (ServiceModel.Instance.GroupChat.Logged.Any(x => x.Email.Equals(email)))
                         {
-                            ServiceModel.Instance.Clients.Remove(user.Email);
-                            NotifyAll();
+                            index = ServiceModel.Instance.GroupChat.Logged.IndexOf(ServiceModel.Instance.GroupChat.Logged.Single(x => x.Email.Equals(email)));
+                            ServiceModel.Instance.GroupChat.Logged.RemoveAt(index);
+                            lock (ServiceModel.Instance.Clients)
+                            {
+                                if (ServiceModel.Instance.Clients.ContainsKey(user.Email))
+                                {
+                                    ServiceModel.Instance.Clients.Remove(user.Email);
+                                    SerializeGroupChat(ServiceModel.Instance.GroupChat);
+                                    NotifyAll();
+                                }
+                            }
+                            return true;
                         }
                     }
-                    return true;
+                    else
+                    {
+                        Console.WriteLine("User {0} is not logged!", user.Name);
+                    }
+
                 }
                 else
                 {
@@ -1142,7 +1145,7 @@ namespace ServiceApp
                             }
 
                         }
-
+                        SerializeGroupChat(ServiceModel.Instance.GroupChat);
                         SerializeUsers(lista);
 
                         NotifyAll();
@@ -1215,11 +1218,10 @@ namespace ServiceApp
             return ok;
         }
 
-        public bool SendGroupMessage(string userName, string message)
+        public void SendGroupMessage(string userName, string message)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
-            bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendGroupMessage.ToString()))
             {
@@ -1232,7 +1234,6 @@ namespace ServiceApp
                     ServiceModel.Instance.GroupChat.AllMessages.Add(m);
                     SerializeGroupChat(ServiceModel.Instance.GroupChat);   // serijal
                     NotifyAll();
-                    ok = true;
                 }
                 else
                 {
@@ -1246,7 +1247,6 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
-            return ok;
         }    // DONE
 
         public bool SendRoomMessage(string userName, string roomName, string message)
@@ -1284,7 +1284,6 @@ namespace ServiceApp
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
-
             return ok;
         }  // DONE
 
