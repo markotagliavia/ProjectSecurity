@@ -44,7 +44,7 @@ namespace SecurityManager
             }
         }
 
-        public string Decrypt(byte[] key, byte[] data)
+        public byte[] Decrypt(byte[] key, byte[] data)
         {
             using (Aes aes = Aes.Create())
             {
@@ -67,7 +67,7 @@ namespace SecurityManager
                         {
                             using (StreamReader reader = new StreamReader(cs))
                             {
-                                return reader.ReadToEnd();
+                                return Encoding.ASCII.GetBytes(reader.ReadToEnd());
                             }
                         }
                     }

@@ -9,21 +9,33 @@ namespace SecurityManager
 {
     class GenerateAesKey
     {
+        // Holds the current session's key.
+        private byte[] mySessionKey;
+
+        public GenerateAesKey()
+        {
+        }
+
+        public byte[] MySessionkey
+        {
+            get { return mySessionKey; }
+            set { mySessionKey = value; }
+        }
+
         // Get the Public Key from the Server
-      /*  RSAParameters publicKey = GetFromServer();
+        RSAParameters publicKey = GetFromServer();
 
         private static RSAParameters GetFromServer()
         {
+            //TO DO
             throw new NotImplementedException();
         }
 
-        // Holds the current session's key.
-        byte[] MySessionKey;
-
         // Send encrypted session key to Server.
-        public void SendToServer(GenerateAndEncryptSessionKey(publicKey))
+        public void SendToServer()
         {
-        
+            byte[] b = GenerateAndEncryptSessionKey(publicKey);
+            //send to server TO DO
         }
  
 
@@ -33,16 +45,16 @@ namespace SecurityManager
             {
                 aes.KeySize = aes.LegalKeySizes[0].MaxSize;
                 // Setting the KeySize generates a new key, but if you're paranoid, you can call aes.GenerateKey() again.
-
-                MySessionKey = aes.Key;
+                mySessionKey = aes.Key;
             }
 
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
                 rsa.ImportParameters(publicKey);
-
-                return rsa.Encrypt(MySessionKey, true /* use OAEP padding */);
+                return rsa.Encrypt(mySessionKey, true /* use OAEP padding */);
             }
-        }*/
+        }
+
+
     }
 }
