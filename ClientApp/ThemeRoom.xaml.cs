@@ -46,7 +46,7 @@ namespace ClientApp
             loggedAsLabel1.Content = $"You are logged as {email}";
         }
 
-        public ObservableCollection<User> Logged 
+        public ObservableCollection<User> Logged
         {
             get
             {
@@ -69,7 +69,36 @@ namespace ClientApp
         /// <param name="e"></param>
         private void enterMsgButton_Click(object sender, RoutedEventArgs e)
         {
-            //TO DO
+            if (!room.Blocked.Any(x => x.Email.Equals(email)))
+            {
+                if (!String.IsNullOrWhiteSpace(entryMessageTextbox.Text))
+                {
+                    if (room.Logged.Single(x => x.Email.Equals(email)).Logged)
+                    {
+                        if (room.Logged.Single(x => x.Email.Equals(email)) != null)
+                        {
+                            proxy.SendRoomMessage(email, room.Theme, entryMessageTextbox.Text);
+                            entryMessageTextbox.Clear();
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("You are banned from group chat and cannot write messages!");
+            }
         }
 
         /// <summary>
@@ -89,7 +118,20 @@ namespace ClientApp
         /// <param name="e"></param>
         private void blockUserButton_Click(object sender, RoutedEventArgs e)
         {
-            //TO DO
+            if (loggedUsersListBox.SelectedIndex != -1)
+            {
+                if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
+                {
+                    if (((Button)sender).Content.Equals("Block"))
+                    {
+                        proxy.BlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                    }
+                    else
+                    {
+                        proxy.RemoveBlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -99,17 +141,47 @@ namespace ClientApp
         /// <param name="e"></param>
         private void closeRoomButton_Click(object sender, RoutedEventArgs e)
         {
-            //TO DO check admin rigths
+            if (room.Logged.Any(x => x.Email.Equals(email)))
+            {
+                if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
+                {
+                    proxy.CloseRoom(room.Theme);
+                }
+            }
         }
+
         private void ChatServiceCallback_ThemeNotified(object sender, ThemeRoomEventArgs e)
         {
             if (e.Room == null)
             {
-                //TO DO zatvori
+                this.Close();
             }
             else
             {
-                //hendlaj view
+                room = e.Room;
+                Logged.Clear();
+                foreach (User u in room.Logged)
+                {
+                    Logged.Add(u);
+                }
+
+                Msg.Clear();
+                foreach (Message m in room.AllMessages)
+                {
+                    Msg.Add(m);
+                }
+                allMessagesScrollViewer.ScrollToBottom();
+
+                if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
+                {
+                    removeUserButton.Visibility = Visibility.Visible;
+                    closeRoomButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    removeUserButton.Visibility = Visibility.Hidden;
+                    closeRoomButton.Visibility = Visibility.Hidden;
+                }
             }
 
         }
@@ -126,19 +198,42 @@ namespace ClientApp
             this.proxy.Abort();
 
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-            if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
-            {
-                removeUserButton.Visibility = Visibility.Visible;
-                closeRoomButton.Visibility = Visibility.Visible;
-            }
+
+
             try
             {
-                this.proxy.SubscribeUserTheme(email,room.Theme);
+                this.proxy.SubscribeUserTheme(email, room.Theme);
             }
             catch
             {
                 // TODO: Handle exception.
             }
+
+            room = this.proxy.GetThemeRoom(room.Theme);
+            Logged.Clear();
+            foreach (User u in room.Logged)
+            {
+                Logged.Add(u);
+            }
+
+            Msg.Clear();
+            foreach (Message m in room.AllMessages)
+            {
+                Msg.Add(m);
+            }
+            allMessagesScrollViewer.ScrollToBottom();
+
+            if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
+            {
+                removeUserButton.Visibility = Visibility.Visible;
+                closeRoomButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                removeUserButton.Visibility = Visibility.Hidden;
+                closeRoomButton.Visibility = Visibility.Hidden;
+            }
+
 
             Timer timer = new Timer(300000);
             timer.Elapsed +=
@@ -174,7 +269,7 @@ namespace ClientApp
         {
             if (e.Key == Key.Enter)
             {
-                 enterMsgButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                enterMsgButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
         }
 
@@ -185,8 +280,10 @@ namespace ClientApp
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //TO DO kreirati na servisu ovu fju
-            //proxy.LeaveThemeRoom(room.Theme);
+            proxy.LeaveRoom(room.Theme);
+            proxy.UnsubscribeUserTheme(email, room.Theme);
+            var s = new GroupChat(proxy, email);
+            s.Show();
         }
 
         /// <summary>
@@ -196,7 +293,26 @@ namespace ClientApp
         /// <param name="e"></param>
         private void removeUserButton_Click(object sender, RoutedEventArgs e)
         {
-            //TO DO check admin rights
+            if (room.Logged.Any(x => x.Email.Equals(email)))
+            {
+                if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
+                {
+                    if (loggedUsersListBox.SelectedIndex != -1)
+                    {
+                        if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
+                        {
+                            if (((Button)sender).Content.Equals("Ban user from chat"))
+                            {
+                                proxy.BlockUserFromRoom(loggedUsersListBox.SelectedItem.ToString(), room.Theme);
+                            }
+                            else
+                            {
+                                proxy.RemoveBlockUserFromRoom(loggedUsersListBox.SelectedItem.ToString(), room.Theme);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public delegate void ThemeRoomEventHandler(object sender, ThemeRoomEventArgs e);
@@ -218,6 +334,49 @@ namespace ClientApp
             /// Gets the message.
             /// </summary>
             public Room Room { get { return room; } }
+        }
+
+        /// <summary>
+        /// selection in list of logged users changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void loggedUsersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (loggedUsersListBox.SelectedIndex == -1)
+            {
+                blockUserButton.IsEnabled = false;
+                removeUserButton.IsEnabled = false;
+                closeRoomButton.IsEnabled = false;
+            }
+            else
+            {
+                if (loggedUsersListBox.SelectedItem.ToString().Equals(email))
+                {
+                    blockUserButton.IsEnabled = false;
+                    removeUserButton.IsEnabled = false;
+                    closeRoomButton.IsEnabled = false;
+                }
+                else
+                {
+                    if (room.Blocked.Any(x => x.Email.Equals(email)))
+                    {
+                        removeUserButton.Content = "Unban user";
+                    }
+
+                    if (room.Logged.Any(x => x.Email.Equals(email)))
+                    {
+                        if (room.Logged.Single(x => x.Email.Equals(email)).Blocked.Any(x => x.Email.Equals(loggedUsersListBox.SelectedItem.ToString())))
+                        {
+                            blockUserButton.Content = "Unblock";
+                            closeRoomButton.IsEnabled = false;
+                        }
+                    }
+                    blockUserButton.IsEnabled = true;
+                    removeUserButton.IsEnabled = true;
+                    closeRoomButton.IsEnabled = true;
+                }
+            }
         }
     }
 }

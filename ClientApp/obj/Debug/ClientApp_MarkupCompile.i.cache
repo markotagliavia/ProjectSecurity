@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Kristijan\Desktop\repo\ClientApp\obj\Debug\
+C:\Users\Marko\Desktop\repo12345\ClientApp\obj\Debug\
 ClientApp
 none
 false
 DEBUG;TRACE
-C:\Users\Kristijan\Desktop\repo\ClientApp\App.xaml
+C:\Users\Marko\Desktop\repo12345\ClientApp\App.xaml
 81527583956
 
-17-965536861
-17-1778389361
+17-589525913
+17-130006459
 ChangePasswordWindow.xaml;ChangeRole.xaml;GroupChat.xaml;MainWindow.xaml;NewRoomWindow.xaml;NewUserWindow.xaml;ThemeRoom.xaml;VerificationKey.xaml;
 
 True
