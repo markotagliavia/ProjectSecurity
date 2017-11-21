@@ -266,3 +266,15 @@ C:\Users\Marko\Desktop\repo12345\ServiceApp\bin\Debug\SecurityManager.pdb
 C:\Users\Marko\Desktop\repo12345\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
 C:\Users\Marko\Desktop\repo12345\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\Marko\Desktop\repo12345\ServiceApp\obj\Debug\ServiceApp.pdb
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\ServiceApp.exe.config
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\ServiceApp.exe
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\ServiceApp.pdb
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\Contracts.dll
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\Contracts.pdb
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\bin\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\obj\Debug\ServiceApp.exe
+D:\cetvrta godina\blok2\Projekat4\ServiceApp\obj\Debug\ServiceApp.pdb

@@ -65,7 +65,7 @@ namespace SecurityManager
             try
             {
                 /// create customLog handle
-                if (!EventLog.SourceExists(SourceName))
+                if (!System.Diagnostics.EventLog.SourceExists(SourceName))
                 {
                     EventLog.CreateEventSource(SourceName, LogName);
                 }

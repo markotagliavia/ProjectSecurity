@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 using System.ServiceModel;
 using System.Text;
 using System.Threading;
@@ -23,8 +24,20 @@ namespace ServiceApp
     public class Service : IService
     {
         private User userOnSession;     //logged user
+        private Guid sessionID;
         public static string AppRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
+        public Guid SessionID
+        {
+            get
+            {
+                return sessionID;
+            }
+            set
+            {
+                sessionID = value;
+            }
+        }
 
         /// <summary>
         /// THis function notifies all logged clients about changes in forum
@@ -2016,13 +2029,13 @@ namespace ServiceApp
                 {
                     if (ServiceModel.Instance.RoomList.Any(i => i.Theme.Equals(theme)))
                     {
-                        Room room = ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme));
-                        if (room.Logged.Any(i => i.Email.Equals(userOnSession.Email)))
+                       
+                        if (ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Any(i => i.Email.Equals(userOnSession.Email)))
                         {
-                            int index = room.Logged.IndexOf(room.Logged.Single(i => i.Email.Equals(userOnSession.Email)));
-                            room.Logged.RemoveAt(index);
-                            SerializeRoom(room);
-                            NotifyViewforRoom(room);
+                            int index = ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.IndexOf(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Single(i => i.Email.Equals(userOnSession.Email)));
+                            ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.RemoveAt(index);
+                            SerializeRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)));
+                            NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)));
                         }
 
                     }
@@ -2109,6 +2122,31 @@ namespace ServiceApp
 
             }
             
+        }
+   
+
+
+        public bool SendSessionKey(byte[] crypted)
+        {
+            if (ServiceModel.Instance.RSA.SetSymmetricKey(this.SessionID, crypted))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// this function provide public RSA key to Client
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        RSAParameters IService.GetPublicKey(Guid code)
+        {
+            this.SessionID = code;
+            return ServiceModel.Instance.RSA.Generate(code);
         }
     }
 }

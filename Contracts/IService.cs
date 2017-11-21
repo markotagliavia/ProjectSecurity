@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ForumModels;
 using System.Collections.ObjectModel;
 using SecurityManager;
+using System.Security.Cryptography;
 
 namespace Contracts
 {
@@ -121,7 +122,11 @@ namespace Contracts
         [OperationContract(IsOneWay = true)]
         void LogInPrivateChat(Guid code);
 
+        [OperationContract]
+        RSAParameters GetPublicKey(Guid code);
 
+        [OperationContract]
+        bool SendSessionKey(byte[] crypted);
     }
 
    

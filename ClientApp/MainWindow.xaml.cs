@@ -28,7 +28,6 @@ namespace ClientApp
 
         public MainWindow()
         {
-            InitializeComponent();
             NetTcpBinding binding = new NetTcpBinding();
             string address = "net.tcp://localhost:27019/ServiceApp";
             InstanceContext instanceContext;
@@ -37,6 +36,20 @@ namespace ClientApp
 
             instanceContext = new InstanceContext(chatServiceCallback);
             this.proxy = new WCFClient(instanceContext, binding, new EndpointAddress(new Uri(address)));
+            this.proxy.Guid = Guid.NewGuid();
+            this.proxy.Aes = new GenerateAesKey(this.proxy.GetPublicKey(this.proxy.Guid), 2048);
+
+            if (this.proxy.SendSessionKey(this.proxy.Aes.AesEncryptedSessionKey))
+            {
+                InitializeComponent();
+            }
+            else
+            {
+                MessageBox.Show("Session is in danger. Possibly someone broke into it. We will shutdown connection to prevent this danger.");
+                this.proxy.Close();
+            }
+
+
             Console.ReadLine();
         }
 

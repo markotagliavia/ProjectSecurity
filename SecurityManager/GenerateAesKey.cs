@@ -7,13 +7,17 @@ using System.Threading.Tasks;
 
 namespace SecurityManager
 {
-    class GenerateAesKey
+    public class GenerateAesKey
     {
         // Holds the current session's key.
         private byte[] mySessionKey;
+        private RSAParameters publicKey;
+        private int keySize;
 
-        public GenerateAesKey()
+        public GenerateAesKey(RSAParameters publicKey, int keySize)
         {
+            this.publicKey = publicKey;
+            this.keySize = keySize;
         }
 
         public byte[] MySessionkey
@@ -23,21 +27,31 @@ namespace SecurityManager
         }
 
         // Get the Public Key from the Server
-        RSAParameters publicKey = GetFromServer();
+        // = GetFromServer();
 
-        private static RSAParameters GetFromServer()
+        public RSAParameters PublicKey
         {
-            //TO DO
-            throw new NotImplementedException();
+            get { return publicKey; }
+            set { publicKey = value; }
         }
 
-        // Send encrypted session key to Server.
-        public void SendToServer()
+        /* private static RSAParameters GetFromServer()
+         {
+             //TO DO
+             throw new NotImplementedException();
+         }
+
+         // Send encrypted session key to Server.
+         public void SendToServer()
+         {
+             byte[] b = GenerateAndEncryptSessionKey(publicKey);
+             //send to server TO DO
+         }*/
+
+        public byte[] AesEncryptedSessionKey
         {
-            byte[] b = GenerateAndEncryptSessionKey(publicKey);
-            //send to server TO DO
+            get { return GenerateAndEncryptSessionKey(publicKey); }
         }
- 
 
         private byte[] GenerateAndEncryptSessionKey(RSAParameters publicKey)
         {
@@ -45,10 +59,11 @@ namespace SecurityManager
             {
                 aes.KeySize = aes.LegalKeySizes[0].MaxSize;
                 // Setting the KeySize generates a new key, but if you're paranoid, you can call aes.GenerateKey() again.
+                aes.GenerateKey();
                 mySessionKey = aes.Key;
             }
 
-            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(keySize))
             {
                 rsa.ImportParameters(publicKey);
                 return rsa.Encrypt(mySessionKey, true /* use OAEP padding */);

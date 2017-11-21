@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SecurityManager
 {
-    class EncryptDecrypt
+    public class EncryptDecrypt
     {
         public byte[] EncryptData(byte[] key, string data)
         {

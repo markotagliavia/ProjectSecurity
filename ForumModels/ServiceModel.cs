@@ -37,6 +37,8 @@ namespace ForumModels
 
         private object lockUsers;
 
+        private GennerateRsaKey rsa;
+
         private ServiceModel()
         {
             //Console.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -62,6 +64,14 @@ namespace ForumModels
             lockPrivateChat = new object();
 
             lockUsers = new object();
+
+            rsa = new GennerateRsaKey(2048);
+        }
+        [DataMember]
+        public GennerateRsaKey RSA
+        {
+            get { return rsa; }
+            set { rsa = value; }
         }
         [DataMember]
         public object LockUsers

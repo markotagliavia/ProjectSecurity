@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SecurityManager;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
 
 namespace ClientApp
 {
@@ -15,6 +16,10 @@ namespace ClientApp
     public class WCFClient : DuplexChannelFactory<IService>,IService
     {
         IService factory;
+
+        Guid guid;
+
+        GenerateAesKey aes;
 
         private InstanceContext instanceContext;
 
@@ -34,6 +39,24 @@ namespace ClientApp
             this.binding.ReceiveTimeout = new TimeSpan(0, 10, 0);
             this.instanceContext = instanceContext;
            factory = this.CreateChannel();    
+        }
+
+        public Guid Guid
+        {
+            get { return guid; }
+            set { guid = value; }
+        }
+
+        public GenerateAesKey Aes
+        {
+            get
+            {
+                return aes;
+            }
+            set
+            {
+                aes = value;
+            }
         }
 
         public EndpointAddress Address
@@ -565,5 +588,35 @@ namespace ClientApp
 
             }
         }
+        public RSAParameters GetPublicKey(Guid code)
+        {
+            RSAParameters a = new RSAParameters();
+            try
+            {
+                a = factory.GetPublicKey(code);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to GetAesKey(). {0}", e.Message);
+
+            }
+                 ;
+            return a;
+        }
+
+        public bool SendSessionKey(byte[] crypted)
+        {
+            bool retVal = false;
+            try
+            {
+                retVal = factory.SendSessionKey(crypted);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Sending session key failed because {ex.Message}");
+            }
+            return retVal;
+        }
     }
 }
+
