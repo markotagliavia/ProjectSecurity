@@ -273,8 +273,7 @@ namespace ClientApp
                     if (Logged.Single(x => x.Email.Equals(email)).Role.Equals(Roles.Admin))
                     {
                         this.i = 1;
-                        var s = new ChangeRole(this.proxy, email);
-                        s.Show();
+                        
                         this.Close();
                     }
                 }
@@ -458,9 +457,11 @@ namespace ClientApp
                 
                 //unsubscribe
             }
-            else
+            else if(i == 1)
             {
                 proxy.Unsubscribe(email);
+                var s = new ChangeRole(this.proxy, email);
+                s.Show();
             }
             
         }

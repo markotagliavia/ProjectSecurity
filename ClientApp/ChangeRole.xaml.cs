@@ -187,7 +187,9 @@ namespace ClientApp
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            this.proxy.UnsubscribeAllUsers(this.email);
+            var gr = new GroupChat(this.proxy,this.email);
+            gr.Show();
         }
     }
     public delegate void AllUsersNotifiedEventHandler(object sender, AllUsersNotifiedEventArgs e);

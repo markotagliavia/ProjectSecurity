@@ -41,7 +41,7 @@ namespace SecurityManager
             {
                 rsa.ImportParameters(publicKey);
 
-                return rsa.Encrypt(MySessionKey, true /* use OAEP padding */);
+                return rsa.Encrypt(MySessionKey, true /* use OAEP padding );
             }
         }*/
     }
