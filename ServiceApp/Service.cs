@@ -563,6 +563,15 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
                 retVal = false;
             }
+
+            if (retVal)
+            {
+                Audit.AddAdminSuccess(user.Email,email);
+            }
+            {
+                Audit.AddAdminFailed(user.Email,email);
+            }
+
             return retVal;
         }                 //DONE
 
@@ -602,6 +611,15 @@ namespace ServiceApp
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            if (retVal)
+            {
+                Audit.BlockGroupChatSuccess(blockEmail);
+            }
+            {
+                Audit.BlockGroupChatFailed(blockEmail);
+            }
+
             return retVal;
         }     // DONE
 
@@ -667,6 +685,14 @@ namespace ServiceApp
                 retVal = false;
             }
 
+            if (retVal)
+            {
+                Audit.BlockUserSuccess(requestEmail,blockEmail);
+            }
+            {
+                Audit.BlockUserFailed(requestEmail,blockEmail);
+            }
+
             return retVal;
         }  //Blokira iz liste logovanih a sta ako nije logovan sto mora?
 
@@ -708,6 +734,14 @@ namespace ServiceApp
             {
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            if (retVal)
+            {
+                Audit.BlockUserFromRoomSuccess(blockEmail, roomName);
+            }
+            {
+                Audit.BlockUserFromRoomFailed(blockEmail, roomName);
             }
 
             return retVal;
@@ -753,6 +787,14 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
+            if (retVal)
+            {
+                Audit.ChangePasswordSuccess(email);
+            }
+            {
+                Audit.ChangePasswordFailed(email);
+            }
+
             return retVal;
         } //DONE
 
@@ -774,23 +816,27 @@ namespace ServiceApp
                             SerializePrivateChat(pc);  // kreiraj fajl
                             SerializeFileChats(pc);
                             ServiceModel.Instance.PrivateChatList.Add(pc);
+                            Audit.CreatePrivateChatSuccess(firstEmail, secondEmail);
                             return pc;
                         }
                         else
                         {
                             Console.WriteLine("Chat already exists!");
+                            Audit.CreatePrivateChatSuccess(firstEmail, secondEmail);
                             return ServiceModel.Instance.PrivateChatList.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email)));
                         }
                     }
                     else
                     {
                         Console.WriteLine("User {0} is not logged in!", secondEmail);
+                        Audit.CreatePrivateChatFailed(firstEmail, secondEmail);
                         return null;
                     }
                 }
                 else
                 {
                     Console.WriteLine("User {0} is not logged in!", user.Name);
+                    Audit.CreatePrivateChatFailed(firstEmail, secondEmail);
                     return null; //nije logovan user
                 }
             }
@@ -800,6 +846,7 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
+            Audit.CreatePrivateChatFailed(firstEmail, secondEmail);
             return null;
         }        //DONE
 
@@ -837,6 +884,15 @@ namespace ServiceApp
             {
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            if (retVal)
+            {
+                Audit.CreateRoomSuccess(roomName);
+            }
+            else
+            {
+                Audit.CreateRoomFailed(roomName);
             }
            
         }        // DONE
@@ -891,6 +947,15 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
+            if (retVal)
+            {
+                Audit.DeleteAdminSuccess(user.Email,email);
+            }
+            else
+            {
+                Audit.DeleteAdminfailed(user.Email, email);
+            }
+
             return retVal;
         } //DONE
 
@@ -902,11 +967,13 @@ namespace ServiceApp
 
             if (lista == null)
             {
+                Audit.LogInFailed(email);
                 return -2;
             }
 
             if (lista.Any(p => p.Email == email) == false)
             {
+                Audit.LogInFailed(email);
                 return -2;
             }
             User u = lista.Single(i => i.Email == email);
@@ -987,8 +1054,9 @@ namespace ServiceApp
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine("Could not end email\n\n" + e.ToString());
+                            Console.WriteLine("Could not send email\n\n" + e.ToString());
                         }
+                        Audit.LogInFailed(email);
                         return 0;
                     }
                     else
@@ -997,6 +1065,7 @@ namespace ServiceApp
                         {
                             ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                             u.Logged = true;
+                            Audit.LogInSuccess(email);
                             ServiceModel.Instance.LoggedIn.Add(u);
                             ServiceModel.Instance.GroupChat.Logged.Add(u);
                             userOnSession = u;
@@ -1044,6 +1113,7 @@ namespace ServiceApp
                         }
                         else
                         {
+                            Audit.LogInFailed(email);
                             return -2; //neko je vec logovan sa tim nalogom
                         }
 
@@ -1052,11 +1122,13 @@ namespace ServiceApp
                 }
                 else
                 {
+                    Audit.LogInFailed(email);
                     return -1;
                 }
             }
             else
             {
+                Audit.LogInFailed(email);
                 return -1;
             }
 
@@ -1093,6 +1165,7 @@ namespace ServiceApp
                                     NotifyAll();
                                 }
                             }
+                            Audit.LogOutSuccess(email);
                             return true;
                         }
                     }
@@ -1113,12 +1186,13 @@ namespace ServiceApp
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+            Audit.LogOutFailed(email);
             return false;
         }                   // ne treba da se upisuje promena u fajl
 
         public bool Registration(string name, string sname, DateTime date, string gender, string email, string password)
         {
-            bool exists = false;
+            bool exists = false , registrationSuccess = false;
             List<User> lista = new List<User>();
 
             User u1 = new User(name, sname, date, email, password, Roles.User, gender);
@@ -1137,6 +1211,7 @@ namespace ServiceApp
                 {
                     bf.Serialize(s, lista);
                     lista.Remove(u1);
+                    registrationSuccess = true;
                 }
                 catch (SerializationException e)
                 {
@@ -1191,6 +1266,7 @@ namespace ServiceApp
                         lista.Add(u1);
                         
                         bf.Serialize(s, lista);
+                        registrationSuccess = true;
                     }
                     catch (SerializationException e)
                     {
@@ -1205,6 +1281,15 @@ namespace ServiceApp
             }
 
             NotifyViewforAdmins();
+
+            if (registrationSuccess)
+            {
+                Audit.RegistrationSuccess(email);
+            }
+            else
+            {
+                Audit.RegistrationFailed(email);
+            }
 
             return exists;
         }   //DONE
@@ -1247,6 +1332,15 @@ namespace ServiceApp
             {
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            if (retVal)
+            {
+                Audit.RemoveBlockGroupChatSuccess(unblockEmail);
+            }
+            else
+            {
+                Audit.RemoveBlockGroupChatFailed(unblockEmail);
             }
 
             return retVal;
@@ -1314,6 +1408,16 @@ namespace ServiceApp
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
+
+            if (retVal)
+            {
+                Audit.RemoveBlockUserSuccess(requestEmail, unblockEmail);
+            }
+            else
+            {
+                Audit.RemoveBlockUserFailed(requestEmail, unblockEmail);
+            }
+
             return retVal;
         }   // Ista stvar ko sa block user
 
@@ -1354,6 +1458,15 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
+            if (retval)
+            {
+                Audit.RemoveBlockUserFromRoomSuccess(unblockEmail, roomName);
+            }
+            else
+            {
+                Audit.RemoveBlockUserFromRoomFailed(unblockEmail, roomName);
+            }
+
             return retval;
         }  //DONE
 
@@ -1392,29 +1505,18 @@ namespace ServiceApp
                 catch (Exception e)
                 {
                     Console.WriteLine("Could not end email\n\n" + e.ToString());
+                    Audit.ResetPasswordFailed(email);
+                    return -1;
                 }
+                Audit.ResetPasswordSuccess(email);
                 return 0;
             }
             else
             {
+                Audit.ResetPasswordFailed(email);
                 return -1;
             }
 
-
-
-              //  }
-              //  else
-               // {
-               //     return -2; // neulogovan je
-              //  }
-
-           // }
-           // else
-           // {
-                //TODO greske
-           // }
-
-            //return -1;
         }       //DONE
 
         public bool SendVerificationKey(string key)
@@ -1461,6 +1563,16 @@ namespace ServiceApp
             else
             {
                 //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            if (ok)
+            {
+                Audit.SendVerificationKeySuccess();
+            }
+            else
+            {
+                Audit.SendVerificationKeyFailed();
             }
 
             return ok;
@@ -1518,6 +1630,15 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
+            if (ok)
+            {
+                Audit.SendPrivateMessageSuccess(sendEmail, reciveEmail);
+            }
+            else
+            {
+                Audit.SendPrivateMessageFailed(sendEmail, reciveEmail);
+            }
+
             return ok;
         } //DONE
 
@@ -1525,6 +1646,7 @@ namespace ServiceApp
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
+            bool sendSuccess = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendGroupMessage.ToString()))
             {
@@ -1535,6 +1657,7 @@ namespace ServiceApp
                     ServiceModel.Instance.GroupChat = DeserializeGroupChat(); //deseral
 
                     ServiceModel.Instance.GroupChat.AllMessages.Add(m);
+                    sendSuccess = true;
                     SerializeGroupChat(ServiceModel.Instance.GroupChat);   // serijal
                     NotifyAll();
                 }
@@ -1550,12 +1673,22 @@ namespace ServiceApp
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
+            if (sendSuccess)
+            {
+                Audit.SendGroupMessageSuccess(userName);
+            }
+            else
+            {
+                Audit.SendGroupMessageFailed(userName);
+            }
+
         }    // DONE
 
         public void SendRoomMessage(string userName, string roomName, string message)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
+            bool sendSuccess = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendRoomMessage.ToString()))
             {
@@ -1566,6 +1699,7 @@ namespace ServiceApp
                     if(room != null)
                     {
                         ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName).AllMessages.Add(m);
+                        sendSuccess = true;
                         SerializeRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName));
                         NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName));
                     }
@@ -1586,8 +1720,16 @@ namespace ServiceApp
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
-            
-           
+
+            if (sendSuccess)
+            {
+                Audit.SendRoomMessageSuccess(userName, roomName);
+            }
+            else
+            {
+                Audit.SendRoomMessageFailed(userName, roomName);
+            }
+
         }   //DONE
 
 
@@ -1657,6 +1799,15 @@ namespace ServiceApp
             {
                 //TODO greske
                 Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            if (ok)
+            {
+                Audit.CloseRoomSuccess(roomName);
+            }
+            else
+            {
+                Audit.CloseRoomFailed(roomName);
             }
 
             return ok;

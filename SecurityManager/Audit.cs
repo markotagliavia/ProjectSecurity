@@ -221,6 +221,32 @@ namespace SecurityManager
             }
         }
 
+        public static void LogOutSuccess(string userName)
+        {
+            if (customLog != null)
+            {
+                string message = String.Format($"{DateTime.Now} | User {userName} successfully logged out.");
+                customLog.WriteEntry(message);
+            }
+            else
+            {
+                throw new ArgumentException(string.Format($"{DateTime.Now} | Error while trying to write event (eventid = {(int)AuditEventTypes.LogOutSuccess}) to event log."));
+            }
+        }
+
+        public static void LogOutFailed(string userName)
+        {
+            if (customLog != null)
+            {
+                string message = String.Format($"{DateTime.Now} | User {userName} failed to log out.");
+                customLog.WriteEntry(message);
+            }
+            else
+            {
+                throw new ArgumentException(string.Format($"{DateTime.Now} | Error while trying to write event (eventid = {(int)AuditEventTypes.LogOutFailed}) to event log."));
+            }
+        }
+
         public static void AddAdminSuccess(string userName, string adminName)
         {
             if (customLog != null)
@@ -251,7 +277,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | User {userName} delete admin rights to user {adminName} successfully.");
+                string message = String.Format($"{DateTime.Now} | User {userName} deleted admin rights to user {adminName} successfully.");
                 customLog.WriteEntry(message);
             }
             else
@@ -303,7 +329,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | User {userName} unblock user {blockUserName} successfully.");
+                string message = String.Format($"{DateTime.Now} | User {userName} unblockd user {blockUserName} successfully.");
                 customLog.WriteEntry(message);
             }
             else
@@ -342,7 +368,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | Fail to block user {userName} from group chat.");
+                string message = String.Format($"{DateTime.Now} | Failed to block user {userName} from group chat.");
                 customLog.WriteEntry(message);
             }
             else
@@ -355,7 +381,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | User {userName} unblock from group chat successfully.");
+                string message = String.Format($"{DateTime.Now} | User {userName} unblocked from group chat successfully.");
                 customLog.WriteEntry(message);
             }
             else
@@ -368,7 +394,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | Fail to unblock user {userName} from group chat.");
+                string message = String.Format($"{DateTime.Now} | Failed to unblock user {userName} from group chat.");
                 customLog.WriteEntry(message);
             }
             else
@@ -394,7 +420,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | Fail to block user {userName} from room {roomName}.");
+                string message = String.Format($"{DateTime.Now} | Failed to block user {userName} from room {roomName}.");
                 customLog.WriteEntry(message);
             }
             else
@@ -420,7 +446,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | Fail to unblock user {userName} from room {roomName}.");
+                string message = String.Format($"{DateTime.Now} | Failed to unblock user {userName} from room {roomName}.");
                 customLog.WriteEntry(message);
             }
             else
@@ -511,7 +537,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | User {userName} successfully sended message to group chat.");
+                string message = String.Format($"{DateTime.Now} | User {userName} successfully send message to group chat.");
                 customLog.WriteEntry(message);
             }
             else
@@ -537,7 +563,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | User {userName} successfully sended message to room {roomName}.");
+                string message = String.Format($"{DateTime.Now} | User {userName} successfully send message to room {roomName}.");
                 customLog.WriteEntry(message);
             }
             else
@@ -563,7 +589,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | User {sendUserName} successfully sended message to user {recvUserName}.");
+                string message = String.Format($"{DateTime.Now} | User {sendUserName} successfully send message to user {recvUserName}.");
                 customLog.WriteEntry(message);
             }
             else
