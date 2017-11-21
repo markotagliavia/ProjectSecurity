@@ -49,8 +49,9 @@ namespace ClientApp
             string theme = themeTextBox.Text;
 
             //send data to server
-            bool i = proxy.CreateRoom(theme);
-            if (i == true)
+            proxy.CreateRoom(theme);
+            this.Close();
+          /*  if (i == true)
             {
                 //treba notificirati na grupnom cetu, videti sa TIjanom
                 //TO DO
@@ -59,7 +60,7 @@ namespace ClientApp
             else
             {
                 MessageBox.Show("There is already this theme room on forum!");
-            }
+            }*/
         }
 
         /// <summary>

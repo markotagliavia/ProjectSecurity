@@ -24,6 +24,7 @@ namespace ClientApp
         private ObservableCollection<User> logged;
         private ObservableCollection<Message> msg;
         private ObservableCollection<string> themeRooms;
+        Room roompom;
 
         private InstanceContext instanceContext;
 
@@ -88,14 +89,14 @@ namespace ClientApp
                 if (Logged.Single(x => x.Email.Equals(email)).Logged)
                 {
                     Console.WriteLine(((MenuItem)sender).Header.ToString());
-                    Room r = proxy.GetThemeRoom(((MenuItem)sender).Header.ToString());
+                    Room r = proxy.GetThemeRoom(((MenuItem)sender).Header.ToString(), email);
                     if (r != null)
                     {
                         if (!r.Blocked.Any(x => x.Email.Equals(email)))
                         {
-                            r.Logged.Add(Logged.Single(x => x.Email.Equals(email)));
-                            var window = new ThemeRoom(proxy, r, email);
-                            window.Show();
+                            this.i = 2;
+                            roompom = r;
+                            this.Close();
                         }
                         else
                         {
@@ -392,6 +393,7 @@ namespace ClientApp
             {
                 MenuItem mi = new MenuItem();
                 mi.Header = s;
+                mi.Click += new RoutedEventHandler(menuItemRoomsClick);
                 roomsMenuItem.Items.Add(mi);
             }
 
@@ -454,14 +456,20 @@ namespace ClientApp
                 s.Show();
                 proxy.LogOut(email);
                 proxy.Unsubscribe(email);
-                
+
                 //unsubscribe
             }
-            else if(i == 1)
+            else if (i == 1)
             {
                 proxy.Unsubscribe(email);
                 var s = new ChangeRole(this.proxy, email);
                 s.Show();
+            }
+            else if (i == 2)
+            {
+                proxy.Unsubscribe(email);
+                var window = new ThemeRoom(this.proxy, this.roompom, this.email);
+                window.Show();
             }
             
         }

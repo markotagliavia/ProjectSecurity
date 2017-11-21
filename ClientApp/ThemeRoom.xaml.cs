@@ -44,22 +44,26 @@ namespace ClientApp
             blockUserButton.IsEnabled = false;
             removeUserButton.IsEnabled = false;
             loggedAsLabel1.Content = $"You are logged as {email}";
+
+            
         }
 
         public ObservableCollection<User> Logged
         {
             get
             {
-                return room.Logged;
+                return logged;
             }
+            set { logged = value; }
         }
 
         public ObservableCollection<Message> Msg
         {
             get
             {
-                return room.AllMessages;
+                return msg;
             }
+            set { msg = value; }
         }
 
         /// <summary>
@@ -198,7 +202,8 @@ namespace ClientApp
             this.proxy.Abort();
 
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-
+            
+            
 
             try
             {
@@ -209,21 +214,24 @@ namespace ClientApp
                 // TODO: Handle exception.
             }
 
-            room = this.proxy.GetThemeRoom(room.Theme);
+            
+            this.room = this.proxy.GetThemeRoom(room.Theme, email);
+            this.proxy.LogInTheme(room.Theme, this.email);
+
             Logged.Clear();
-            foreach (User u in room.Logged)
+            foreach (User u in this.room.Logged)
             {
                 Logged.Add(u);
             }
 
             Msg.Clear();
-            foreach (Message m in room.AllMessages)
+            foreach (Message m in this.room.AllMessages)
             {
                 Msg.Add(m);
             }
             allMessagesScrollViewer.ScrollToBottom();
 
-            if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
+            if (this.room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
             {
                 removeUserButton.Visibility = Visibility.Visible;
                 closeRoomButton.Visibility = Visibility.Visible;

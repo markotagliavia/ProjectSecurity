@@ -26,7 +26,7 @@ namespace ForumModels
         public Room(string theme)
         {
             this.theme = theme;
-            this.code = System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
+            this.code = Guid.NewGuid();
             this.Blocked = new ObservableCollection<User>();
             this.Logged = new ObservableCollection<User>();
             this.AllMessages = new ObservableCollection<Message>();

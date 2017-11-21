@@ -60,8 +60,8 @@ namespace Contracts
         [OperationContract]
         PrivateChat GetPrivateChat(Guid code);
 
-        [OperationContract]
-        bool CreateRoom(string roomName);
+        [OperationContract(IsOneWay =true)]
+        void CreateRoom(string roomName);
 
         [OperationContract(IsOneWay = true)]
         void LeaveRoom(string theme);
@@ -78,14 +78,14 @@ namespace Contracts
         [OperationContract(IsOneWay = true)]
         void SendGroupMessage(string sender, string message);
 
-        [OperationContract]
-        bool SendRoomMessage(string sender, string roomName, string message);
+        [OperationContract(IsOneWay = true)]
+        void SendRoomMessage(string sender, string roomName, string message);
 
         [OperationContract]
         GroupChat GetGroupChat();
 
         [OperationContract]
-        Room GetThemeRoom(string roomName);
+        Room GetThemeRoom(string roomName,string email);
 
         [OperationContract]
         bool CloseRoom(string roomName);
@@ -114,6 +114,12 @@ namespace Contracts
 
         [OperationContract(IsOneWay = true)]
         void UnsubscribeAllUsers(string email);
+
+        [OperationContract(IsOneWay = true)]
+        void LogInTheme(string theme,string email);
+
+        [OperationContract(IsOneWay = true)]
+        void LogInPrivateChat(Guid code);
 
 
     }

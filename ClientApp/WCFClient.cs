@@ -159,19 +159,19 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool CreateRoom(string roomName)
+        public void CreateRoom(string roomName)
         {
-            bool retVal = false;
+           
             try
             {
-                retVal = factory.CreateRoom(roomName);
+                factory.CreateRoom(roomName);
                 Console.WriteLine("CreateRoom executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to CreateRoom(). {0}", e.Message);
             }
-            return retVal;
+           
         }
 
         public bool DeleteAdmin(string email)
@@ -209,12 +209,12 @@ namespace ClientApp
 
         }
 
-        public Room GetThemeRoom(string roomName)
+        public Room GetThemeRoom(string roomName,string email)
         {
             Room room = new Room("");
             try
             {
-                room = factory.GetThemeRoom(roomName);
+                room = factory.GetThemeRoom(roomName,email);
                 Console.WriteLine("GetThemeRoom executed");
             }
             catch (Exception e)
@@ -378,12 +378,12 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool SendRoomMessage(string userName, string roomName, string message)
+        public void SendRoomMessage(string userName, string roomName, string message)
         {
-            bool retVal = false;
+            
             try
             {
-                retVal = factory.SendRoomMessage(userName, roomName, message);
+                factory.SendRoomMessage(userName, roomName, message);
                 Console.WriteLine("SendRoomMessage executed");
             }
             catch (Exception e)
@@ -391,7 +391,7 @@ namespace ClientApp
                 Console.WriteLine("Error while trying to SendRoomMessage(). {0}", e.Message);
             }
 
-            return retVal;
+            
         }
 
         public bool SendVerificationKey(string key)
@@ -536,6 +536,32 @@ namespace ClientApp
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to LeavePrivateChat(). {0}", e.Message);
+
+            }
+        }
+
+        public void LogInTheme(string theme,string email)
+        {
+            try
+            {
+                factory.LogInTheme(theme,email);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to LogInTheme(). {0}", e.Message);
+
+            }
+        }
+
+        public void LogInPrivateChat(Guid code)
+        {
+            try
+            {
+                factory.LogInPrivateChat(code);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to LogInPrivateChat(). {0}", e.Message);
 
             }
         }
