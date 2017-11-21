@@ -103,6 +103,12 @@ namespace Contracts
         [OperationContract(IsOneWay = true)]
         void Unsubscribe(string email);
 
+        [OperationContract(IsOneWay = true)]
+        void UnsubscribeUserTheme(string email, string theme);
+
+        [OperationContract(IsOneWay = true)]
+        void UnsubscribeAllUsers(string email);
+
 
     }
 

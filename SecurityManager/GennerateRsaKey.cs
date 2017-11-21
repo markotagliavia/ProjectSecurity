@@ -5,10 +5,19 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace SecurityManager
 {
+
     class GennerateRsaKey
     {
+        private int keySize;
+
+        public GennerateRsaKey(int size)
+        {
+            keySize = size;
+        }
+
         public sealed class SessionKey
         {
             public Guid Id;
@@ -20,11 +29,17 @@ namespace SecurityManager
 
         private Dictionary<Guid, SessionKey> sessionKeys;
 
+        public Dictionary<Guid, SessionKey> SessionKeys
+        {
+            get { return sessionKeys; }
+            set { sessionKeys = value; }
+        }
+
 
         public RSAParameters Generate(Guid sessionId)
         {
             // NOTE: Make the key size configurable.
-            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(2048))
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(keySize))
             {
                 SessionKey s = new SessionKey()
                 {
@@ -37,6 +52,17 @@ namespace SecurityManager
                 sessionKeys.Add(Guid.NewGuid(), s);
 
                 return s.PublicKey;
+            }
+        }
+
+        public void SetSymmetricKey(Guid id, byte[] encryptedKey)
+        {
+            SessionKey session = sessionKeys[id];
+
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.ImportParameters(session.PrivateKey);
+                session.SymmetricKey = rsa.Decrypt(encryptedKey, true);
             }
         }
     }

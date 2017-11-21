@@ -1718,10 +1718,10 @@ namespace ServiceApp
             return null;
         } //ne treba
 
-        void IService.Unsubscribe(string email)
+        public void Unsubscribe(string email)
         {
 
-            if (!ServiceModel.Instance.Clients.ContainsKey(email))
+            if (ServiceModel.Instance.Clients.ContainsKey(email))
             {
                 
                 if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
@@ -1797,6 +1797,40 @@ namespace ServiceApp
             }
         }
 
+        public void UnsubscribeUserTheme(string email, string theme)
+        {
+            if (ServiceModel.Instance.ClientsForThemeRoom.ContainsKey(theme))
+            {
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+                {
+                    lock (ServiceModel.Instance.ClientsForThemeRoom)
+                    {
+                        if (ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(theme)).Value.ContainsKey(email))
+                        {
+                            ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(theme)).Value.Remove(email);
+                        }
+                    }
+                }
 
+            }
+        }
+
+        public void UnsubscribeAllUsers(string email)
+        {
+            if (ServiceModel.Instance.ClientsForViewAdmins.ContainsKey(email))
+            {
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+                {
+                    lock (ServiceModel.Instance.ClientsForViewAdmins)
+                    {
+                        if (ServiceModel.Instance.ClientsForViewAdmins.ContainsKey(email))
+                        {
+                            ServiceModel.Instance.ClientsForViewAdmins.Remove(email);
+                        }
+                    }
+                }
+
+            }
+        }
     }
 }
