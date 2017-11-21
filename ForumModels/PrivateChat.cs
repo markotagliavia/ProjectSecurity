@@ -15,16 +15,45 @@ namespace ForumModels
 
         private string user2;
 
+        private bool user1logged;
+
+        private bool user2logged;
+
         private ObservableCollection<Message> messages;
 
         public PrivateChat(string user1, string user2)
         {
             this.User1 = user1;
             this.user2 = user2;
+            this.User1logged = false;
+            this.User2logged = false;
             this.uid =  Guid.NewGuid();//System.Runtime.InteropServices.Marshal.GenerateGuidForType(typeof(int));
             messages = new ObservableCollection<Message>();
         }
 
+        public bool User1logged
+        {
+            get
+            {
+                return user1logged;
+            }
+            set
+            {
+                user1logged = value;
+            }
+        }
+
+        public bool User2logged
+        {
+            get
+            {
+                return user2logged;
+            }
+            set
+            {
+                user2logged = value;
+            }
+        }
         public ObservableCollection<Message> Messages
         {
             get

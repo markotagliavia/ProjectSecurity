@@ -513,5 +513,31 @@ namespace ClientApp
 
             }
         }
+
+        public void LeaveRoom(string theme)
+        {
+            try
+            {
+                factory.LeaveRoom(theme);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to LeaveRoom(). {0}", e.Message);
+
+            }
+        }
+
+        public void LeavePrivateChat(Guid code)
+        {
+            try
+            {
+                factory.LeavePrivateChat(code);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while trying to LeavePrivateChat(). {0}", e.Message);
+
+            }
+        }
     }
 }

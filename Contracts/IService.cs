@@ -63,6 +63,12 @@ namespace Contracts
         [OperationContract]
         bool CreateRoom(string roomName);
 
+        [OperationContract(IsOneWay = true)]
+        void LeaveRoom(string theme);
+
+        [OperationContract(IsOneWay = true)]
+        void LeavePrivateChat(Guid code);
+
         [OperationContract]
         bool SendVerificationKey(string key);
 

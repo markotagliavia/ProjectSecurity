@@ -1601,8 +1601,19 @@ namespace ServiceApp
         public Room GetThemeRoom(string roomName)
         {
             Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
-            return room;
-        }   // ne treba
+            if (room.Logged.Any(i => i.Email.Equals(userOnSession.Email)))
+            {
+                room.Logged.Add(userOnSession);
+                SerializeFileRooms(room);
+                NotifyViewforRoom(room);
+                return room;
+            }
+            else
+            {
+                return null;
+            }
+           
+        }   
 
         public bool CloseRoom(string roomName)
         {
@@ -1746,7 +1757,23 @@ namespace ServiceApp
                 {
                     if (userOnSession.IsInRole(Permissions.GetPrivateChat.ToString()))
                     {
-                        return DeserializePrivateChat(code);
+                        PrivateChat pc  = DeserializePrivateChat(code);
+
+                        if (pc.User1.Equals(userOnSession.Email))
+                        {
+                            pc.User1logged = true;
+                        }
+                        else if (pc.User1.Equals(userOnSession.Email))
+                        {
+                            pc.User2logged = true;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        NotifyViewforPC(pc.Uid);
+                        SerializePrivateChat(pc);
+                        return pc;
                     }
                     else
                     {
@@ -1765,7 +1792,12 @@ namespace ServiceApp
                 return null;
             }
             
-        }     // ne treba
+        }
+
+        private void NotifyViewforPC(Guid uid)
+        {
+            throw new NotImplementedException();
+        }
 
         public void SubscribeUserTheme(string email, string theme)
         {
@@ -1828,6 +1860,67 @@ namespace ServiceApp
                             ServiceModel.Instance.ClientsForViewAdmins.Remove(email);
                         }
                     }
+                }
+
+            }
+        }
+
+        public void LeaveRoom(string theme)
+        {
+            if (userOnSession.IsInRole(Permissions.SendGroupMessage.ToString()))
+            {
+                if (userOnSession.Logged)
+                {
+                    if (ServiceModel.Instance.RoomList.Any(i => i.Theme.Equals(theme)))
+                    {
+                        Room room = ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme));
+                        if (room.Logged.Any(i => i.Email.Equals(userOnSession.Email)))
+                        {
+                            int index = room.Logged.IndexOf(room.Logged.Single(i => i.Email.Equals(userOnSession.Email)));
+                            room.Logged.RemoveAt(index);
+                            SerializeFileRooms(room);
+                            NotifyViewforRoom(room);
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is already logged out!", userOnSession.Name);
+                }
+
+            }
+        }
+
+        public void LeavePrivateChat(Guid code)
+        {
+            if (userOnSession.IsInRole(Permissions.SendGroupMessage.ToString()))
+            {
+                if (userOnSession.Logged)
+                {
+                    if (ServiceModel.Instance.PrivateChatList.Any(i => i.Uid.Equals(code)))
+                    {
+                        PrivateChat pc= ServiceModel.Instance.PrivateChatList.Single(i => i.Uid.Equals(code));
+                        if (pc.User1.Equals(userOnSession.Email))
+                        {
+                            pc.User1logged = false;
+                            SerializeFileChats(pc);
+                            NotifyViewforPC(pc.Uid);
+                        }
+                        else if (pc.User2.Equals(userOnSession.Email))
+                        {
+                            pc.User2logged = false;
+                            SerializeFileChats(pc);
+                            NotifyViewforPC(pc.Uid);
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is already logged out!", userOnSession.Name);
                 }
 
             }
