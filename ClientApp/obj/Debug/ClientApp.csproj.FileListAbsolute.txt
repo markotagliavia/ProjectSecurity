@@ -597,3 +597,9 @@ D:\cetvrta godina\blok2\Projekat3\ClientApp\obj\Debug\ClientApp.Properties.Resou
 D:\cetvrta godina\blok2\Projekat3\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
 D:\cetvrta godina\blok2\Projekat3\ClientApp\obj\Debug\ClientApp.exe
 D:\cetvrta godina\blok2\Projekat3\ClientApp\obj\Debug\ClientApp.pdb
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ChangePasswordWindow.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ChangeRole.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\NewRoomWindow.g.cs
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ChangePasswordWindow.baml
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\ChangeRole.baml
+C:\Users\Tijana\Desktop\Projekat\ClientApp\obj\Debug\NewRoomWindow.baml
