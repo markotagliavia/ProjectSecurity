@@ -21,6 +21,8 @@
             </MenuItem>
             <MenuItem Header="Rooms" x:Name="roomsMenuItem">
             </MenuItem>
+            <MenuItem Header="Private chats" x:Name="privateChatsMenuItem" Visibility="Hidden">
+            </MenuItem>
         </Menu>
         <!--> **************End of Menu************ <-->
 
