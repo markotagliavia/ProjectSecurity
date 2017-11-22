@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SecurityManager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ namespace ClientApp
     {
         private WCFClient proxy;
         private string email;
+        private EncryptDecrypt aesCommander = new EncryptDecrypt();
 
         public NewRoomWindow(WCFClient proxy, string email)
         {
@@ -47,9 +49,10 @@ namespace ClientApp
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {
             string theme = themeTextBox.Text;
-
+            byte[] themeInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, theme);
+            string themeHash = Sha256encrypt(theme);
             //send data to server
-            proxy.CreateRoom(theme);
+            proxy.CreateRoom(themeInBytes,themeHash);
             this.Close();
           /*  if (i == true)
             {
@@ -84,6 +87,18 @@ namespace ClientApp
             {
                 submitButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
+        }
+        /// <summary>
+        /// Convert input string to his hashed value using SHA256 alghoritm
+        /// </summary>
+        /// <param name="phrase">input string</param>
+        /// <returns>Hashed value of input string</returns>
+        public string Sha256encrypt(string phrase)
+        {
+            UTF8Encoding encoder = new UTF8Encoding();
+            System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
         }
     }
 }

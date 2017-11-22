@@ -29,6 +29,7 @@ namespace ClientApp
         private ObservableCollection<User> users;
         private ObservableCollection<User> allusers;
         private InstanceContext instanceContext;
+        private EncryptDecrypt aesCommander = new EncryptDecrypt();
         public ChangeRole(WCFClient proxy, string email)
         {
             this.DataContext = this;
@@ -84,11 +85,18 @@ namespace ClientApp
 
             EndpointAddress adr = this.proxy.Address;
             NetTcpBinding tcp = this.proxy.Binding;
+            Guid guid = this.proxy.Guid;
+            GenerateAesKey aes = this.proxy.Aes;
             this.proxy.InstanceContext = instanceContext;
             this.proxy.Abort();
 
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-            allusers = this.proxy.GetAllUsers(this.email); //kad ovo sredis, radice
+            this.proxy.Guid = guid;
+            this.proxy.Aes = aes;
+            this.proxy.SendSessionKey(guid);
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
+            allusers = this.proxy.GetAllUsers(emailInBytes,emailHash); //kad ovo sredis, radice
             foreach (User u in allusers)
             {
                 if (u.Role == Roles.Admin)
@@ -103,7 +111,7 @@ namespace ClientApp
 
             try
             {
-                this.proxy.SubscribeAllUsers(email);
+                this.proxy.SubscribeAllUsers(emailInBytes, emailHash);
             }
             catch
             {
@@ -140,9 +148,19 @@ namespace ClientApp
         {
             if (!UsersListBox.SelectedItem.ToString().Equals(email))
             {
-                this.proxy.AddAdmin(UsersListBox.SelectedItem.ToString());
-                Admins.Add((User)UsersListBox.SelectedItem);
-                Users.Remove((User)UsersListBox.SelectedItem);
+                byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, UsersListBox.SelectedItem.ToString());
+                string emailHash = Sha256encrypt(UsersListBox.SelectedItem.ToString());
+                bool ret = this.proxy.AddAdmin(emailInBytes,emailHash);
+                if (ret)
+                {
+                    Admins.Add((User)UsersListBox.SelectedItem);
+                    Users.Remove((User)UsersListBox.SelectedItem);
+                }
+                else
+                {
+                    MessageBox.Show("Cannot move this user to admin");
+                }
+               
                 
             }
             
@@ -155,7 +173,9 @@ namespace ClientApp
         {
             if (!AdminsListBox.SelectedItem.ToString().Equals(email))
             {
-                bool ret = this.proxy.DeleteAdmin(AdminsListBox.SelectedItem.ToString());
+                byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, AdminsListBox.SelectedItem.ToString());
+                string emailHash = Sha256encrypt(AdminsListBox.SelectedItem.ToString());
+                bool ret = this.proxy.DeleteAdmin(emailInBytes, emailHash);
                 if (ret)
                 {
                     Users.Add((User)AdminsListBox.SelectedItem);
@@ -163,7 +183,7 @@ namespace ClientApp
                 }
                 else
                 {
-                    //to do neka greska
+                    MessageBox.Show("Cannot move this user to users");
                 }
                 
                 
@@ -187,9 +207,23 @@ namespace ClientApp
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.proxy.UnsubscribeAllUsers(this.email);
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
+            this.proxy.UnsubscribeAllUsers(emailInBytes, emailHash);
             var gr = new GroupChat(this.proxy,this.email);
             gr.Show();
+        }
+        /// <summary>
+        /// Convert input string to his hashed value using SHA256 alghoritm
+        /// </summary>
+        /// <param name="phrase">input string</param>
+        /// <returns>Hashed value of input string</returns>
+        public string Sha256encrypt(string phrase)
+        {
+            UTF8Encoding encoder = new UTF8Encoding();
+            System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
         }
     }
     public delegate void AllUsersNotifiedEventHandler(object sender, AllUsersNotifiedEventArgs e);

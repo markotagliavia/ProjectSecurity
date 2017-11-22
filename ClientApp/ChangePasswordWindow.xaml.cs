@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SecurityManager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ namespace ClientApp
     {
         private WCFClient proxy;
         private string email;
+        private EncryptDecrypt aesCommander = new EncryptDecrypt();
 
         public ChangePasswordWindow(WCFClient proxy, string email)
         {
@@ -56,7 +58,13 @@ namespace ClientApp
             }
             else
             {
-                bool retVal = proxy.ChangePassword(email, oldPass, newPass);
+                byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, email);
+                string emailHash = Sha256encrypt(email);
+                byte[] oldpasswordInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, oldPass);
+                string oldPassHash = Sha256encrypt(oldPass);
+                byte[] newpasswordInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, newPass);
+                string newPassHash = Sha256encrypt(newPass);
+                bool retVal = proxy.ChangePassword(emailInBytes, oldpasswordInBytes, newpasswordInBytes,emailHash,oldPassHash,newPassHash);
                 if (retVal == false)
                 {
                     MessageBox.Show("Something went wrong! Password is not changed.");
@@ -100,6 +108,19 @@ namespace ClientApp
             {
                 changePassButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
+        }
+
+        /// <summary>
+        /// Convert input string to his hashed value using SHA256 alghoritm
+        /// </summary>
+        /// <param name="phrase">input string</param>
+        /// <returns>Hashed value of input string</returns>
+        public string Sha256encrypt(string phrase)
+        {
+            UTF8Encoding encoder = new UTF8Encoding();
+            System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
         }
     }
 }

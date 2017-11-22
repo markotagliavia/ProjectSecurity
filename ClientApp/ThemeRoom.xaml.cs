@@ -30,6 +30,7 @@ namespace ClientApp
         private ObservableCollection<User> logged;
         private ObservableCollection<Message> msg;
         private InstanceContext instanceContext;
+        private EncryptDecrypt aesCommander = new EncryptDecrypt();
 
         public ThemeRoom(WCFClient proxy, Room r, string email)
         {
@@ -71,6 +72,12 @@ namespace ClientApp
         /// <param name="e"></param>
         private void enterMsgButton_Click(object sender, RoutedEventArgs e)
         {
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
+            byte[] msgInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, entryMessageTextbox.Text);
+            string msgHash = Sha256encrypt(entryMessageTextbox.Text);
+            byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
+            string roomHash = Sha256encrypt(room.Theme);
             if (!room.Blocked.Any(x => x.Email.Equals(email)))
             {
                 if (!String.IsNullOrWhiteSpace(entryMessageTextbox.Text))
@@ -79,7 +86,7 @@ namespace ClientApp
                     {
                         if (room.Logged.Single(x => x.Email.Equals(email)) != null)
                         {
-                            proxy.SendRoomMessage(email, room.Theme, entryMessageTextbox.Text);
+                            proxy.SendRoomMessage(emailInBytes,roomInBytes,msgInBytes,emailHash, roomHash, msgHash);
                             entryMessageTextbox.Clear();
                         }
                         else
@@ -120,17 +127,21 @@ namespace ClientApp
         /// <param name="e"></param>
         private void blockUserButton_Click(object sender, RoutedEventArgs e)
         {
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
+            byte[] userInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, loggedUsersListBox.SelectedItem.ToString());
+            string userHash = Sha256encrypt(loggedUsersListBox.SelectedItem.ToString());
             if (loggedUsersListBox.SelectedIndex != -1)
             {
                 if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                 {
                     if (((Button)sender).Content.Equals("Block"))
                     {
-                        proxy.BlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                        proxy.BlockUser(emailInBytes, userInBytes,emailHash,userHash);
                     }
                     else
                     {
-                        proxy.RemoveBlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                        proxy.RemoveBlockUser(emailInBytes, userInBytes, emailHash, userHash);
                     }
                 }
             }
@@ -143,11 +154,13 @@ namespace ClientApp
         /// <param name="e"></param>
         private void closeRoomButton_Click(object sender, RoutedEventArgs e)
         {
+            byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
+            string roomHash = Sha256encrypt(room.Theme);
             if (room.Logged.Any(x => x.Email.Equals(email)))
             {
                 if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
                 {
-                    proxy.CloseRoom(room.Theme);
+                    proxy.CloseRoom(roomInBytes,roomHash);
                 }
             }
         }
@@ -202,21 +215,29 @@ namespace ClientApp
 
             EndpointAddress adr = this.proxy.Address;
             NetTcpBinding tcp = this.proxy.Binding;
+            Guid guid = this.proxy.Guid;
+            GenerateAesKey aes = this.proxy.Aes;
             this.proxy.InstanceContext = instanceContext;
             this.proxy.Abort();
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-                     
+            this.proxy.Guid = guid;
+            this.proxy.Aes = aes;
+            this.proxy.SendSessionKey(guid);
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
+            byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
+            string roomHash = Sha256encrypt(room.Theme);
             try
             {
-                this.proxy.SubscribeUserTheme(email, room.Theme);
+                this.proxy.SubscribeUserTheme(emailInBytes,roomInBytes,emailHash, roomHash);
             }
             catch
             {
                 // TODO: Handle exception.
             }
             
-            this.room = this.proxy.GetThemeRoom(room.Theme, email);
-            this.proxy.LogInTheme(room.Theme, this.email);
+            this.room = this.proxy.GetThemeRoom(roomInBytes, emailInBytes, roomHash,emailHash);
+            this.proxy.LogInTheme(roomInBytes, emailInBytes, roomHash, emailHash);
 
             Logged.Clear();
             foreach (User u in this.room.Logged)
@@ -288,8 +309,12 @@ namespace ClientApp
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            proxy.LeaveRoom(room.Theme);
-            proxy.UnsubscribeUserTheme(email, room.Theme);
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
+            byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
+            string roomHash = Sha256encrypt(room.Theme);
+            proxy.LeaveRoom(roomInBytes,roomHash);
+            proxy.UnsubscribeUserTheme(emailInBytes,roomInBytes,emailHash, roomHash);
             var s = new GroupChat(proxy, email);
             s.Show();
         }
@@ -301,6 +326,10 @@ namespace ClientApp
         /// <param name="e"></param>
         private void removeUserButton_Click(object sender, RoutedEventArgs e)
         {
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, loggedUsersListBox.SelectedItem.ToString());
+            string emailHash = Sha256encrypt(loggedUsersListBox.SelectedItem.ToString());
+            byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
+            string roomHash = Sha256encrypt(room.Theme);
             if (room.Logged.Any(x => x.Email.Equals(email)))
             {
                 if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
@@ -311,16 +340,29 @@ namespace ClientApp
                         {
                             if (((Button)sender).Content.Equals("Ban user from chat"))
                             {
-                                proxy.BlockUserFromRoom(loggedUsersListBox.SelectedItem.ToString(), room.Theme);
+                                proxy.BlockUserFromRoom(emailInBytes,roomInBytes,emailHash,roomHash);
                             }
                             else
                             {
-                                proxy.RemoveBlockUserFromRoom(loggedUsersListBox.SelectedItem.ToString(), room.Theme);
+                                proxy.RemoveBlockUserFromRoom(emailInBytes, roomInBytes, emailHash, roomHash);
                             }
                         }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Convert input string to his hashed value using SHA256 alghoritm
+        /// </summary>
+        /// <param name="phrase">input string</param>
+        /// <returns>Hashed value of input string</returns>
+        public string Sha256encrypt(string phrase)
+        {
+            UTF8Encoding encoder = new UTF8Encoding();
+            System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
         }
 
         public delegate void ThemeRoomEventHandler(object sender, ThemeRoomEventArgs e);

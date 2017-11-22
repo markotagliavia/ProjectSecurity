@@ -9,6 +9,7 @@ using ForumModels;
 using System.ServiceModel;
 using System.Timers;
 using static ClientApp.ThemeRoom;
+using System.Text;
 
 namespace ClientApp
 {
@@ -24,6 +25,7 @@ namespace ClientApp
         private ObservableCollection<User> logged;
         private ObservableCollection<Message> msg;
         private ObservableCollection<string> themeRooms;
+        private EncryptDecrypt aesCommander = new EncryptDecrypt();
         Room roompom;
 
         private InstanceContext instanceContext;
@@ -89,7 +91,11 @@ namespace ClientApp
                 if (Logged.Single(x => x.Email.Equals(email)).Logged)
                 {
                     Console.WriteLine(((MenuItem)sender).Header.ToString());
-                    Room r = proxy.GetThemeRoom(((MenuItem)sender).Header.ToString(), email);
+                    byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                    string emailHash = Sha256encrypt(this.email);
+                    byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, ((MenuItem)sender).Header.ToString());
+                    string roomHash = Sha256encrypt(((MenuItem)sender).Header.ToString());
+                    Room r = proxy.GetThemeRoom(roomInBytes,emailInBytes,roomHash, emailHash);
                     if (r != null)
                     {
                         if (!r.Blocked.Any(x => x.Email.Equals(email)))
@@ -140,7 +146,11 @@ namespace ClientApp
                     {
                         if (groupChat.Logged.Single(x => x.Email.Equals(email)) != null)
                         {
-                            proxy.SendGroupMessage(email, entryMessageTextbox.Text);
+                            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                            string emailHash = Sha256encrypt(this.email);
+                            byte[] msgInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, entryMessageTextbox.Text);
+                            string msgHash = Sha256encrypt(entryMessageTextbox.Text);
+                            proxy.SendGroupMessage(emailInBytes,msgInBytes,emailHash,msgHash );
                             entryMessageTextbox.Clear();
                         }
                         else
@@ -171,7 +181,10 @@ namespace ClientApp
         /// <param name="e"></param>
         private void logOutButton_Click(object sender, RoutedEventArgs e)
         {
-            proxy.LogOut(email);
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
+            proxy.LogOut(emailInBytes,emailHash);
+            proxy.Unsubscribe(emailInBytes, emailHash);
             var s = new MainWindow();
             s.Show();
             this.Close();
@@ -184,17 +197,21 @@ namespace ClientApp
         /// <param name="e"></param>
         private void blockUserButton_Click(object sender, RoutedEventArgs e)
         {
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
+            byte[] userInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, loggedUsersListBox.SelectedItem.ToString());
+            string userHash = Sha256encrypt(loggedUsersListBox.SelectedItem.ToString());
             if (loggedUsersListBox.SelectedIndex != -1)
             {
                 if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                 {
                     if (((Button)sender).Content.Equals("Block"))
                     {
-                        proxy.BlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                        proxy.BlockUser(emailInBytes,userInBytes,emailHash,userHash);
                     }
                     else
                     {
-                        proxy.RemoveBlockUser(email, loggedUsersListBox.SelectedItem.ToString());
+                        proxy.RemoveBlockUser(emailInBytes, userInBytes, emailHash, userHash);
                     }
                 }
             }
@@ -207,17 +224,19 @@ namespace ClientApp
         /// <param name="e"></param>
         private void removeUserButton_Click(object sender, RoutedEventArgs e)
         {
+            byte[] userInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, loggedUsersListBox.SelectedItem.ToString());
+            string userHash = Sha256encrypt(loggedUsersListBox.SelectedItem.ToString());
             if (loggedUsersListBox.SelectedIndex != -1)
             {
                 if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                 {
                     if (((Button)sender).Content.Equals("Ban user from chat"))
                     {
-                        proxy.BlockGroupChat(loggedUsersListBox.SelectedItem.ToString());
+                        proxy.BlockGroupChat(userInBytes,userHash);
                     }
                     else
                     {
-                        proxy.RemoveBlockGroupChat(loggedUsersListBox.SelectedItem.ToString());
+                        proxy.RemoveBlockGroupChat(userInBytes,userHash);
                     }
                 }
             }
@@ -353,6 +372,8 @@ namespace ClientApp
 
             EndpointAddress adr = this.proxy.Address;
             NetTcpBinding tcp = this.proxy.Binding;
+            Guid guid = this.proxy.Guid;
+            GenerateAesKey aes = this.proxy.Aes;
             tcp.MaxConnections = 500;
               tcp.OpenTimeout = new TimeSpan(0, 10, 0);
               tcp.CloseTimeout = new TimeSpan(0, 10, 0);
@@ -362,10 +383,14 @@ namespace ClientApp
             this.proxy.Abort();
             
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-
+            this.proxy.Guid = guid;
+            this.proxy.Aes = aes;
+            this.proxy.SendSessionKey(guid);
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
             try
             {
-                this.proxy.Subscribe(email);
+                this.proxy.Subscribe(emailInBytes,emailHash);
             }
             catch
             {
@@ -450,24 +475,26 @@ namespace ClientApp
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailHash = Sha256encrypt(this.email);
             if (i == 0)
             {
                 var s = new MainWindow();
                 s.Show();
-                proxy.LogOut(email);
-                proxy.Unsubscribe(email);
+                proxy.LogOut(emailInBytes,emailHash);
+                proxy.Unsubscribe(emailInBytes, emailHash);
 
                 //unsubscribe
             }
             else if (i == 1)
             {
-                proxy.Unsubscribe(email);
+                proxy.Unsubscribe(emailInBytes, emailHash);
                 var s = new ChangeRole(this.proxy, email);
                 s.Show();
             }
             else if (i == 2)
             {
-                proxy.Unsubscribe(email);
+                proxy.Unsubscribe(emailInBytes, emailHash);
                 var window = new ThemeRoom(this.proxy, this.roompom, this.email);
                 window.Show();
             }
@@ -485,24 +512,20 @@ namespace ClientApp
             //TO DO
         }
 
-        /*private void Window_Closed(object sender, EventArgs e)
+        /// <summary>
+        /// Convert input string to his hashed value using SHA256 alghoritm
+        /// </summary>
+        /// <param name="phrase">input string</param>
+        /// <returns>Hashed value of input string</returns>
+        public string Sha256encrypt(string phrase)
         {
-            if (proxy != null)
-            {
-                try
-                {
-                    if (proxy.State != CommunicationState.Faulted)
-                    {
-                        proxy.Unsubscribe(email);
-                        proxy.Close();
-                    }
-                }
-                catch
-                {
-                    proxy.Abort();
-                }
-            }
-        }*/
+            UTF8Encoding encoder = new UTF8Encoding();
+            System.Security.Cryptography.SHA256Managed sha256hasher = new System.Security.Cryptography.SHA256Managed();
+            byte[] hashedDataBytes = sha256hasher.ComputeHash(encoder.GetBytes(phrase));
+            return Convert.ToBase64String(hashedDataBytes);
+        }
+
+       
     }
 
 

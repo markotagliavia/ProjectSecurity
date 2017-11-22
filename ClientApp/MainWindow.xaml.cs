@@ -161,9 +161,11 @@ namespace ClientApp
         /// <param name="e"></param>
         private void resetPassButton_Click(object sender, RoutedEventArgs e)
         {
-            if(!String.IsNullOrWhiteSpace(textBox1.Text))
+            byte[] email = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, textBox1.Text);
+            string passwordHash = Sha256encrypt(textBox1.Text);
+            if (!String.IsNullOrWhiteSpace(textBox1.Text))
             {
-                int i = proxy.ResetPassword(textBox1.Text);
+                int i = proxy.ResetPassword(email,passwordHash);
                 if (i == -1)
                 {
                     MessageBox.Show("Please provide correct email address.");
