@@ -26,28 +26,44 @@ namespace ClientApp
     {
         private WCFClient proxy;
         private ForumModels.Room room;
+        private PrivateChat pc;
         private string email;
-        private ObservableCollection<User> logged;
+        private string theme;
+        private ObservableCollection<string> logged;
         private ObservableCollection<Message> msg;
         private InstanceContext instanceContext;
         private EncryptDecrypt aesCommander = new EncryptDecrypt();
+        private int i;
 
-        public ThemeRoom(WCFClient proxy, Room r, string email)
+        public ThemeRoom(WCFClient proxy, string theme, string email,int i)
         {
             DataContext = this;
             this.proxy = proxy;
-            this.room = r;
+            this.i = i;
             this.email = email;
-            logged = new ObservableCollection<User>();
+            this.theme = theme;
+            logged = new ObservableCollection<string>();
             msg = new ObservableCollection<Message>();
             InitializeComponent();
-            label.Content = room.Theme;
-            blockUserButton.IsEnabled = false;
-            removeUserButton.IsEnabled = false;
+            if (i == 1)
+            {
+                label.Content = theme;
+                blockUserButton.IsEnabled = false;
+                removeUserButton.IsEnabled = false;
+            }
+            else
+            {
+                label.Content = "Private chat";
+                blockUserButton.IsEnabled = false;
+                removeUserButton.Visibility = Visibility.Hidden;
+                closeRoomButton.Visibility = Visibility.Hidden;
+                leaveRoomButton.Content = "Leave private chat";
+            }
+            
             loggedAsLabel1.Content = $"You are logged as {email}";           
         }
 
-        public ObservableCollection<User> Logged
+        public ObservableCollection<string> Logged
         {
             get
             {
@@ -76,18 +92,26 @@ namespace ClientApp
             string emailHash = Sha256encrypt(this.email);
             byte[] msgInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, entryMessageTextbox.Text);
             string msgHash = Sha256encrypt(entryMessageTextbox.Text);
-            byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
-            string roomHash = Sha256encrypt(room.Theme);
-            if (!room.Blocked.Any(x => x.Email.Equals(email)))
+
+            if (i == 1)
             {
-                if (!String.IsNullOrWhiteSpace(entryMessageTextbox.Text))
+                byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
+                string roomHash = Sha256encrypt(room.Theme);
+                if (!room.Blocked.Any(x => x.Email.Equals(email)))
                 {
-                    if (room.Logged.Single(x => x.Email.Equals(email)).Logged)
+                    if (!String.IsNullOrWhiteSpace(entryMessageTextbox.Text))
                     {
-                        if (room.Logged.Single(x => x.Email.Equals(email)) != null)
+                        if (room.Logged.Single(x => x.Email.Equals(email)).Logged)
                         {
-                            proxy.SendRoomMessage(emailInBytes,roomInBytes,msgInBytes,emailHash, roomHash, msgHash);
-                            entryMessageTextbox.Clear();
+                            if (room.Logged.Single(x => x.Email.Equals(email)) != null)
+                            {
+                                proxy.SendRoomMessage(emailInBytes, roomInBytes, msgInBytes, emailHash, roomHash, msgHash);
+                                entryMessageTextbox.Clear();
+                            }
+                            else
+                            {
+                                return;
+                            }
                         }
                         else
                         {
@@ -101,13 +125,44 @@ namespace ClientApp
                 }
                 else
                 {
-                    return;
+                    MessageBox.Show("You are banned from theme room chat and cannot write messages!");
                 }
             }
             else
             {
-                MessageBox.Show("You are banned from group chat and cannot write messages!");
+                byte[] receiveMail;
+                string receiveHash;
+                if (pc.User1.Equals(this.email))
+                {
+                    receiveMail = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.User2);
+                    receiveHash = Sha256encrypt(pc.User2); 
+
+                }
+                else if (pc.User2.Equals(this.email))
+                {
+                    receiveMail = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.User1);
+                    receiveHash = Sha256encrypt(pc.User1);
+                }
+                else
+                {
+                    MessageBox.Show("You are admin and cannot send messages.");
+                    return;
+                }
+                byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.theme);
+                string guidHash = Sha256encrypt(this.theme);
+                if (!String.IsNullOrWhiteSpace(entryMessageTextbox.Text))
+                {
+                    
+                    proxy.SendPrivateMessage(emailInBytes, receiveMail,msgInBytes, emailHash, receiveHash,msgHash);
+                    entryMessageTextbox.Clear();
+                     
+                }
+                else
+                {
+                    return;
+                }
             }
+            
         }
 
         /// <summary>
@@ -131,20 +186,30 @@ namespace ClientApp
             string emailHash = Sha256encrypt(this.email);
             byte[] userInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, loggedUsersListBox.SelectedItem.ToString());
             string userHash = Sha256encrypt(loggedUsersListBox.SelectedItem.ToString());
-            if (loggedUsersListBox.SelectedIndex != -1)
+            if (i == 1)
             {
-                if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
+                byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
+                string roomHash = Sha256encrypt(room.Theme);
+                if (loggedUsersListBox.SelectedIndex != -1)
                 {
-                    if (((Button)sender).Content.Equals("Block"))
+                    if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                     {
-                        proxy.BlockUser(emailInBytes, userInBytes,emailHash,userHash);
-                    }
-                    else
-                    {
-                        proxy.RemoveBlockUser(emailInBytes, userInBytes, emailHash, userHash);
+                        if (((Button)sender).Content.Equals("Block"))
+                        {
+                            proxy.BlockUserFromRoom(userInBytes,roomInBytes,userHash,roomHash);
+                        }
+                        else
+                        {
+                            proxy.RemoveBlockUserFromRoom(userInBytes, roomInBytes, userHash, roomHash);
+                        }
                     }
                 }
             }
+            else
+            {
+                //TO DO
+            }
+            
         }
 
         /// <summary>
@@ -154,15 +219,19 @@ namespace ClientApp
         /// <param name="e"></param>
         private void closeRoomButton_Click(object sender, RoutedEventArgs e)
         {
+      
             byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
             string roomHash = Sha256encrypt(room.Theme);
             if (room.Logged.Any(x => x.Email.Equals(email)))
             {
                 if (room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
                 {
-                    proxy.CloseRoom(roomInBytes,roomHash);
+                    proxy.CloseRoom(roomInBytes, roomHash);
                 }
             }
+           
+           
+            this.Close();
         }
 
         private void ChatServiceCallback_ThemeNotified(object sender, ThemeRoomEventArgs e)
@@ -177,7 +246,7 @@ namespace ClientApp
                 Logged.Clear();
                 foreach (User u in room.Logged)
                 {
-                    Logged.Add(u);
+                    Logged.Add(u.Email);
                 }
 
                 Msg.Clear();
@@ -211,6 +280,7 @@ namespace ClientApp
         {
             ChatServiceCallback chatServiceCallback = new ChatServiceCallback();
             chatServiceCallback.ThemeNotified += ChatServiceCallback_ThemeNotified;
+            chatServiceCallback.PrivateChatNotified += ChatServiceCallback_PrivateChatNotified;
             instanceContext = new InstanceContext(chatServiceCallback);
 
             EndpointAddress adr = this.proxy.Address;
@@ -223,44 +293,86 @@ namespace ClientApp
             this.proxy.Guid = guid;
             this.proxy.Aes = aes;
             this.proxy.SessionKey(guid);
-            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
-            string emailHash = Sha256encrypt(this.email);
-            byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
-            string roomHash = Sha256encrypt(room.Theme);
-            try
-            {
-                this.proxy.SubscribeUserTheme(emailInBytes,roomInBytes,emailHash, roomHash);
-            }
-            catch
-            {
-                // TODO: Handle exception.
-            }
-            
-            this.room = this.proxy.GetThemeRoom(roomInBytes, emailInBytes, roomHash,emailHash);
-            this.proxy.LogInTheme(roomInBytes, emailInBytes, roomHash, emailHash);
-
             Logged.Clear();
-            foreach (User u in this.room.Logged)
-            {
-                Logged.Add(u);
-            }
-
             Msg.Clear();
-            foreach (Message m in this.room.AllMessages)
+            if (i == 1)
             {
-                Msg.Add(m);
-            }
-            allMessagesScrollViewer.ScrollToBottom();
+                byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                string emailHash = Sha256encrypt(this.email);
+                byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.theme);
+                string roomHash = Sha256encrypt(this.theme);
+                try
+                {
+                    this.proxy.SubscribeUserTheme(emailInBytes, roomInBytes, emailHash, roomHash);
+                }
+                catch
+                {
+                    // TODO: Handle exception.
+                }
+                this.room = this.proxy.GetThemeRoom(roomInBytes, emailInBytes, roomHash, emailHash);
+                this.proxy.LogInTheme(roomInBytes, emailInBytes, roomHash, emailHash);
+                foreach (User u in this.room.Logged)
+                {
+                    Logged.Add(u.Email);
+                }
 
-            if (this.room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
-            {
-                removeUserButton.Visibility = Visibility.Visible;
-                closeRoomButton.Visibility = Visibility.Visible;
+
+                foreach (Message m in this.room.AllMessages)
+                {
+                    Msg.Add(m);
+                }
+                allMessagesScrollViewer.ScrollToBottom();
+
+                if (this.room.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
+                {
+                    removeUserButton.Visibility = Visibility.Visible;
+                    closeRoomButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    removeUserButton.Visibility = Visibility.Hidden;
+                    closeRoomButton.Visibility = Visibility.Hidden;
+                }
             }
             else
             {
-                removeUserButton.Visibility = Visibility.Hidden;
-                closeRoomButton.Visibility = Visibility.Hidden;
+                byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                string emailHash = Sha256encrypt(this.email);
+                byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.theme);
+                string guidHash = Sha256encrypt(this.theme);
+                try
+                {
+                    this.proxy.SubscribeUserChat(emailInBytes,guidInBytes,emailHash,guidHash);
+                }
+                catch
+                {
+                    // TODO: Handle exception.
+                }
+             
+                
+
+                this.pc = this.proxy.GetPrivateChat(guidInBytes,guidHash);
+                this.proxy.LogInPrivateChat(emailInBytes, emailHash, guidInBytes, guidHash);
+
+                
+                if (this.pc.User2logged)
+                {
+                    Logged.Add(this.pc.User2);
+                }
+               
+                    
+                if (this.pc.User1logged)
+                {
+                    Logged.Add(this.pc.User1);
+                }
+                
+
+                foreach (Message m in this.pc.Messages)
+                {
+                    Msg.Add(m);
+                }
+                allMessagesScrollViewer.ScrollToBottom();
+
             }
 
 
@@ -289,6 +401,35 @@ namespace ClientApp
             );
         }
 
+        private void ChatServiceCallback_PrivateChatNotified(object sender, PrivateChatEventArgs e)
+        {
+            if (e.PC == null)
+            {
+                this.Close();
+            }
+            else
+            {
+                pc = e.PC;
+                Logged.Clear();
+                if (pc.User1logged)
+                {
+                    Logged.Add(pc.User1);
+                }
+                if (pc.User2logged)
+                {
+                    Logged.Add(pc.User2);
+                }
+
+                Msg.Clear();
+                foreach (Message m in pc.Messages)
+                {
+                    Msg.Add(m);
+                }
+                allMessagesScrollViewer.ScrollToBottom();
+
+            }
+        }
+
         /// <summary>
         /// On enter, send Message
         /// </summary>
@@ -309,14 +450,30 @@ namespace ClientApp
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
-            string emailHash = Sha256encrypt(this.email);
-            byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
-            string roomHash = Sha256encrypt(room.Theme);
-            proxy.LeaveRoom(roomInBytes,roomHash);
-            proxy.UnsubscribeUserTheme(emailInBytes,roomInBytes,emailHash, roomHash);
-            var s = new GroupChat(proxy, email);
-            s.Show();
+            if (i == 1)
+            {
+                byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                string emailHash = Sha256encrypt(this.email);
+                byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
+                string roomHash = Sha256encrypt(room.Theme);
+                proxy.LeaveRoom(roomInBytes, roomHash);
+                proxy.UnsubscribeUserTheme(emailInBytes, roomInBytes, emailHash, roomHash);
+                var s = new GroupChat(proxy, email);
+                s.Show();
+            }
+            else
+            {
+                byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                string emailHash = Sha256encrypt(this.email);
+                byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.Uid.ToString());
+                string guidHash = Sha256encrypt(pc.Uid.ToString());
+                this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
+                this.proxy.LeavePrivateChat(guidInBytes, guidHash);
+                
+                var s = new GroupChat(proxy, email);
+                s.Show();
+            }
+            
         }
 
         /// <summary>
@@ -366,6 +523,7 @@ namespace ClientApp
         }
 
         public delegate void ThemeRoomEventHandler(object sender, ThemeRoomEventArgs e);
+        public delegate void PrivateChatEventHandler(object sender, PrivateChatEventArgs e);
 
         public class ThemeRoomEventArgs : EventArgs
         {
@@ -384,6 +542,25 @@ namespace ClientApp
             /// Gets the message.
             /// </summary>
             public Room Room { get { return room; } }
+        }
+
+        public class PrivateChatEventArgs : EventArgs
+        {
+            private PrivateChat pc;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="message">Message from server.</param>
+            public PrivateChatEventArgs(PrivateChat pc)
+            {
+                this.pc = pc;
+            }
+
+            /// <summary>
+            /// Gets the message.
+            /// </summary>
+            public PrivateChat PC { get { return pc; } }
         }
 
         /// <summary>

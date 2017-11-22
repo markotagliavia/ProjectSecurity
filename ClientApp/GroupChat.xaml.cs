@@ -27,6 +27,7 @@ namespace ClientApp
         private ObservableCollection<string> themeRooms;
         private EncryptDecrypt aesCommander = new EncryptDecrypt();
         Room roompom;
+        PrivateChat pcpom;
 
         private InstanceContext instanceContext;
 
@@ -481,7 +482,7 @@ namespace ClientApp
             {
                 var s = new MainWindow();
                 s.Show();
-                proxy.LogOut(emailInBytes,emailHash);
+                proxy.LogOut(emailInBytes, emailHash);
                 proxy.Unsubscribe(emailInBytes, emailHash);
 
                 //unsubscribe
@@ -495,7 +496,13 @@ namespace ClientApp
             else if (i == 2)
             {
                 proxy.Unsubscribe(emailInBytes, emailHash);
-                var window = new ThemeRoom(this.proxy, this.roompom, this.email);
+                var window = new ThemeRoom(this.proxy, this.roompom.Theme, this.email, 1);
+                window.Show();
+            }
+            else if (i == 3)
+            {
+                proxy.Unsubscribe(emailInBytes, emailHash);
+                var window = new ThemeRoom(this.proxy, pcpom.Uid.ToString(), this.email, 2);
                 window.Show();
             }
             
@@ -509,7 +516,22 @@ namespace ClientApp
         private void openPrivateChatButton_Click(object sender, RoutedEventArgs e)
         {
             string userToChat = loggedUsersListBox.SelectedItem.ToString();
-            //TO DO
+            if (!this.email.Equals(userToChat))
+            {
+                byte[] firstInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                string firstHAsh = Sha256encrypt(this.email);
+                byte[] secondInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, userToChat);
+                string secondHAsh = Sha256encrypt(userToChat);
+                pcpom = this.proxy.CreatePrivateChat(firstInBytes,secondInBytes,firstHAsh,secondHAsh);
+                this.i = 3;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Cannot talk to itself.");
+            }
+            
+            
         }
 
         /// <summary>
@@ -534,6 +556,7 @@ namespace ClientApp
         public event ClientNotifiedEventHandler ClientNotified;
         public event AllUsersNotifiedEventHandler UserNotified;
         public event ThemeRoomEventHandler ThemeNotified;
+        public event PrivateChatEventHandler PrivateChatNotified;
 
         /// <summary>
         /// Notifies the client of the message by raising an event.
@@ -565,7 +588,10 @@ namespace ClientApp
 
         void IChatServiceCallback.GetPrivateChat(PrivateChat pc)
         {
-            throw new NotImplementedException();
+            if (PrivateChatNotified != null)
+            {
+                PrivateChatNotified(this, new PrivateChatEventArgs(pc));
+            }
         }
     }
 

@@ -88,9 +88,14 @@ namespace ServiceApp
             );
         }
 
-        public void NotifyViewforRoom(Room room)
+        public void NotifyViewforRoom(Room room,int close)
         {
-            Room r = DeserializeRoom(room);
+            Room r = null;
+            if (close == 0)
+            {
+                r = DeserializeRoom(room);
+            }
+             
             ThreadPool.QueueUserWorkItem
             (
                 delegate
@@ -99,9 +104,9 @@ namespace ServiceApp
                     {
                         List<string> disconnectedClientGuids = new List<string>();
 
-                        if (ServiceModel.Instance.ClientsForThemeRoom.Any(i => i.Key.Equals(r.Theme)))
+                        if (ServiceModel.Instance.ClientsForThemeRoom.Any(i => i.Key.Equals(room.Theme)))
                         {
-                            foreach (KeyValuePair<string, IChatServiceCallback> client in ServiceModel.Instance.ClientsForThemeRoom[r.Theme])
+                            foreach (KeyValuePair<string, IChatServiceCallback> client in ServiceModel.Instance.ClientsForThemeRoom[room.Theme])
                             {
                                 try
                                 {
@@ -115,7 +120,7 @@ namespace ServiceApp
 
                             foreach (string clientGuid in disconnectedClientGuids)
                             {
-                                ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(r.Theme)).Value.Remove(clientGuid);
+                                ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(room.Theme)).Value.Remove(clientGuid);
                             }
                         }
 
@@ -376,7 +381,7 @@ namespace ServiceApp
                      return;
                  }
              }*/
-            NotifyViewforRoom(null);
+            
         }
 
         public void SerializeRoom(Room room)     // Serialize Room
@@ -691,7 +696,7 @@ namespace ServiceApp
                     if (user.Email != blockEmail)
                     {
                         User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
-                        if (ServiceModel.Instance.GroupChat.Blocked.Single(i => i.Email == blockEmail) == null)
+                        if (ServiceModel.Instance.GroupChat.Blocked.Any(i => i.Email == blockEmail) == false)
                         {
                             ServiceModel.Instance.GroupChat = DeserializeGroupChat();// deser
                             ServiceModel.Instance.GroupChat.Blocked.Add(u);
@@ -971,7 +976,7 @@ namespace ServiceApp
                     User user2 = ServiceModel.Instance.LoggedIn.Single(i => i.Email == secondEmail);
                     if (user2 != null)
                     {
-                        if (ServiceModel.Instance.PrivateChatList.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))) == null)
+                        if ((ServiceModel.Instance.PrivateChatList.Any(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))) == false) && ServiceModel.Instance.PrivateChatList.Any(i => (i.User1.Equals(user2.Email) && i.User2.Equals(user.Email))) == false)
                         {
                             PrivateChat pc = new PrivateChat(user.Email, user2.Email);
                             SerializePrivateChat(pc);  // kreiraj fajl
@@ -984,7 +989,15 @@ namespace ServiceApp
                         {
                             Console.WriteLine("Chat already exists!");
                             Audit.CreatePrivateChatSuccess(firstEmail, secondEmail);
-                            return ServiceModel.Instance.PrivateChatList.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email)));
+                            if (ServiceModel.Instance.PrivateChatList.Any(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))))
+                            {
+                                return ServiceModel.Instance.PrivateChatList.Single(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email)));
+                            }
+                            else
+                            {
+                                return ServiceModel.Instance.PrivateChatList.Single(i => (i.User1.Equals(user2.Email) && i.User2.Equals(user.Email)));
+                            }
+                            
                         }
                     }
                     else
@@ -1816,6 +1829,11 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey(); return; }
 
             User user = userOnSession;
+            if (userOnSession == null)
+            {
+                Audit.SendPrivateMessageFailed(sendEmail, reciveEmail);
+                return;
+            }
             bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendPrivateMessage.ToString()))
@@ -1831,17 +1849,21 @@ namespace ServiceApp
                         ServiceModel.Instance.PrivateChatList.Add(newChat);
 
                         SerializePrivateChat(newChat);
-                        SerializeFileChats(newChat);
+                        //SerializeFileChats(newChat);
+                        NotifyViewforPC(newChat.Uid);
                         ok = true;
                     }
                     else
                     {
+                        privateChat = DeserializePrivateChat(privateChat.Uid);
                         privateChat.Messages.Add(m);
 
                         SerializePrivateChat(privateChat);
-                        SerializeFileChats(privateChat);
+                        //SerializeFileChats(privateChat);
+                        NotifyViewforPC(privateChat.Uid);
                         ok = true;
                     }
+
                 }
                 else
                 {
@@ -1952,7 +1974,7 @@ namespace ServiceApp
                         ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName).AllMessages.Add(m);
                         sendSuccess = true;
                         SerializeRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName));
-                        NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName));
+                        NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName),0);
                     }
                     else
                     {
@@ -2040,7 +2062,7 @@ namespace ServiceApp
 
         }
 
-        public bool CloseRoom(byte[] roomNameBytes, string roomNameHash)
+        public void CloseRoom(byte[] roomNameBytes, string roomNameHash)
         {
             string roomName = "";
             try
@@ -2049,10 +2071,10 @@ namespace ServiceApp
                 if (!roomNameHash.Equals(Sha256encrypt(roomName)))
                 {
                     Audit.ModifiedMessageDanger();
-                    return false;
+                    
                 }
             }
-            catch (Exception e) { Audit.BadAesKey(); return false; }
+            catch (Exception e) { Audit.BadAesKey();  }
 
             User user = userOnSession;
             bool ok = false;
@@ -2069,6 +2091,7 @@ namespace ServiceApp
                         ServiceModel.Instance.GroupChat.ThemeRooms.Remove(room.Theme);
                         SerializeGroupChat(ServiceModel.Instance.GroupChat);
                         CloseupRoom(room);   // Obrisi taj fajl kompletno
+                        NotifyViewforRoom(room, 1);
                         ok = true;
                     }
                     else
@@ -2097,7 +2120,7 @@ namespace ServiceApp
                 Audit.CloseRoomFailed(roomName);
             }
 
-            return ok;
+            
         }
 
         public void KeepConnection()
@@ -2243,6 +2266,10 @@ namespace ServiceApp
 
         public PrivateChat GetPrivateChat(byte[] codeByte, string codeHash)
         {
+            if (userOnSession == null)
+            {
+                return null;
+            }
             string code1 = "";
             try
             {
@@ -2264,7 +2291,32 @@ namespace ServiceApp
                     if (userOnSession.IsInRole(Permissions.GetPrivateChat.ToString()))
                     {
                         PrivateChat pc = DeserializePrivateChat(code);
-                        return pc;
+                        if (pc.User1.Equals(userOnSession.Email) || pc.User2.Equals(userOnSession.Email) || userOnSession.Role == Roles.Admin)
+                        {
+                            List<User> lista = DeserializeUsers();
+                            if (pc.User1.Equals((userOnSession.Email)))
+                            {
+                                if (lista.Single(i => i.Email.Equals(pc.User2)).Blocked.Any(i => i.Email.Equals(pc.User1)))
+                                {
+                                    return null;
+                                }
+                            }
+                            else if (pc.User2.Equals(userOnSession.Email))
+                            {
+                                if (lista.Single(i => i.Email.Equals(pc.User1)).Blocked.Any(i => i.Email.Equals(pc.User2)))
+                                {
+                                    return null;
+                                }
+                            }
+
+                            return pc;
+                        }
+                        else
+                        {
+                           
+                            return null;
+                        }
+                        
                     }
                     else
                     {
@@ -2287,7 +2339,47 @@ namespace ServiceApp
 
         private void NotifyViewforPC(Guid uid)
         {
-            throw new NotImplementedException();
+
+            PrivateChat pc = DeserializePrivateChat(uid);
+
+            if (pc == null)
+            {
+                return;
+            }
+
+
+            ThreadPool.QueueUserWorkItem
+            (
+                delegate
+                {
+                    lock (ServiceModel.Instance.ClientsForPrivateChat)
+                    {
+                        List<string> disconnectedClientGuids = new List<string>();
+
+                        if (ServiceModel.Instance.ClientsForPrivateChat.Any(i => i.Key.Equals(uid)))
+                        {
+                            foreach (KeyValuePair<string, IChatServiceCallback> client in ServiceModel.Instance.ClientsForPrivateChat[uid])
+                            {
+                                try
+                                {
+                                    client.Value.GetPrivateChat(pc);
+                                }
+                                catch (Exception)
+                                {
+                                    disconnectedClientGuids.Add(client.Key);
+                                }
+                            }
+
+                            foreach (string clientGuid in disconnectedClientGuids)
+                            {
+                                ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(uid)).Value.Remove(clientGuid);
+                            }
+                        }
+
+
+                    }
+                }
+            );
         }
 
         public void SubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
@@ -2422,7 +2514,7 @@ namespace ServiceApp
                             int index = ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.IndexOf(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Single(i => i.Email.Equals(userOnSession.Email)));
                             ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.RemoveAt(index);
                             SerializeRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)));
-                            NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)));
+                            NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)),0);
                         }
 
                     }
@@ -2458,7 +2550,7 @@ namespace ServiceApp
                 {
                     if (ServiceModel.Instance.PrivateChatList.Any(i => i.Uid.Equals(code)))
                     {
-                        PrivateChat pc = ServiceModel.Instance.PrivateChatList.Single(i => i.Uid.Equals(code));
+                        PrivateChat pc = DeserializePrivateChat(code);
                         if (pc.User1.Equals(userOnSession.Email))
                         {
                             pc.User1logged = false;
@@ -2503,15 +2595,17 @@ namespace ServiceApp
 
             if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
             {
-                NotifyViewforRoom(room);
+                NotifyViewforRoom(room,0);
             }
         }
 
-        public void LogInPrivateChat(byte[] codeByte, string codeHash)
+        public void LogInPrivateChat(byte[] emailBytes, string emailHash, byte[] codeByte, string codeHash)
         {
             string code1 = "";
+            string email = "";
             try
             {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
                 code1 = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, codeByte));
                 if (!codeHash.Equals(Sha256encrypt(code1)))
                 {
@@ -2523,25 +2617,35 @@ namespace ServiceApp
 
             Guid code = new Guid(code1);
 
-            if (userOnSession.Logged)
-            {
-                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(userOnSession.Email)))
+          
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
                 {
+                    userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                    
                     if (userOnSession.IsInRole(Permissions.GetPrivateChat.ToString()))
                     {
                         PrivateChat pc = DeserializePrivateChat(code);
 
-                        if (pc.User1.Equals(userOnSession.Email))
-                        {
-                            pc.User1logged = true;
-                        }
-                        else if (pc.User1.Equals(userOnSession.Email))
-                        {
-                            pc.User2logged = true;
-                        }
+                    if (pc.User1.Equals(userOnSession.Email))
+                    {
+                        pc.User1logged = true;
+                    }
+                    else if (pc.User2.Equals(userOnSession.Email))
+                    {
+                        pc.User2logged = true;
+                    }
+                    else if (userOnSession.Role != Roles.Admin)
+                    {
+                        pc = null;
+                    }
 
-                        NotifyViewforPC(pc.Uid);
+                    if (pc != null)
+                    {
+                        
                         SerializePrivateChat(pc);
+                        NotifyViewforPC(pc.Uid);
+                    }
+                        
 
                     }
 
@@ -2549,7 +2653,7 @@ namespace ServiceApp
                 }
 
 
-            }
+            
 
         }
 
@@ -2585,6 +2689,84 @@ namespace ServiceApp
         public void SessionKey(Guid code)
         {
             SessionID = code;
+        }
+
+        public void SubscribeUserChat(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
+        {
+            string email = "";
+            string theme = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                theme = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, themeBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)) || !themeHash.Equals(Sha256encrypt(theme)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+            Guid code = new Guid(theme);
+            if (!ServiceModel.Instance.ClientsForPrivateChat.Any(i => i.Key.Equals(code)))
+            {
+                Dictionary<string, IChatServiceCallback> pom = new Dictionary<string, IChatServiceCallback>();
+
+                lock (ServiceModel.Instance.ClientsForPrivateChat)
+                {
+                    ServiceModel.Instance.ClientsForPrivateChat.Add(code, pom);
+                }
+            }
+
+            if (!ServiceModel.Instance.ClientsForPrivateChat[code].ContainsKey(email))
+            {
+
+                IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
+
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+                {
+
+                    lock (ServiceModel.Instance.ClientsForPrivateChat)
+                    {
+                        ServiceModel.Instance.ClientsForPrivateChat[code].Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
+                        userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                    }
+                }
+
+            }
+        }
+
+        public void UnsubscribeUserChat(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
+        {
+            string email = "";
+            string theme = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                theme = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, themeBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)) || !themeHash.Equals(Sha256encrypt(theme)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
+            Guid code = new Guid(theme);
+
+            if (ServiceModel.Instance.ClientsForPrivateChat.ContainsKey(code))
+            {
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
+                {
+                    lock (ServiceModel.Instance.ClientsForPrivateChat)
+                    {
+                        if (ServiceModel.Instance.ClientsForPrivateChat[code].ContainsKey(email))
+                        {
+                            ServiceModel.Instance.ClientsForPrivateChat[code].Remove(email);
+                        }
+                    }
+                }
+
+            }
         }
     }
 }

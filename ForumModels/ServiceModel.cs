@@ -21,7 +21,7 @@ namespace ForumModels
 
         private Dictionary<string, Dictionary<string, IChatServiceCallback>> clientsforThemeRoom;
 
-        private Dictionary<string, Dictionary<string, IChatServiceCallback>> clientsforPrivateChat;
+        private Dictionary<Guid, Dictionary<string, IChatServiceCallback>> clientsforPrivateChat;
 
         private ObservableCollection<User> loggedIn;
 
@@ -53,7 +53,7 @@ namespace ForumModels
 
             clientsforThemeRoom = new Dictionary<string, Dictionary<string, IChatServiceCallback>>();
 
-            clientsforPrivateChat = new Dictionary<string, Dictionary<string, IChatServiceCallback>>();
+            clientsforPrivateChat = new Dictionary<Guid, Dictionary<string, IChatServiceCallback>>();
 
             clients = new Dictionary<string, IChatServiceCallback>();//ne cuvaj u fajl, to mi cuva proxyje u runtime-u
 
@@ -100,7 +100,7 @@ namespace ForumModels
             set { clientsforThemeRoom = value; }
         }
         [DataMember]
-        public Dictionary<string, Dictionary<string, IChatServiceCallback>> ClientsForPrivateChat
+        public Dictionary<Guid, Dictionary<string, IChatServiceCallback>> ClientsForPrivateChat
         {
             get { return clientsforPrivateChat; }
             set { clientsforPrivateChat = value; }

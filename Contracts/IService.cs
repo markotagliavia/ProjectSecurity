@@ -88,8 +88,8 @@ namespace Contracts
         [OperationContract]
         Room GetThemeRoom(byte[] roomNameBytes, byte[] emailBytes, string roomNameHash, string emailHash);
 
-        [OperationContract]
-        bool CloseRoom(byte[] roomNameBytes, string roomNameHash);
+        [OperationContract(IsOneWay =true)]
+        void CloseRoom(byte[] roomNameBytes, string roomNameHash);
 
         [OperationContract(IsOneWay = true)]
         void KeepConnection();
@@ -104,6 +104,9 @@ namespace Contracts
         [OperationContract(IsOneWay = true)]
         void SubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash);
 
+        [OperationContract(IsOneWay = true)]
+        void SubscribeUserChat(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash);
+
         [OperationContract]
         ObservableCollection<User> GetAllUsers(byte[] emailBytes, string emailHash);
 
@@ -114,13 +117,16 @@ namespace Contracts
         void UnsubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash);
 
         [OperationContract(IsOneWay = true)]
+        void UnsubscribeUserChat(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash);
+
+        [OperationContract(IsOneWay = true)]
         void UnsubscribeAllUsers(byte[] emailBytes, string emailHash);
 
         [OperationContract(IsOneWay = true)]
         void LogInTheme(byte[] themeBytes, byte[] emailBytes, string themeHash, string emailHash);
 
         [OperationContract(IsOneWay = true)]
-        void LogInPrivateChat(byte[] codeByte, string codeHash);
+        void LogInPrivateChat(byte[] emailBytes, string emailHash, byte[] codeByte, string codeHash);
 
         [OperationContract]
         RSAParameters GetPublicKey(Guid code);

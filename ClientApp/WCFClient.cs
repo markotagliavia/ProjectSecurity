@@ -13,7 +13,7 @@ using System.Security.Cryptography;
 namespace ClientApp
 {
 
-    public class WCFClient : DuplexChannelFactory<IService>,IService
+    public class WCFClient : DuplexChannelFactory<IService>,IService,IDisposable
     {
         IService factory;
 
@@ -152,19 +152,19 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool CloseRoom(byte[] roomNameBytes, string roomNameHash)
+        public void CloseRoom(byte[] roomNameBytes, string roomNameHash)
         {
-            bool retVal = false;
+            
             try
             {
-                retVal = factory.CloseRoom(roomNameBytes, roomNameHash);
+                factory.CloseRoom(roomNameBytes, roomNameHash);
                 Console.WriteLine("CloseRoom executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to CloseRoom(). {0}", e.Message);
             }
-            return retVal;
+            
         }
 
         public PrivateChat CreatePrivateChat(byte[] firstEmailBytes, byte[] secondEmailBytes, string firstEmailHash, string secondEmailHash)
@@ -573,11 +573,11 @@ namespace ClientApp
             }
         }
 
-        public void LogInPrivateChat(byte[] codeByte, string codeHash)
+        public void LogInPrivateChat(byte[] emailBytes, string emailHash,byte[] codeByte, string codeHash)
         {
             try
             {
-                factory.LogInPrivateChat(codeByte, codeHash);
+                factory.LogInPrivateChat(emailBytes, emailHash,codeByte, codeHash);
             }
             catch (Exception e)
             {
@@ -625,6 +625,32 @@ namespace ClientApp
             catch (Exception ex)
             {
                 Console.WriteLine($"Sending session key failed because {ex.Message}");
+            }
+        }
+
+        public void SubscribeUserChat(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
+
+        {
+            try
+            {
+                factory.SubscribeUserChat(emailBytes, themeBytes, emailHash, themeHash);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"SubscribeUserChat failed because {ex.Message}");
+            }
+        }
+
+        public void UnsubscribeUserChat(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
+        {
+            try
+            {
+                factory.UnsubscribeUserChat(emailBytes, themeBytes, emailHash, themeHash);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UnsubscribeUserChat failed because {ex.Message}");
             }
         }
     }
