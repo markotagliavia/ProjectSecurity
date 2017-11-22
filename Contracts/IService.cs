@@ -17,7 +17,7 @@ namespace Contracts
     {
 
         [OperationContract]
-        bool Registration(string name, string sname, DateTime date, string gender, string email, string password);
+        bool Registration(byte[] nameBytes, byte[] snameBytes, byte[] dateBytes, byte[] genderBytes, byte[] emailBytes, byte[] passwordBytes, string nameHash, string snameHash, string dateHash, string genderHash, string emailHash, string passwordHash);
 
         [OperationContract]
         bool ChangePassword(byte[] emailBytes, byte[] oldPasswordBytes, byte[] newPasswordBytes, string emailHash, string oldPassowrdHash, string newPasswordHash);
@@ -129,7 +129,7 @@ namespace Contracts
         bool SendSessionKey(byte[] crypted);
 
         [OperationContract(IsOneWay = true)]
-        void SendSessionKey(Guid code);
+        void SessionKey(Guid code);
     }
 
    

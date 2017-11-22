@@ -51,7 +51,9 @@ namespace SecurityManager
         SendPrivateMessageSuccess = 39,
         SendPrivateMessageFailed = 40,
         CloseRoomSuccess = 41,
-        CloseRoomFailed = 42
+        CloseRoomFailed = 42,
+        ModifiedMessageDanger = 43,
+        BadAesKey = 44
     }
 
     public class Audit : IDisposable
@@ -485,7 +487,7 @@ namespace SecurityManager
         {
             if (customLog != null)
             {
-                string message = String.Format($"{DateTime.Now} | Room {roomName} successfully closed.");
+                string message = String.Format($"{DateTime.Now} | Room {roomName} successfully created.");
                 customLog.WriteEntry(message);
             }
             else
@@ -634,6 +636,32 @@ namespace SecurityManager
             else
             {
                 throw new ArgumentException(string.Format($"{DateTime.Now} | Error while trying to write event (eventid = {(int)AuditEventTypes.CloseRoomFailed}) to event log."));
+            }
+        }
+
+        public static void ModifiedMessageDanger()
+        {
+            if (customLog != null)
+            {
+                string message = String.Format($"{DateTime.Now} | Danger! Data sent through network are modified.");
+                customLog.WriteEntry(message);
+            }
+            else
+            {
+                throw new ArgumentException(string.Format($"{DateTime.Now} | Error while trying to write event (eventid = {(int)AuditEventTypes.ModifiedMessageDanger}) to event log."));
+            }
+        }
+
+        public static void BadAesKey()
+        {
+            if (customLog != null)
+            {
+                string message = String.Format($"{DateTime.Now} | Danger! Application is under hacker attack. Please be carefull.");
+                customLog.WriteEntry(message);
+            }
+            else
+            {
+                throw new ArgumentException(string.Format($"{DateTime.Now} | Error while trying to write event (eventid = {(int)AuditEventTypes.BadAesKey}) to event log."));
             }
         }
 

@@ -119,7 +119,7 @@ namespace ServiceApp
                             }
                         }
 
-                       
+
                     }
                 }
             );
@@ -182,7 +182,7 @@ namespace ServiceApp
             Stream s = File.Open("Chats.dat", FileMode.Create);
             try
             {
-                if(lista!=null)
+                if (lista != null)
                 {
                     foreach (PrivateChat r in lista)
                     {
@@ -191,11 +191,12 @@ namespace ServiceApp
                             lista.Remove(r); // izbaci staru i ubaci nove parametre sobe
                         }
                     }
-                }else
+                }
+                else
                 {
                     lista = new List<PrivateChat>();
                 }
-                
+
 
                 lista.Add(pc);
                 BinaryFormatter bf = new BinaryFormatter();
@@ -204,7 +205,7 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-              //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
             }
             finally
             {
@@ -212,7 +213,7 @@ namespace ServiceApp
             }
 
         }     // serijalizacija fajla sa privatnim chatovima
-     
+
         public List<PrivateChat> DeserializeChats()
         {
             List<PrivateChat> pc = null;
@@ -225,7 +226,7 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-               // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
             }
             finally
             {
@@ -240,7 +241,7 @@ namespace ServiceApp
             Stream s = File.Open("Rooms.dat", FileMode.Create);
             try
             {
-                if(lista!=null)
+                if (lista != null)
                 {
                     foreach (Room r in lista)
                     {
@@ -251,19 +252,20 @@ namespace ServiceApp
                         }
                     }
 
-                }else
+                }
+                else
                 {
                     lista = new List<Room>();
                 }
-                            
-                    lista.Add(room);
-                    BinaryFormatter bf = new BinaryFormatter();
-                    bf.Serialize(s, lista);        
-           
+
+                lista.Add(room);
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(s, lista);
+
             }
             catch (SerializationException e)
             {
-             //   Console.WriteLine("Failed to serialize. Reason: " + e.Message);    
+                //   Console.WriteLine("Failed to serialize. Reason: " + e.Message);    
             }
             finally
             {
@@ -273,7 +275,7 @@ namespace ServiceApp
 
         public List<Room> DeserializeFileRooms()
         {
-            List<Room> rooms=null;
+            List<Room> rooms = null;
             FileStream fs = new FileStream("Rooms.dat", FileMode.OpenOrCreate);
             try
             {
@@ -304,7 +306,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                //    Console.WriteLine("Failed to serialize. Reason: " + e.Message);                    
+                    //    Console.WriteLine("Failed to serialize. Reason: " + e.Message);                    
                 }
                 finally
                 {
@@ -362,20 +364,20 @@ namespace ServiceApp
                 return;
             }
 
-           /* if (File.Exists(room.Code.ToString() + ".dat"))
-            {
-                try
-                {
-                    System.IO.File.Delete(AppRoot + room.Code.ToString() + ".dat");
-                }
-                catch (System.IO.IOException e)
-                {
-                    Console.WriteLine(e.Message);
-                    return;
-                }
-            }*/
-           NotifyViewforRoom(null);
-        } 
+            /* if (File.Exists(room.Code.ToString() + ".dat"))
+             {
+                 try
+                 {
+                     System.IO.File.Delete(AppRoot + room.Code.ToString() + ".dat");
+                 }
+                 catch (System.IO.IOException e)
+                 {
+                     Console.WriteLine(e.Message);
+                     return;
+                 }
+             }*/
+            NotifyViewforRoom(null);
+        }
 
         public void SerializeRoom(Room room)     // Serialize Room
         {
@@ -387,7 +389,7 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-              //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);               
+                //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);               
             }
             finally
             {
@@ -397,7 +399,7 @@ namespace ServiceApp
 
         public Room DeserializeRoom(Room room)   // DEserialize Room
         {
-            Room pc1=null;
+            Room pc1 = null;
 
             FileStream fs = new FileStream(room.Code.ToString() + ".dat", FileMode.OpenOrCreate);
 
@@ -409,7 +411,7 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-               // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);                
+                // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);                
             }
             finally
             {
@@ -431,7 +433,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                   // Console.WriteLine("Failed to serialize. Reason: " + e.Message);                 
+                    // Console.WriteLine("Failed to serialize. Reason: " + e.Message);                 
                 }
                 finally
                 {
@@ -456,7 +458,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                   // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);                    
+                    // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);                    
                 }
                 finally
                 {
@@ -502,7 +504,7 @@ namespace ServiceApp
 
                 }
                 catch (SerializationException e)
-                { 
+                {
                 }
                 finally
                 {
@@ -522,9 +524,22 @@ namespace ServiceApp
 
         public bool AddAdmin(byte[] emailBytes, string emailHash)
         {
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
             bool retVal = false;
+
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.AddAdmin.ToString()) && userOnSession.Logged && ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(userOnSession.Email)))
             {
@@ -569,10 +584,10 @@ namespace ServiceApp
 
             if (retVal)
             {
-                Audit.AddAdminSuccess(user.Email,email);
+                Audit.AddAdminSuccess(user.Email, email);
             }
             {
-                Audit.AddAdminFailed(user.Email,email);
+                Audit.AddAdminFailed(user.Email, email);
             }
 
             return retVal;
@@ -580,6 +595,17 @@ namespace ServiceApp
 
         public bool DeleteAdmin(byte[] emailBytes, string emailHash)
         {
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
             bool retVal = true;
@@ -642,6 +668,18 @@ namespace ServiceApp
 
         public bool BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
         {
+            string blockEmail = "";
+            try
+            {
+                blockEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, blockEmailBytes));
+                if (!blockEmailHash.Equals(Sha256encrypt(blockEmail)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
             bool retVal = false;
@@ -651,7 +689,7 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     if (user.Email != blockEmail)
-                    {                  
+                    {
                         User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
                         if (ServiceModel.Instance.GroupChat.Blocked.Single(i => i.Email == blockEmail) == null)
                         {
@@ -665,7 +703,8 @@ namespace ServiceApp
                     {
                         Console.WriteLine("You can not block yourself!");
                     }
-                }else
+                }
+                else
                 {
                     Console.WriteLine("User {0} is not logged in!", user.Name);
                 }
@@ -686,10 +725,24 @@ namespace ServiceApp
             }
 
             return retVal;
-        }     
+        }
 
-        public bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)   
+        public bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)
         {
+            string requestEmail = "";
+            string blockEmail = "";
+            try
+            {
+                requestEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, requestEmailBytes));
+                blockEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, blokEmailBytes));
+                if (!blockEmailHash.Equals(Sha256encrypt(blockEmail)) || !requestEmailHash.Equals(Sha256encrypt(requestEmail)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
             bool retVal = false;
@@ -752,17 +805,31 @@ namespace ServiceApp
 
             if (retVal)
             {
-                Audit.BlockUserSuccess(requestEmail,blockEmail);
+                Audit.BlockUserSuccess(requestEmail, blockEmail);
             }
             {
-                Audit.BlockUserFailed(requestEmail,blockEmail);
+                Audit.BlockUserFailed(requestEmail, blockEmail);
             }
 
             return retVal;
-        } 
+        }
 
         public bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash)
         {
+            string roomName = "";
+            string blockEmail = "";
+            try
+            {
+                roomName = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, roomNameBytes));
+                blockEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, blokEmailBytes));
+                if (!blockEmailHash.Equals(Sha256encrypt(blockEmail)) || !roomNameHash.Equals(Sha256encrypt(roomName)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
             bool retVal = false;
@@ -781,7 +848,7 @@ namespace ServiceApp
 
                         SerializeRoom(room);
 
-                        SerializeFileRooms(room);  
+                        SerializeFileRooms(room);
 
                         retVal = true;
                     }
@@ -810,10 +877,26 @@ namespace ServiceApp
             }
 
             return retVal;
-        }   
+        }
 
-        public bool ChangePassword(byte[] emailBytes, byte[] oldPasswordBytes, byte[] newPasswordBytes, string emailHash, string oldPassowrdHash, string newPasswordHash)   
+        public bool ChangePassword(byte[] emailBytes, byte[] oldPasswordBytes, byte[] newPasswordBytes, string emailHash, string oldPassowrdHash, string newPasswordHash)
         {
+            string email = "";
+            string oldPassowrd = "";
+            string newPassword = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                oldPassowrd = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, oldPasswordBytes));
+                newPassword = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, newPasswordBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)) || !newPasswordHash.Equals(Sha256encrypt(newPassword)) || !oldPassowrdHash.Equals(Sha256encrypt(oldPassowrd)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
             bool retVal = false;
@@ -830,13 +913,13 @@ namespace ServiceApp
                     List<User> lista = DeserializeUsers();
                     foreach (User ur in lista)
                     {
-                        if (ur.Email == email && ur.Password==oldPassowrd)
+                        if (ur.Email == email && ur.Password == oldPassowrd)
                         {
                             ur.Password = newPassword;
 
                             SerializeUsers(lista); // upisi u fajl
                         }
-            
+
                     }
 
                     retVal = true;
@@ -861,11 +944,24 @@ namespace ServiceApp
             }
 
             return retVal;
-        } 
+        }
 
         public PrivateChat CreatePrivateChat(byte[] firstEmailBytes, byte[] secondEmailBytes, string firstEmailHash, string secondEmailHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string firstEmail = "";
+            string secondEmail = "";
+            try
+            {
+                firstEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, firstEmailBytes));
+                secondEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, secondEmailBytes));
+                if (!firstEmailHash.Equals(Sha256encrypt(firstEmail)) || !secondEmailHash.Equals(Sha256encrypt(secondEmail)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return null;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return null; }
+
             User user = userOnSession;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.CreatePrivateChat.ToString()))
@@ -913,11 +1009,22 @@ namespace ServiceApp
 
             Audit.CreatePrivateChatFailed(firstEmail, secondEmail);
             return null;
-        }        
+        }
 
         public void CreateRoom(byte[] roomNameBytes, string roomNameHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string roomName = "";
+            try
+            {
+                roomName = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, roomNameBytes));
+                if (!roomNameHash.Equals(Sha256encrypt(roomName)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             User user = userOnSession;
             bool retVal = false;
 
@@ -928,14 +1035,14 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     if (!ServiceModel.Instance.RoomList.Any(i => i.Theme == roomName))
-                    {                    
+                    {
                         Room room = new Room(roomName);
                         ServiceModel.Instance.RoomList.Add(room);
                         ServiceModel.Instance.GroupChat.ThemeRooms.Add(room.Theme);
                         SerializeRoom(room);
                         SerializeFileRooms(room); // dodaj u listu soba fajl
                         SerializeGroupChat(ServiceModel.Instance.GroupChat);
-                        
+
                         retVal = true;
                         NotifyAll();
                     }
@@ -959,22 +1066,25 @@ namespace ServiceApp
             {
                 Audit.CreateRoomFailed(roomName);
             }
-           
-        }        
 
- 
+        }
 
         public int LogIn(byte[] cipherEmail, byte[] cipherPassword, string emailHash, string passwordHash)
         {
             List<User> lista = DeserializeUsers();
-
-            string email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, cipherEmail));
-            string password = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, cipherPassword));
-            if (!emailHash.Equals(Sha256encrypt(email)) || !passwordHash.Equals(Sha256encrypt(password)))
+            string email = "";
+            string password = "";
+            try
             {
-                Console.WriteLine("Someone modified your messages, for your security, we will prevent further program execution.");
-                return -3;
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, cipherEmail));
+                password = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, cipherPassword));
+                if (!emailHash.Equals(Sha256encrypt(email)) || !passwordHash.Equals(Sha256encrypt(password)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return -3;
+                }
             }
+            catch (Exception ex) { Audit.BadAesKey(); return -3; }
 
             if (lista == null)
             {
@@ -993,9 +1103,9 @@ namespace ServiceApp
 
             if (u != null)
             {
-                if(string.Equals(password,u.Password))
+                if (string.Equals(password, u.Password))
                 {
-                  
+
                     if (!u.Verify)
                     {
                         //Thread.CurrentPrincipal = lista.Single(i => i.Email == email);
@@ -1066,7 +1176,7 @@ namespace ServiceApp
                     }
                     else
                     {
-                        if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(u.Email))==false)
+                        if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(u.Email)) == false)
                         {
                             ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                             u.Logged = true;
@@ -1079,7 +1189,7 @@ namespace ServiceApp
                             SerializeGroupChat(ServiceModel.Instance.GroupChat);
 
                             List<PrivateChat> pc = DeserializeChats();
-                            if(pc!=null)
+                            if (pc != null)
                             {
                                 foreach (PrivateChat item in pc)
                                 {
@@ -1089,11 +1199,11 @@ namespace ServiceApp
                                     }
                                 }
                             }
-                            
+
 
 
                             List<Room> rooms = DeserializeFileRooms();
-                            if(rooms!=null)
+                            if (rooms != null)
                             {
                                 foreach (Room item in rooms)
                                 {
@@ -1138,11 +1248,22 @@ namespace ServiceApp
             }
 
 
-        }    
+        }
 
         public bool LogOut(byte[] emailBytes, string emailHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             User user = userOnSession;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.LogOut.ToString()))
@@ -1155,7 +1276,7 @@ namespace ServiceApp
                         int index = ServiceModel.Instance.LoggedIn.IndexOf(ServiceModel.Instance.LoggedIn.Single(x => x.Email.Equals(email)));
                         ServiceModel.Instance.LoggedIn.RemoveAt(index);
                         ServiceModel.Instance.GroupChat = DeserializeGroupChat(); //deser users
-                        
+
 
                         if (ServiceModel.Instance.GroupChat.Logged.Any(x => x.Email.Equals(email)))
                         {
@@ -1193,11 +1314,35 @@ namespace ServiceApp
             }
             Audit.LogOutFailed(email);
             return false;
-        }                   
+        }
 
-        public bool Registration(string name, string sname, DateTime date, string gender, string email, string password)
+        public bool Registration(byte[] nameBytes, byte[] snameBytes, byte[] dateBytes, byte[] genderBytes, byte[] emailBytes, byte[] passwordBytes, string nameHash, string snameHash, string dateHash, string genderHash, string emailHash, string passwordHash)
         {
-            bool exists = false , registrationSuccess = false;
+            string name = "";
+            string sname = "";
+            string gender = "";
+            string email = "";
+            DateTime date = new DateTime();
+            string password = "";
+            try
+            {
+                name = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, nameBytes));
+                sname = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, snameBytes));
+                gender = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, genderBytes));
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                password = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, passwordBytes));
+                try { date = DateTime.Parse(Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, dateBytes))); }
+                catch (Exception e) { date = DateTime.Now; }
+
+                if (!emailHash.Equals(Sha256encrypt(email)) || !nameHash.Equals(Sha256encrypt(name)) || !snameHash.Equals(Sha256encrypt(sname)) || !genderHash.Equals(Sha256encrypt(gender)) || !passwordHash.Equals(Sha256encrypt(password)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
+            bool exists = false, registrationSuccess = false;
             List<User> lista = new List<User>();
 
             User u1 = new User(name, sname, date, email, password, Roles.User, gender);
@@ -1269,7 +1414,7 @@ namespace ServiceApp
                     try
                     {
                         lista.Add(u1);
-                        
+
                         bf.Serialize(s, lista);
                         registrationSuccess = true;
                     }
@@ -1301,7 +1446,18 @@ namespace ServiceApp
 
         public bool RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string unblockEmail = "";
+            try
+            {
+                unblockEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, unblockEmailBytes));
+                if (!unblockEmailHash.Equals(Sha256encrypt(unblockEmail)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             User user = userOnSession;
             bool retVal = false;
 
@@ -1349,11 +1505,24 @@ namespace ServiceApp
             }
 
             return retVal;
-        } 
+        }
 
-        public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash)        
+        public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string requestEmail = "";
+            string unblockEmail = "";
+            try
+            {
+                unblockEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, unblockEmailBytes));
+                requestEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, requestEmailBytes));
+                if (!unblockEmailHash.Equals(Sha256encrypt(unblockEmail)) || !requestEmailHash.Equals(Sha256encrypt(requestEmail)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             User user = userOnSession;
             bool retVal = false;
             /// audit both successfull and failed authorization checks
@@ -1424,11 +1593,24 @@ namespace ServiceApp
             }
 
             return retVal;
-        }   
+        }
 
         public bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string unblockEmail = "";
+            string roomName = "";
+            try
+            {
+                unblockEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, unblockEmailBytes));
+                roomName = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, roomNameBytes));
+                if (!unblockEmailHash.Equals(Sha256encrypt(unblockEmail)) || !roomNameHash.Equals(Sha256encrypt(roomName)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             User user = userOnSession;
             bool retval = false;
 
@@ -1473,10 +1655,22 @@ namespace ServiceApp
             }
 
             return retval;
-        }  
+        }
 
         public int ResetPassword(byte[] emailBytes, string emailHash)
         {
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return -1;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return -1; }
+
             List<User> lista;
             lista = DeserializeUsers();  //deser user
             if (lista.Any(x => x.Email.Equals(email)))
@@ -1522,11 +1716,22 @@ namespace ServiceApp
                 return -1;
             }
 
-        }       
+        }
 
         public bool SendVerificationKey(byte[] keyBytes, string keyHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string key = "";
+            try
+            {
+                key = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, keyBytes));
+                if (!keyHash.Equals(Sha256encrypt(key)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             User user = userOnSession;
             bool ok = false;
             /// audit both successfull and failed authorization checks
@@ -1545,10 +1750,10 @@ namespace ServiceApp
                         ServiceModel.Instance.GroupChat.Logged.Add(user);
 
                         List<User> lista = new List<User>();
-                        lista= DeserializeUsers();
-                        foreach(User u in lista)
+                        lista = DeserializeUsers();
+                        foreach (User u in lista)
                         {
-                            if(u.Email==user.Email)
+                            if (u.Email == user.Email)
                             {
                                 u.Verify = true;
                                 u.SecureCode = user.SecureCode;
@@ -1559,7 +1764,7 @@ namespace ServiceApp
                         SerializeUsers(lista);
 
                         NotifyAll();
-                        
+
                     }
 
                 }
@@ -1582,7 +1787,7 @@ namespace ServiceApp
 
             return ok;
 
-        }   
+        }
 
         public string Sha256encrypt(string phrase)
         {
@@ -1592,9 +1797,24 @@ namespace ServiceApp
             return Convert.ToBase64String(hashedDataBytes);
         }    //DONE
 
-        public void SendPrivateMessage(byte[] sendEmailBytes, byte[] reciveEmailBytes, byte[] messageBytes, string sendEmailHash, string reciveEmailHash, string messageHash)  
+        public void SendPrivateMessage(byte[] sendEmailBytes, byte[] reciveEmailBytes, byte[] messageBytes, string sendEmailHash, string reciveEmailHash, string messageHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string sendEmail = "";
+            string reciveEmail = "";
+            string message = "";
+            try
+            {
+                sendEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, sendEmailBytes));
+                reciveEmail = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, reciveEmailBytes));
+                message = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, messageBytes));
+                if (!sendEmailHash.Equals(Sha256encrypt(sendEmail)) || !reciveEmailHash.Equals(Sha256encrypt(reciveEmail)) || !messageHash.Equals(Sha256encrypt(message)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             User user = userOnSession;
             bool ok = false;
             /// audit both successfull and failed authorization checks
@@ -1643,13 +1863,24 @@ namespace ServiceApp
             {
                 Audit.SendPrivateMessageFailed(sendEmail, reciveEmail);
             }
-
-            return ok;
-        } 
+        }
 
         public void SendGroupMessage(byte[] userNameBytes, byte[] messageBytes, string userNameHash, string messageHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string userName = "";
+            string message = "";
+            try
+            {
+                userName = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, userNameBytes));
+                message = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, messageBytes));
+                if (!userNameHash.Equals(Sha256encrypt(userName)) || !messageHash.Equals(Sha256encrypt(message)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             User user = userOnSession;
             bool sendSuccess = false;
             /// audit both successfull and failed authorization checks
@@ -1687,11 +1918,26 @@ namespace ServiceApp
                 Audit.SendGroupMessageFailed(userName);
             }
 
-        }    
+        }
 
         public void SendRoomMessage(byte[] userNameBytes, byte[] roomNameBytes, byte[] messageBytes, string userNameHash, string roomNameHash, string messageHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string userName = "";
+            string roomName = "";
+            string message = "";
+            try
+            {
+                userName = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, userNameBytes));
+                roomName = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, roomNameBytes));
+                message = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, messageBytes));
+                if (!userNameHash.Equals(Sha256encrypt(userName)) || !roomNameHash.Equals(Sha256encrypt(roomName)) || !messageHash.Equals(Sha256encrypt(message)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             User user = userOnSession;
             bool sendSuccess = false;
             /// audit both successfull and failed authorization checks
@@ -1701,7 +1947,7 @@ namespace ServiceApp
                 {
                     Message m = new Message(message, userName);
                     Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
-                    if(room != null)
+                    if (room != null)
                     {
                         ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName).AllMessages.Add(m);
                         sendSuccess = true;
@@ -1712,7 +1958,7 @@ namespace ServiceApp
                     {
                         Console.WriteLine("Room {0} dose not exist", roomName);
                     }
-                    
+
                 }
                 else
                 {
@@ -1735,7 +1981,7 @@ namespace ServiceApp
                 Audit.SendRoomMessageFailed(userName, roomName);
             }
 
-        }   
+        }
 
 
         //-----------------------------------------------------------------------------------------------------------------
@@ -1753,23 +1999,37 @@ namespace ServiceApp
                         return DeserializeGroupChat();
                     }
                 }
-                
+
             }
 
             return null;
-        }   
+        }
 
         public Room GetThemeRoom(byte[] roomNameBytes, byte[] emailBytes, string roomNameHash, string emailHash)
         {
+            string roomName = "";
+            string email = "";
+            try
+            {
+                roomName = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, roomNameBytes));
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!roomNameHash.Equals(Sha256encrypt(roomName)) || !emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return null;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return null; }
+
             Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
             if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
             {
                 userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
-                if (room.Logged.Any(i => i.Email.Equals(email))==false)
+                if (room.Logged.Any(i => i.Email.Equals(email)) == false)
                 {
                     ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName).Logged.Add(userOnSession);
                 }
-                
+
                 SerializeRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName));
                 return ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
             }
@@ -1777,12 +2037,23 @@ namespace ServiceApp
             {
                 return null;
             }
-           
-        }   
+
+        }
 
         public bool CloseRoom(byte[] roomNameBytes, string roomNameHash)
         {
-            //User user = Thread.CurrentPrincipal as User;
+            string roomName = "";
+            try
+            {
+                roomName = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, roomNameBytes));
+                if (!roomNameHash.Equals(Sha256encrypt(roomName)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return false;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return false; }
+
             User user = userOnSession;
             bool ok = false;
             /// audit both successfull and failed authorization checks
@@ -1791,7 +2062,7 @@ namespace ServiceApp
                 if (user.Logged)
                 {
                     Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
-                    if(room != null)
+                    if (room != null)
                     {
                         ServiceModel.Instance.GroupChat = DeserializeGroupChat();
                         ServiceModel.Instance.RoomList.Remove(room);
@@ -1827,7 +2098,7 @@ namespace ServiceApp
             }
 
             return ok;
-        }      
+        }
 
         public void KeepConnection()
         {
@@ -1836,6 +2107,18 @@ namespace ServiceApp
 
         public void Subscribe(byte[] emailBytes, string emailHash)
         {
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             if (!ServiceModel.Instance.Clients.ContainsKey(email))
             {
                 IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
@@ -1851,10 +2134,22 @@ namespace ServiceApp
 
             }
 
-        }   
+        }
 
         public void SubscribeAllUsers(byte[] emailBytes, string emailHash)
         {
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             if (!ServiceModel.Instance.ClientsForViewAdmins.ContainsKey(email))
             {
                 IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
@@ -1869,10 +2164,22 @@ namespace ServiceApp
                 }
 
             }
-        }  
+        }
 
         public ObservableCollection<User> GetAllUsers(byte[] emailBytes, string emailHash)
         {
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return null;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return null; }
+
             List<User> lista = DeserializeUsers();
             ObservableCollection<User> obs = new ObservableCollection<User>();
             foreach (User u in lista)
@@ -1889,7 +2196,7 @@ namespace ServiceApp
                 return null;
             }
 
-            if(userOnSession.IsInRole(Permissions.GetAllUsers.ToString()))
+            if (userOnSession.IsInRole(Permissions.GetAllUsers.ToString()))
             {
                 if (userOnSession.Logged)
                 {
@@ -1901,14 +2208,25 @@ namespace ServiceApp
             }
 
             return null;
-        } 
+        }
 
         public void Unsubscribe(byte[] emailBytes, string emailHash)
         {
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
 
             if (ServiceModel.Instance.Clients.ContainsKey(email))
             {
-                
+
                 if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
                 {
                     lock (ServiceModel.Instance.Clients)
@@ -1925,32 +2243,46 @@ namespace ServiceApp
 
         public PrivateChat GetPrivateChat(byte[] codeByte, string codeHash)
         {
+            string code1 = "";
+            try
+            {
+                code1 = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, codeByte));
+                if (!codeHash.Equals(Sha256encrypt(code1)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return null;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return null; }
+
+            Guid code = new Guid(code1);
+
             if (userOnSession.Logged)
             {
                 if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(userOnSession.Email)))
                 {
                     if (userOnSession.IsInRole(Permissions.GetPrivateChat.ToString()))
                     {
-                        PrivateChat pc  = DeserializePrivateChat(code);
+                        PrivateChat pc = DeserializePrivateChat(code);
                         return pc;
                     }
                     else
                     {
                         return null;
                     }
-                    
+
                 }
                 else
                 {
                     return null;
                 }
-                
+
             }
             else
             {
                 return null;
             }
-            
+
         }
 
         private void NotifyViewforPC(Guid uid)
@@ -1960,24 +2292,38 @@ namespace ServiceApp
 
         public void SubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
         {
-            if (!ServiceModel.Instance.ClientsForThemeRoom.Any(i => i.Key.Equals(theme)))
+            string email = "";
+            string theme = "";
+            try
             {
-                Dictionary<string, IChatServiceCallback> pom =  new Dictionary<string, IChatServiceCallback>();
-        
-                lock (ServiceModel.Instance.ClientsForThemeRoom)
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                theme = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, themeBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)) || !themeHash.Equals(Sha256encrypt(theme)))
                 {
-                    ServiceModel.Instance.ClientsForThemeRoom.Add(theme,pom);
+                    Audit.ModifiedMessageDanger();
+                    return;
                 }
             }
-            
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
+            if (!ServiceModel.Instance.ClientsForThemeRoom.Any(i => i.Key.Equals(theme)))
+            {
+                Dictionary<string, IChatServiceCallback> pom = new Dictionary<string, IChatServiceCallback>();
+
+                lock (ServiceModel.Instance.ClientsForThemeRoom)
+                {
+                    ServiceModel.Instance.ClientsForThemeRoom.Add(theme, pom);
+                }
+            }
+
             if (!ServiceModel.Instance.ClientsForThemeRoom[theme].ContainsKey(email))
             {
-                
+
                 IChatServiceCallback callback = OperationContext.Current.GetCallbackChannel<IChatServiceCallback>();
 
                 if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
                 {
-                  
+
                     lock (ServiceModel.Instance.ClientsForThemeRoom)
                     {
                         ServiceModel.Instance.ClientsForThemeRoom[theme].Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
@@ -1990,6 +2336,20 @@ namespace ServiceApp
 
         public void UnsubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
         {
+            string email = "";
+            string theme = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                theme = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, themeBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)) || !themeHash.Equals(Sha256encrypt(theme)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             if (ServiceModel.Instance.ClientsForThemeRoom.ContainsKey(theme))
             {
                 if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
@@ -2008,6 +2368,18 @@ namespace ServiceApp
 
         public void UnsubscribeAllUsers(byte[] emailBytes, string emailHash)
         {
+            string email = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             if (ServiceModel.Instance.ClientsForViewAdmins.ContainsKey(email))
             {
                 if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)) == true)
@@ -2026,13 +2398,25 @@ namespace ServiceApp
 
         public void LeaveRoom(byte[] themeBytes, string themeHash)
         {
+            string theme = "";
+            try
+            {
+                theme = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, themeBytes));
+                if (!themeHash.Equals(Sha256encrypt(theme)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             if (userOnSession.IsInRole(Permissions.SendGroupMessage.ToString()))
             {
                 if (userOnSession.Logged)
                 {
                     if (ServiceModel.Instance.RoomList.Any(i => i.Theme.Equals(theme)))
                     {
-                       
+
                         if (ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Any(i => i.Email.Equals(userOnSession.Email)))
                         {
                             int index = ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.IndexOf(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Single(i => i.Email.Equals(userOnSession.Email)));
@@ -2054,13 +2438,27 @@ namespace ServiceApp
 
         public void LeavePrivateChat(byte[] codeByte, string codeHash)
         {
+            string code1 = "";
+            try
+            {
+                code1 = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, codeByte));
+                if (!codeHash.Equals(Sha256encrypt(code1)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
+            Guid code = new Guid(code1);
+
             if (userOnSession.IsInRole(Permissions.SendGroupMessage.ToString()))
             {
                 if (userOnSession.Logged)
                 {
                     if (ServiceModel.Instance.PrivateChatList.Any(i => i.Uid.Equals(code)))
                     {
-                        PrivateChat pc= ServiceModel.Instance.PrivateChatList.Single(i => i.Uid.Equals(code));
+                        PrivateChat pc = ServiceModel.Instance.PrivateChatList.Single(i => i.Uid.Equals(code));
                         if (pc.User1.Equals(userOnSession.Email))
                         {
                             pc.User1logged = false;
@@ -2087,16 +2485,44 @@ namespace ServiceApp
 
         public void LogInTheme(byte[] themeBytes, byte[] emailBytes, string themeHash, string emailHash)
         {
+            string email = "";
+            string theme = "";
+            try
+            {
+                email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, emailBytes));
+                theme = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, themeBytes));
+                if (!emailHash.Equals(Sha256encrypt(email)) || !themeHash.Equals(Sha256encrypt(theme)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
             Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == theme);
 
             if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
             {
-                NotifyViewforRoom(room);               
-            }         
+                NotifyViewforRoom(room);
+            }
         }
 
         public void LogInPrivateChat(byte[] codeByte, string codeHash)
         {
+            string code1 = "";
+            try
+            {
+                code1 = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, codeByte));
+                if (!codeHash.Equals(Sha256encrypt(code1)))
+                {
+                    Audit.ModifiedMessageDanger();
+                    return;
+                }
+            }
+            catch (Exception e) { Audit.BadAesKey(); return; }
+
+            Guid code = new Guid(code1);
+
             if (userOnSession.Logged)
             {
                 if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(userOnSession.Email)))
@@ -2113,20 +2539,20 @@ namespace ServiceApp
                         {
                             pc.User2logged = true;
                         }
-                        
+
                         NotifyViewforPC(pc.Uid);
                         SerializePrivateChat(pc);
-                       
+
                     }
-                    
+
 
                 }
-                
+
 
             }
-            
+
         }
-   
+
 
         /// <summary>
         /// If aes key is decrypted with rsa private key, everything is ok, i onther case, nots
@@ -2156,7 +2582,7 @@ namespace ServiceApp
             return ServiceModel.Instance.RSA.Generate(code);
         }
 
-        void SendSessionKey(Guid code)
+        public void SessionKey(Guid code)
         {
             SessionID = code;
         }

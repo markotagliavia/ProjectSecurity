@@ -93,7 +93,7 @@ namespace ClientApp
             this.proxy = new WCFClient(instanceContext, tcp, adr);
             this.proxy.Guid = guid;
             this.proxy.Aes = aes;
-            this.proxy.SendSessionKey(guid);
+            this.proxy.SessionKey(guid);
             byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
             string emailHash = Sha256encrypt(this.email);
             allusers = this.proxy.GetAllUsers(emailInBytes,emailHash); //kad ovo sredis, radice

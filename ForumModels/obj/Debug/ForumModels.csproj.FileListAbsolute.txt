@@ -165,3 +165,10 @@ C:\Users\Marko\Desktop\repoSreda\ForumModels\bin\Debug\SecurityManager.pdb
 C:\Users\Marko\Desktop\repoSreda\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
 C:\Users\Marko\Desktop\repoSreda\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\Marko\Desktop\repoSreda\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoSreda2\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoSreda2\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoSreda2\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repoSreda2\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoSreda2\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\repoSreda2\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoSreda2\ForumModels\obj\Debug\ForumModels.pdb

@@ -126,7 +126,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.BlockUserFromRoom(blockEmailBytes, roomNameBytes, blockEmailHash, roomNameHash);
+                retVal = factory.BlockUserFromRoom(blokEmailBytes, roomNameBytes, blockEmailHash, roomNameHash);
                 Console.WriteLine("BlockUserFromRoom executed");
             }
             catch (Exception e)
@@ -292,11 +292,11 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool Registration(string name, string sname, DateTime date, string gender, string email, string password)
+        public bool Registration(byte[] nameBytes, byte[] snameBytes, byte[] dateBytes, byte[] genderBytes, byte[] emailBytes, byte[] passwordBytes, string nameHash, string snameHash, string dateHash, string genderHash, string emailHash, string passwordHash)
         {
             try
             {
-                factory.Registration(name, sname, date, gender, email, password);
+                factory.Registration(nameBytes, snameBytes, dateBytes, genderBytes, emailBytes, passwordBytes, nameHash, snameHash, dateHash, genderHash, emailHash, passwordHash);
                 Console.WriteLine("Registration executed");
                 return true;
             }
@@ -385,20 +385,17 @@ namespace ClientApp
 
         }
 
-        public bool SendPrivateMessage(byte[] sendEmailBytes, byte[] reciveEmailBytes, byte[] messageBytes, string sendEmailHash, string reciveEmailHash, string messageHash)
+        public void SendPrivateMessage(byte[] sendEmailBytes, byte[] reciveEmailBytes, byte[] messageBytes, string sendEmailHash, string reciveEmailHash, string messageHash)
         {
-            bool retVal = false;
             try
             {
-                retVal = factory.SendPrivateMessage(sendEmailBytes,reciveEmailBytes,messageBytes,sendEmailHash,reciveEmailHash,messageHash);
+               factory.SendPrivateMessage(sendEmailBytes,reciveEmailBytes,messageBytes,sendEmailHash,reciveEmailHash,messageHash);
                 Console.WriteLine("SendPrivateMessage executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to SendPrivateMessage(). {0}", e.Message);
             }
-
-            return retVal;
         }
 
         public void SendRoomMessage(byte[] userNameBytes, byte[] roomNameBytes, byte[] messageBytes, string userNameHash, string roomNameHash, string messageHash)
@@ -617,6 +614,18 @@ namespace ClientApp
                 Console.WriteLine($"Sending session key failed because {ex.Message}");
             }
             return retVal;
+        }
+
+        public void SessionKey(Guid code)
+        {
+            try
+            {
+                factory.SessionKey(code);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Sending session key failed because {ex.Message}");
+            }
         }
     }
 }

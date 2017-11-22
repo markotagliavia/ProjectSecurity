@@ -1,4 +1,5 @@
 ﻿using ClientApp;
+using SecurityManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace ClientApp
     public partial class NewUserWindow : Window
     {
         WCFClient proxy;
+        private EncryptDecrypt aesCommander = new EncryptDecrypt(); 
 
         public NewUserWindow(WCFClient proxy)
         {
@@ -216,7 +218,14 @@ namespace ClientApp
             {
                 //Valid data. Send it to server
                 //kriptovati sifru
-                proxy.Registration(name, lastName, birthDate, gender, user, Sha256encrypt(pass));
+                byte[] nameBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, name);
+                byte[] lastNameBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, lastName);
+                byte[] birthDateBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, birthDate.ToString());
+                byte[] genderBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, gender);
+                byte[] userBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, user);
+                byte[] passBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, Sha256encrypt(pass));
+
+                proxy.Registration(nameBytes, lastNameBytes, birthDateBytes, genderBytes, userBytes, passBytes, Sha256encrypt(name), Sha256encrypt(lastName), Sha256encrypt(birthDate.ToString()), Sha256encrypt(gender), Sha256encrypt(user), Sha256encrypt(Sha256encrypt(pass)));
 
                 this.Close();
             }

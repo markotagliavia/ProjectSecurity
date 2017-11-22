@@ -117,3 +117,7 @@ C:\Users\Marko\Desktop\repoSreda\SecurityManager\bin\Debug\SecurityManager.dll
 C:\Users\Marko\Desktop\repoSreda\SecurityManager\bin\Debug\SecurityManager.pdb
 C:\Users\Marko\Desktop\repoSreda\SecurityManager\obj\Debug\SecurityManager.dll
 C:\Users\Marko\Desktop\repoSreda\SecurityManager\obj\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoSreda2\SecurityManager\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repoSreda2\SecurityManager\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoSreda2\SecurityManager\obj\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repoSreda2\SecurityManager\obj\Debug\SecurityManager.pdb
