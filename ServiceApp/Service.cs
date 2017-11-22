@@ -2683,7 +2683,8 @@ namespace ServiceApp
         RSAParameters IService.GetPublicKey(Guid code)
         {
             this.SessionID = code;
-            return ServiceModel.Instance.RSA.Generate(code);
+            RSAParameters r = ServiceModel.Instance.RSA.Generate(code);
+            return r;
         }
 
         public void SessionKey(Guid code)

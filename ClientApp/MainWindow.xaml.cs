@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+using System.IO;
 using System.Windows.Shapes;
+using System.Xml.Linq;
+using System.Xml;
 
 namespace ClientApp
 {
@@ -28,14 +29,49 @@ namespace ClientApp
 
         public MainWindow()
         {
+            string ip = "";
+            string port = "";
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load((System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), @"NetworkConfig.xml")).ToString());
+                ip = doc.GetElementsByTagName("IPAddress")[0].InnerXml;
+                port = doc.GetElementsByTagName("Port")[0].InnerXml;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("NetworkConfig file is missing!");
+                this.Close();
+            }
             NetTcpBinding binding = new NetTcpBinding();
-            string address = "net.tcp://localhost:27019/ServiceApp";
+            string address = $"net.tcp://{ip}:{port}/ServiceApp";
             InstanceContext instanceContext;
             ChatServiceCallback chatServiceCallback = new ChatServiceCallback();
             //chatServiceCallback.ClientNotified += ChatServiceCallback_ClientNotified;
 
             instanceContext = new InstanceContext(chatServiceCallback);
-            this.proxy = new WCFClient(instanceContext, binding, new EndpointAddress(new Uri(address)));
+            bool exit = false;
+            do
+            {
+                try
+                {
+                    this.proxy = new WCFClient(instanceContext, binding, new EndpointAddress(new Uri(address)));
+                    exit = true;
+                }
+                catch (Exception e)
+                {
+                    var result = MessageBox.Show("Do you want to try to establish connection again?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                   
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        exit = false;
+                    }
+                    else if (result == MessageBoxResult.No)
+                    {
+                        exit = true;
+                    }
+                }
+            } while (exit == false);
             this.proxy.Guid = Guid.NewGuid();
             this.proxy.Aes = new GenerateAesKey(this.proxy.GetPublicKey(this.proxy.Guid), 2048);
 
