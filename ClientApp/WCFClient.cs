@@ -80,7 +80,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.AddAdmin(email);
+                retVal = factory.AddAdmin(emailBytes, emailHash);
                 Console.WriteLine("AddAdmin executed");
             }
             catch (Exception e)
@@ -95,7 +95,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.BlockGroupChat(blockEmai);
+                retVal = factory.BlockGroupChat(blockEmailBytes, blockEmailHash);
                 Console.WriteLine("BlockGroupChat executed");
             }
             catch (Exception e)
@@ -111,7 +111,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.BlockUser(requestEmail, blockEmail);
+                retVal = factory.BlockUser(requestEmailBytes, blokEmailBytes, requestEmailHash, blockEmailHash);
                 Console.WriteLine("BlockUser executed");
             }
             catch (Exception e)
@@ -126,7 +126,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.BlockUserFromRoom(blockEmail, roomName);
+                retVal = factory.BlockUserFromRoom(blockEmailBytes, roomNameBytes, blockEmailHash, roomNameHash);
                 Console.WriteLine("BlockUserFromRoom executed");
             }
             catch (Exception e)
@@ -142,7 +142,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.ChangePassword(email, oldPassowrd, newPassword);
+                retVal = factory.ChangePassword(emailBytes, oldPasswordBytes, newPasswordBytes, emailHash, oldPassowrdHash, newPasswordHash);
                 Console.WriteLine("ChangePassword executed");
             }
             catch (Exception e)
@@ -157,7 +157,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.CloseRoom(roomName);
+                retVal = factory.CloseRoom(roomNameBytes, roomNameHash);
                 Console.WriteLine("CloseRoom executed");
             }
             catch (Exception e)
@@ -172,7 +172,7 @@ namespace ClientApp
             PrivateChat retVal = null;
             try
             {
-                retVal = factory.CreatePrivateChat(firstEmail, secondEmail);
+                retVal = factory.CreatePrivateChat(firstEmailBytes, secondEmailBytes, firstEmailHash, secondEmailHash);
                 Console.WriteLine("CreatePrivateChat executed");
             }
             catch (Exception e)
@@ -187,7 +187,7 @@ namespace ClientApp
            
             try
             {
-                factory.CreateRoom(roomName);
+                factory.CreateRoom(roomNameBytes, roomNameHash);
                 Console.WriteLine("CreateRoom executed");
             }
             catch (Exception e)
@@ -202,7 +202,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.DeleteAdmin(email);
+                retVal = factory.DeleteAdmin(emailBytes, emailHash);
                 Console.WriteLine("DeleteAdmin executed");
             }
             catch (Exception e)
@@ -237,7 +237,7 @@ namespace ClientApp
             Room room = new Room("");
             try
             {
-                room = factory.GetThemeRoom(roomName,email);
+                room = factory.GetThemeRoom(roomNameBytes, emailBytes, roomNameHash, emailHash);
                 Console.WriteLine("GetThemeRoom executed");
             }
             catch (Exception e)
@@ -282,7 +282,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.LogOut(email);
+                retVal = factory.LogOut(emailBytes, emailHash);
                 Console.WriteLine("LogOut executed");
             }
             catch (Exception e)
@@ -313,7 +313,7 @@ namespace ClientApp
 
             try
             {
-                retVal = factory.RemoveBlockGroupChat(unblockEmail);
+                retVal = factory.RemoveBlockGroupChat(unblockEmailBytes, unblockEmailHash);
                 Console.WriteLine("RemoveBlockGroupChat executed");
             }
             catch (Exception e)
@@ -329,7 +329,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.RemoveBlockUser(requestEmail, unblockEmail);
+                retVal = factory.RemoveBlockUser(requestEmailBytes, unblockEmailBytes, requestEmailHash, unblockEmailHash);
                 Console.WriteLine("RemoveBlockUser executed");
             }
             catch (Exception e)
@@ -344,7 +344,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.RemoveBlockUserFromRoom(unblockEmail, roomName);
+                retVal = factory.RemoveBlockUserFromRoom(unblockEmailBytes, roomNameBytes, unblockEmailHash, roomNameHash);
                 Console.WriteLine("RemoveBlockUserFromRoom executed");
             }
             catch (Exception e)
@@ -360,7 +360,7 @@ namespace ClientApp
             int ret = -1;
             try
             {
-                ret = factory.ResetPassword(email);
+                ret = factory.ResetPassword(emailBytes, emailHash);
                 Console.WriteLine("ResetPassword executed");
             }
             catch (Exception e)
@@ -375,7 +375,7 @@ namespace ClientApp
         {
             try
             {
-                factory.SendGroupMessage(userName, message);
+                factory.SendGroupMessage(userNameBytes, messageBytes, userNameHash, messageHash);
                 Console.WriteLine("SendGroupMessage executed");
             }
             catch (Exception e)
@@ -390,7 +390,7 @@ namespace ClientApp
             bool retVal = false;
             try
             {
-                retVal = factory.SendPrivateMessage(sendEmail, reciveEmail, message);
+                retVal = factory.SendPrivateMessage(sendEmailBytes,reciveEmailBytes,messageBytes,sendEmailHash,reciveEmailHash,messageHash);
                 Console.WriteLine("SendPrivateMessage executed");
             }
             catch (Exception e)
@@ -406,7 +406,7 @@ namespace ClientApp
             
             try
             {
-                factory.SendRoomMessage(userName, roomName, message);
+                factory.SendRoomMessage(userNameBytes, roomNameBytes, messageBytes, userNameHash, roomNameHash, messageHash);
                 Console.WriteLine("SendRoomMessage executed");
             }
             catch (Exception e)
@@ -422,7 +422,7 @@ namespace ClientApp
             bool ok = false;
             try
             {
-                ok = factory.SendVerificationKey(key);
+                ok = factory.SendVerificationKey(keyBytes, keyHash);
                 Console.WriteLine("SendVerificationKey executed");
             }
             catch (Exception e)
@@ -437,7 +437,7 @@ namespace ClientApp
         {
             try
             {
-                factory.Subscribe(email);
+                factory.Subscribe(emailBytes, emailHash);
                 Console.WriteLine("subscribe executed");
             }
             catch (Exception e)
@@ -450,7 +450,7 @@ namespace ClientApp
         {
             try
             {
-                factory.SubscribeAllUsers(email);
+                factory.SubscribeAllUsers(emailBytes, emailHash);
                 Console.WriteLine("SubscribeAllUsers executed");
             }
             catch (Exception e)
@@ -463,7 +463,7 @@ namespace ClientApp
         {
             try
             {
-                return factory.GetAllUsers(email);
+                return factory.GetAllUsers(emailBytes, emailHash);
             }
             catch (Exception e)
             {
@@ -476,7 +476,7 @@ namespace ClientApp
         {
             try
             {
-                return factory.GetPrivateChat(code);
+                return factory.GetPrivateChat(codeByte, codeHash);
             }
             catch (Exception e)
             {
@@ -489,7 +489,7 @@ namespace ClientApp
         {
             try
             {
-                factory.Unsubscribe(email);
+                factory.Unsubscribe(emailBytes, emailHash);
             }
             catch (Exception e)
             {
@@ -502,7 +502,7 @@ namespace ClientApp
         {
             try
             {
-                factory.SubscribeUserTheme(email, theme);
+                factory.SubscribeUserTheme(emailBytes, themeBytes, emailHash, themeHash);
             }
             catch (Exception e)
             {
@@ -515,7 +515,7 @@ namespace ClientApp
         {
             try
             {
-                factory.UnsubscribeUserTheme(email, theme);
+                factory.UnsubscribeUserTheme(emailBytes, themeBytes, emailHash, themeHash);
             }
             catch (Exception e)
             {
@@ -528,7 +528,7 @@ namespace ClientApp
         {
             try
             {
-                factory.UnsubscribeAllUsers(email);
+                factory.UnsubscribeAllUsers(emailBytes, emailHash);
             }
             catch (Exception e)
             {
@@ -541,7 +541,7 @@ namespace ClientApp
         {
             try
             {
-                factory.LeaveRoom(theme);
+                factory.LeaveRoom(themeBytes, themeHash);
             }
             catch (Exception e)
             {
@@ -554,7 +554,7 @@ namespace ClientApp
         {
             try
             {
-                factory.LeavePrivateChat(code);
+                factory.LeavePrivateChat(codeByte, codeHash);
             }
             catch (Exception e)
             {
@@ -567,7 +567,7 @@ namespace ClientApp
         {
             try
             {
-                factory.LogInTheme(theme,email);
+                factory.LogInTheme(themeBytes, emailBytes, themeHash,emailHash);
             }
             catch (Exception e)
             {
@@ -580,7 +580,7 @@ namespace ClientApp
         {
             try
             {
-                factory.LogInPrivateChat(code);
+                factory.LogInPrivateChat(codeByte, codeHash);
             }
             catch (Exception e)
             {
