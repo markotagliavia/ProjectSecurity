@@ -20,107 +20,107 @@ namespace Contracts
         bool Registration(string name, string sname, DateTime date, string gender, string email, string password);
 
         [OperationContract]
-        bool ChangePassword(string email, string oldPassowrd, string newPassword);
+        bool ChangePassword(byte[] emailBytes, byte[] oldPasswordBytes, byte[] newPasswordBytes, string emailHash, string oldPassowrdHash, string newPasswordHash);
 
         [OperationContract]
-        int ResetPassword(string email);
+        int ResetPassword(byte[] emailBytes, string emailHash);
 
         [OperationContract]
         int LogIn(byte[] email, byte[] password, string emailHash, string passwordHash);
 
         [OperationContract]
-        bool LogOut(string email);
+        bool LogOut(byte[] emailBytes, string emailHash);
 
         [OperationContract]
-        bool AddAdmin(string email);
+        bool AddAdmin(byte[] emailBytes, string emailHash);
 
         [OperationContract]
-        bool DeleteAdmin(string email);
+        bool DeleteAdmin(byte[] emailBytes, string emailHash);
 
         [OperationContract]
-        bool BlockUser(string requestEmail, string blockEmail);
+        bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash);
 
         [OperationContract]
-        bool RemoveBlockUser(string requestEmail, string unblockEmail);
+        bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash);
 
         [OperationContract]
-        bool BlockGroupChat(string blockEmai);
+        bool BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash);
 
         [OperationContract]
-        bool RemoveBlockGroupChat(string unblockEmail);
+        bool RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash);
 
         [OperationContract]
-        bool BlockUserFromRoom(string blockEmail, string roomName);
+        bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash);
 
         [OperationContract]
-        bool RemoveBlockUserFromRoom(string unblockEmail, string roomName);
+        bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash);
 
         [OperationContract]
-        PrivateChat CreatePrivateChat(string firstEmail, string secondEmail);
+        PrivateChat CreatePrivateChat(byte[] firstEmailBytes, byte[] secondEmailBytes, string firstEmailHash, string secondEmailHash);
 
         [OperationContract]
-        PrivateChat GetPrivateChat(Guid code);
+        PrivateChat GetPrivateChat(byte[] codeByte, string codeHash);
 
         [OperationContract(IsOneWay =true)]
-        void CreateRoom(string roomName);
+        void CreateRoom(byte[] roomNameBytes, string roomNameHash);
 
         [OperationContract(IsOneWay = true)]
-        void LeaveRoom(string theme);
+        void LeaveRoom(byte[] themeBytes, string themeHash);
 
         [OperationContract(IsOneWay = true)]
-        void LeavePrivateChat(Guid code);
+        void LeavePrivateChat(byte[] codeByte, string codeHash);
 
         [OperationContract]
-        bool SendVerificationKey(string key);
-
-        [OperationContract]
-        bool SendPrivateMessage(string sendEmail, string reciveEmail, string message);
+        bool SendVerificationKey(byte[] keyBytes, string keyHash);
 
         [OperationContract(IsOneWay = true)]
-        void SendGroupMessage(string sender, string message);
+        void SendPrivateMessage(byte[] sendEmailBytes, byte[] reciveEmailBytes, byte[] messageBytes, string sendEmailHash, string reciveEmailHash, string messageHash);
 
         [OperationContract(IsOneWay = true)]
-        void SendRoomMessage(string sender, string roomName, string message);
+        void SendGroupMessage(byte[] userNameBytes, byte[] messageBytes, string userNameHash, string messageHash);
+
+        [OperationContract(IsOneWay = true)]
+        void SendRoomMessage(byte[] userNameBytes, byte[] roomNameBytes, byte[] messageBytes, string userNameHash, string roomNameHash, string messageHash);
 
         [OperationContract]
         GroupChat GetGroupChat();
 
         [OperationContract]
-        Room GetThemeRoom(string roomName,string email);
+        Room GetThemeRoom(byte[] roomNameBytes, byte[] emailBytes, string roomNameHash, string emailHash);
 
         [OperationContract]
-        bool CloseRoom(string roomName);
+        bool CloseRoom(byte[] roomNameBytes, string roomNameHash);
 
         [OperationContract(IsOneWay = true)]
         void KeepConnection();
 
         [OperationContract(IsOneWay = true)]
-        void Subscribe(string email);
+        void Subscribe(byte[] emailBytes, string emailHash);
 
 
         [OperationContract(IsOneWay = true)]
-        void SubscribeAllUsers(string email);
+        void SubscribeAllUsers(byte[] emailBytes, string emailHash);
 
         [OperationContract(IsOneWay = true)]
-        void SubscribeUserTheme(string email, string theme);
+        void SubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash);
 
         [OperationContract]
-        ObservableCollection<User> GetAllUsers(string email);
+        ObservableCollection<User> GetAllUsers(byte[] emailBytes, string emailHash);
 
         [OperationContract(IsOneWay = true)]
-        void Unsubscribe(string email);
+        void Unsubscribe(byte[] emailBytes, string emailHash);
 
         [OperationContract(IsOneWay = true)]
-        void UnsubscribeUserTheme(string email, string theme);
+        void UnsubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash);
 
         [OperationContract(IsOneWay = true)]
-        void UnsubscribeAllUsers(string email);
+        void UnsubscribeAllUsers(byte[] emailBytes, string emailHash);
 
         [OperationContract(IsOneWay = true)]
-        void LogInTheme(string theme,string email);
+        void LogInTheme(byte[] themeBytes, byte[] emailBytes, string themeHash, string emailHash);
 
         [OperationContract(IsOneWay = true)]
-        void LogInPrivateChat(Guid code);
+        void LogInPrivateChat(byte[] codeByte, string codeHash);
 
         [OperationContract]
         RSAParameters GetPublicKey(Guid code);

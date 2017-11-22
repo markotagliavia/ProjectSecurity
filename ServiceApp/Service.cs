@@ -520,7 +520,7 @@ namespace ServiceApp
 
         //-----------------------------------------------------------------------------------------------------------------
 
-        public bool AddAdmin(string email)
+        public bool AddAdmin(byte[] emailBytes, string emailHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -576,9 +576,71 @@ namespace ServiceApp
             }
 
             return retVal;
-        }                 //DONE
+        }
 
-        public bool BlockGroupChat(string blockEmail)
+        public bool DeleteAdmin(byte[] emailBytes, string emailHash)
+        {
+            //User user = Thread.CurrentPrincipal as User;
+            User user = userOnSession;
+            bool retVal = true;
+            /// audit both successfull and failed authorization checks
+            if (user.IsInRole(Permissions.DeleteAdmin.ToString()))
+            {
+
+                if (user.Logged)
+                {
+                    if (ServiceModel.Instance.LoggedIn.Any(i => i.Email == email))
+                    {
+                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == email);
+                        u.Role = Roles.User;
+                    }
+
+
+                    List<User> lista = DeserializeUsers(); //deser user
+                    if (lista.Any(i => i.Email == email))
+                    {
+                        foreach (User ur in lista)
+                        {
+                            if (ur.Email == email)
+                            {
+                                ur.Role = Roles.User;
+                                SerializeUsers(lista); // upisi u fajl
+                            }
+
+                        }
+                        NotifyAll();
+                        retVal = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("User {0} is not logged in!", user.Name);
+                }
+            }
+            else
+            {
+                //TODO greske
+                Console.WriteLine("User {0} don't have permission!", user.Name);
+            }
+
+            if (retVal)
+            {
+                Audit.DeleteAdminSuccess(user.Email, email);
+            }
+            else
+            {
+                Audit.DeleteAdminfailed(user.Email, email);
+            }
+
+            return retVal;
+        }
+
+        public bool BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -624,9 +686,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        }     // DONE
+        }     
 
-        public bool BlockUser(string requestEmail, string blockEmail)   
+        public bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)   
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -697,9 +759,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        }  //Blokira iz liste logovanih 
+        } 
 
-        public bool BlockUserFromRoom(string blockEmail, string roomName)
+        public bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -748,9 +810,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        }   //DONE
+        }   
 
-        public bool ChangePassword(string email, string oldPassowrd, string newPassword)   
+        public bool ChangePassword(byte[] emailBytes, byte[] oldPasswordBytes, byte[] newPasswordBytes, string emailHash, string oldPassowrdHash, string newPasswordHash)   
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -799,9 +861,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        } //DONE
+        } 
 
-        public PrivateChat CreatePrivateChat(string firstEmail, string secondEmail)
+        public PrivateChat CreatePrivateChat(byte[] firstEmailBytes, byte[] secondEmailBytes, string firstEmailHash, string secondEmailHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -851,9 +913,9 @@ namespace ServiceApp
 
             Audit.CreatePrivateChatFailed(firstEmail, secondEmail);
             return null;
-        }        //DONE
+        }        
 
-        public void CreateRoom(string roomName)
+        public void CreateRoom(byte[] roomNameBytes, string roomNameHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -898,69 +960,9 @@ namespace ServiceApp
                 Audit.CreateRoomFailed(roomName);
             }
            
-        }        // DONE
+        }        
 
-        public bool DeleteAdmin(string email)                 
-        {
-            //User user = Thread.CurrentPrincipal as User;
-            User user = userOnSession;
-            bool retVal = true;
-            /// audit both successfull and failed authorization checks
-            if (user.IsInRole(Permissions.DeleteAdmin.ToString()))
-            {
-                
-                if (user.Logged)
-                {
-                    if (ServiceModel.Instance.LoggedIn.Any(i => i.Email == email))
-                    {
-                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == email);
-                        u.Role = Roles.User;
-                    }
-                    
-
-                    List<User> lista = DeserializeUsers(); //deser user
-                    if (lista.Any(i => i.Email == email))
-                    {
-                        foreach (User ur in lista)
-                        {
-                            if (ur.Email == email)
-                            {
-                                ur.Role = Roles.User;
-                                SerializeUsers(lista); // upisi u fajl
-                            }
-
-                        }
-                        NotifyAll();
-                        retVal = true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    
-                }
-                else
-                {
-                    Console.WriteLine("User {0} is not logged in!", user.Name);
-                }
-            }
-            else
-            {
-                //TODO greske
-                Console.WriteLine("User {0} don't have permission!", user.Name);
-            }
-
-            if (retVal)
-            {
-                Audit.DeleteAdminSuccess(user.Email,email);
-            }
-            else
-            {
-                Audit.DeleteAdminfailed(user.Email, email);
-            }
-
-            return retVal;
-        } //DONE
+ 
 
         public int LogIn(byte[] cipherEmail, byte[] cipherPassword, string emailHash, string passwordHash)
         {
@@ -1136,9 +1138,9 @@ namespace ServiceApp
             }
 
 
-        }    // DONE
+        }    
 
-        public bool LogOut(string email)
+        public bool LogOut(byte[] emailBytes, string emailHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1191,7 +1193,7 @@ namespace ServiceApp
             }
             Audit.LogOutFailed(email);
             return false;
-        }                   // ne treba da se upisuje promena u fajl
+        }                   
 
         public bool Registration(string name, string sname, DateTime date, string gender, string email, string password)
         {
@@ -1297,7 +1299,7 @@ namespace ServiceApp
             return exists;
         }   //DONE
 
-        public bool RemoveBlockGroupChat(string unblockEmail)
+        public bool RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1347,9 +1349,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        } // DONE
+        } 
 
-        public bool RemoveBlockUser(string requestEmail, string unblockEmail)        
+        public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash)        
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1422,9 +1424,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        }   // Ista stvar ko sa block user
+        }   
 
-        public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)
+        public bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1471,9 +1473,9 @@ namespace ServiceApp
             }
 
             return retval;
-        }  //DONE
+        }  
 
-        public int ResetPassword(string email)
+        public int ResetPassword(byte[] emailBytes, string emailHash)
         {
             List<User> lista;
             lista = DeserializeUsers();  //deser user
@@ -1520,9 +1522,9 @@ namespace ServiceApp
                 return -1;
             }
 
-        }       //DONE
+        }       
 
-        public bool SendVerificationKey(string key)
+        public bool SendVerificationKey(byte[] keyBytes, string keyHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1580,7 +1582,7 @@ namespace ServiceApp
 
             return ok;
 
-        }   //DONE
+        }   
 
         public string Sha256encrypt(string phrase)
         {
@@ -1590,7 +1592,7 @@ namespace ServiceApp
             return Convert.ToBase64String(hashedDataBytes);
         }    //DONE
 
-        public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)  
+        public void SendPrivateMessage(byte[] sendEmailBytes, byte[] reciveEmailBytes, byte[] messageBytes, string sendEmailHash, string reciveEmailHash, string messageHash)  
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1643,9 +1645,9 @@ namespace ServiceApp
             }
 
             return ok;
-        } //DONE
+        } 
 
-        public void SendGroupMessage(string userName, string message)
+        public void SendGroupMessage(byte[] userNameBytes, byte[] messageBytes, string userNameHash, string messageHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1685,9 +1687,9 @@ namespace ServiceApp
                 Audit.SendGroupMessageFailed(userName);
             }
 
-        }    // DONE
+        }    
 
-        public void SendRoomMessage(string userName, string roomName, string message)
+        public void SendRoomMessage(byte[] userNameBytes, byte[] roomNameBytes, byte[] messageBytes, string userNameHash, string roomNameHash, string messageHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1733,7 +1735,7 @@ namespace ServiceApp
                 Audit.SendRoomMessageFailed(userName, roomName);
             }
 
-        }   //DONE
+        }   
 
 
         //-----------------------------------------------------------------------------------------------------------------
@@ -1742,11 +1744,22 @@ namespace ServiceApp
 
         public GroupChat GetGroupChat()
         {
-            //ServiceModel.Instance.GroupChat = DeserializeGroupChat();
-            return DeserializeGroupChat();
-        }   //vraca grupni chat sa singletona (ne treba)
+            if (userOnSession != null)
+            {
+                if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(userOnSession.Email)))
+                {
+                    if (userOnSession.IsInRole(Permissions.GetGroupChat.ToString()))
+                    {
+                        return DeserializeGroupChat();
+                    }
+                }
+                
+            }
 
-        public Room GetThemeRoom(string roomName,string email)
+            return null;
+        }   
+
+        public Room GetThemeRoom(byte[] roomNameBytes, byte[] emailBytes, string roomNameHash, string emailHash)
         {
             Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
             if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
@@ -1767,7 +1780,7 @@ namespace ServiceApp
            
         }   
 
-        public bool CloseRoom(string roomName)
+        public bool CloseRoom(byte[] roomNameBytes, string roomNameHash)
         {
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -1814,14 +1827,14 @@ namespace ServiceApp
             }
 
             return ok;
-        }      //DONE
+        }      
 
         public void KeepConnection()
         {
             // do nothing
         }   //odrzi konekciju u slucaju greske
 
-        public void Subscribe(string email)
+        public void Subscribe(byte[] emailBytes, string emailHash)
         {
             if (!ServiceModel.Instance.Clients.ContainsKey(email))
             {
@@ -1838,9 +1851,9 @@ namespace ServiceApp
 
             }
 
-        }   //subscrubuje se user na grupni chat
+        }   
 
-        public void SubscribeAllUsers(string email)
+        public void SubscribeAllUsers(byte[] emailBytes, string emailHash)
         {
             if (!ServiceModel.Instance.ClientsForViewAdmins.ContainsKey(email))
             {
@@ -1856,9 +1869,9 @@ namespace ServiceApp
                 }
 
             }
-        }  //ne treba
+        }  
 
-        public ObservableCollection<User> GetAllUsers(string email)
+        public ObservableCollection<User> GetAllUsers(byte[] emailBytes, string emailHash)
         {
             List<User> lista = DeserializeUsers();
             ObservableCollection<User> obs = new ObservableCollection<User>();
@@ -1888,9 +1901,9 @@ namespace ServiceApp
             }
 
             return null;
-        } //ne treba
+        } 
 
-        public void Unsubscribe(string email)
+        public void Unsubscribe(byte[] emailBytes, string emailHash)
         {
 
             if (ServiceModel.Instance.Clients.ContainsKey(email))
@@ -1910,7 +1923,7 @@ namespace ServiceApp
             }
         }
 
-        public PrivateChat GetPrivateChat(Guid code)
+        public PrivateChat GetPrivateChat(byte[] codeByte, string codeHash)
         {
             if (userOnSession.Logged)
             {
@@ -1945,7 +1958,7 @@ namespace ServiceApp
             throw new NotImplementedException();
         }
 
-        public void SubscribeUserTheme(string email, string theme)
+        public void SubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
         {
             if (!ServiceModel.Instance.ClientsForThemeRoom.Any(i => i.Key.Equals(theme)))
             {
@@ -1975,7 +1988,7 @@ namespace ServiceApp
             }
         }
 
-        public void UnsubscribeUserTheme(string email, string theme)
+        public void UnsubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
         {
             if (ServiceModel.Instance.ClientsForThemeRoom.ContainsKey(theme))
             {
@@ -1993,7 +2006,7 @@ namespace ServiceApp
             }
         }
 
-        public void UnsubscribeAllUsers(string email)
+        public void UnsubscribeAllUsers(byte[] emailBytes, string emailHash)
         {
             if (ServiceModel.Instance.ClientsForViewAdmins.ContainsKey(email))
             {
@@ -2011,7 +2024,7 @@ namespace ServiceApp
             }
         }
 
-        public void LeaveRoom(string theme)
+        public void LeaveRoom(byte[] themeBytes, string themeHash)
         {
             if (userOnSession.IsInRole(Permissions.SendGroupMessage.ToString()))
             {
@@ -2039,7 +2052,7 @@ namespace ServiceApp
             }
         }
 
-        public void LeavePrivateChat(Guid code)
+        public void LeavePrivateChat(byte[] codeByte, string codeHash)
         {
             if (userOnSession.IsInRole(Permissions.SendGroupMessage.ToString()))
             {
@@ -2072,7 +2085,7 @@ namespace ServiceApp
             }
         }
 
-        public void LogInTheme(string theme,string email)
+        public void LogInTheme(byte[] themeBytes, byte[] emailBytes, string themeHash, string emailHash)
         {
             Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == theme);
 
@@ -2082,7 +2095,7 @@ namespace ServiceApp
             }         
         }
 
-        public void LogInPrivateChat(Guid code)
+        public void LogInPrivateChat(byte[] codeByte, string codeHash)
         {
             if (userOnSession.Logged)
             {
@@ -2141,6 +2154,11 @@ namespace ServiceApp
         {
             this.SessionID = code;
             return ServiceModel.Instance.RSA.Generate(code);
+        }
+
+        void SendSessionKey(Guid code)
+        {
+            SessionID = code;
         }
     }
 }
