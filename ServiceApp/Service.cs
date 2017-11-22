@@ -23,6 +23,7 @@ namespace ServiceApp
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession)]
     public class Service : IService
     {
+        private EncryptDecrypt aesCommander = new EncryptDecrypt();
         private User userOnSession;     //logged user
         private Guid sessionID;
         public static string AppRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -188,7 +189,6 @@ namespace ServiceApp
                         if (r.Uid == pc.Uid)
                         {
                             lista.Remove(r); // izbaci staru i ubaci nove parametre sobe
-
                         }
                     }
                 }else
@@ -204,8 +204,7 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-
+              //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
             }
             finally
             {
@@ -226,16 +225,13 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-
+               // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
             }
             finally
             {
                 fs.Close();
             }
-
             return pc;
-
         }
 
         public void SerializeFileRooms(Room room)
@@ -259,8 +255,7 @@ namespace ServiceApp
                 {
                     lista = new List<Room>();
                 }
-               
-              
+                            
                     lista.Add(room);
                     BinaryFormatter bf = new BinaryFormatter();
                     bf.Serialize(s, lista);        
@@ -268,8 +263,7 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-    
+             //   Console.WriteLine("Failed to serialize. Reason: " + e.Message);    
             }
             finally
             {
@@ -289,15 +283,12 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-        
+                // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);        
             }
             finally
             {
                 fs.Close();
             }
-
-
             return rooms;
         }
 
@@ -313,8 +304,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                    
+                //    Console.WriteLine("Failed to serialize. Reason: " + e.Message);                    
                 }
                 finally
                 {
@@ -352,9 +342,27 @@ namespace ServiceApp
 
         public void CloseupRoom(Room room)
         {
-           // AppRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            // AppRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            if (ServiceModel.Instance.RoomList.Any(x => x.Theme.Equals(room.Theme)))
+            {
+                int index = ServiceModel.Instance.RoomList.IndexOf(ServiceModel.Instance.RoomList.Single(x => x.Theme.Equals(room.Theme)));
+                ServiceModel.Instance.RoomList[index].Code = new Guid("00000000-0000-0000-0000-000000000000");
+                index = -1;
+                for (int i = 0; i < ServiceModel.Instance.GroupChat.ThemeRooms.Count; i++)
+                {
+                    if (ServiceModel.Instance.GroupChat.ThemeRooms[i].Equals(room.Theme)) index = i;
+                }
+                if (index != -1)
+                {
+                    ServiceModel.Instance.GroupChat.ThemeRooms.RemoveAt(index);
+                }
+            }
+            else
+            {
+                return;
+            }
 
-            if (File.Exists(room.Code.ToString() + ".dat"))
+           /* if (File.Exists(room.Code.ToString() + ".dat"))
             {
                 try
                 {
@@ -365,9 +373,9 @@ namespace ServiceApp
                     Console.WriteLine(e.Message);
                     return;
                 }
-            }
-            //NotifyViewforRoom(null);
-        }             // apsolutna putanja 
+            }*/
+           NotifyViewforRoom(null);
+        } 
 
         public void SerializeRoom(Room room)     // Serialize Room
         {
@@ -379,15 +387,12 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                
+              //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);               
             }
             finally
             {
                 s.Close();
             }
-
-
         }
 
         public Room DeserializeRoom(Room room)   // DEserialize Room
@@ -404,8 +409,7 @@ namespace ServiceApp
             }
             catch (SerializationException e)
             {
-               // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                
+               // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);                
             }
             finally
             {
@@ -413,9 +417,6 @@ namespace ServiceApp
             }
 
             return pc1;
-
-
-
         }
 
         public void SerializePrivateChat(PrivateChat pc)
@@ -430,8 +431,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                  
+                   // Console.WriteLine("Failed to serialize. Reason: " + e.Message);                 
                 }
                 finally
                 {
@@ -456,8 +456,7 @@ namespace ServiceApp
                 }
                 catch (SerializationException e)
                 {
-                   // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                    
+                   // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);                    
                 }
                 finally
                 {
@@ -476,17 +475,11 @@ namespace ServiceApp
                 try
                 {
                     BinaryFormatter bf = new BinaryFormatter();
-                    /* foreach(User u in lista)
-                     {
-                         Sha256encrypt(u.Password);
-                     }*/
-
                     bf.Serialize(s, lista);
                 }
                 catch (SerializationException e)
                 {
-                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                   
+                    //Console.WriteLine("Failed to serialize. Reason: " + e.Message);                   
                 }
                 finally
                 {
@@ -500,7 +493,6 @@ namespace ServiceApp
             lock (ServiceModel.Instance.LockUsers)
             {
                 List<User> lista = new List<User>();
-
                 FileStream fs = new FileStream("Users.dat", FileMode.OpenOrCreate);
 
                 try
@@ -510,9 +502,7 @@ namespace ServiceApp
 
                 }
                 catch (SerializationException e)
-                {
-                   // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                    
+                { 
                 }
                 finally
                 {
@@ -707,7 +697,7 @@ namespace ServiceApp
             }
 
             return retVal;
-        }  //Blokira iz liste logovanih a sta ako nije logovan sto mora?
+        }  //Blokira iz liste logovanih 
 
         public bool BlockUserFromRoom(string blockEmail, string roomName)
         {
@@ -972,11 +962,17 @@ namespace ServiceApp
             return retVal;
         } //DONE
 
-        public int LogIn(string email, string password)
+        public int LogIn(byte[] cipherEmail, byte[] cipherPassword, string emailHash, string passwordHash)
         {
-            //TODO ubaciti u listo ulogovanih
-
             List<User> lista = DeserializeUsers();
+
+            string email = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, cipherEmail));
+            string password = Encoding.ASCII.GetString(aesCommander.Decrypt(ServiceModel.Instance.RSA.SessionKeys[SessionID].SymmetricKey, cipherPassword));
+            if (!emailHash.Equals(Sha256encrypt(email)) || !passwordHash.Equals(Sha256encrypt(password)))
+            {
+                Console.WriteLine("Someone modified your messages, for your security, we will prevent further program execution.");
+                return -3;
+            }
 
             if (lista == null)
             {
@@ -1038,8 +1034,6 @@ namespace ServiceApp
                                 }
                             }
 
-
-
                             List<Room> rooms = DeserializeFileRooms();
                             if (rooms != null)
                             {
@@ -1059,11 +1053,7 @@ namespace ServiceApp
                                         ServiceModel.Instance.RoomList.Add(item);
                                     }
                                 }
-
-
                             }
-
-
                         }
                         catch (Exception e)
                         {
@@ -1146,7 +1136,7 @@ namespace ServiceApp
             }
 
 
-        }    // ne treba da se upisuje promena u fajl  valjda done???
+        }    // DONE
 
         public bool LogOut(string email)
         {
@@ -2125,7 +2115,11 @@ namespace ServiceApp
         }
    
 
-
+        /// <summary>
+        /// If aes key is decrypted with rsa private key, everything is ok, i onther case, nots
+        /// </summary>
+        /// <param name="crypted"></param>
+        /// <returns></returns>
         public bool SendSessionKey(byte[] crypted)
         {
             if (ServiceModel.Instance.RSA.SetSymmetricKey(this.SessionID, crypted))

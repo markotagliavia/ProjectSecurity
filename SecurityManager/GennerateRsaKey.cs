@@ -60,7 +60,7 @@ namespace SecurityManager
                      SymmetricKey = null,
                  */
 
-                sessionKeys.Add(Guid.NewGuid(), s);
+                sessionKeys.Add(sessionId, s);
 
                 return s.PublicKey;
             }

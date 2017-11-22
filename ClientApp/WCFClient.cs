@@ -75,7 +75,7 @@ namespace ClientApp
             set { this.instanceContext = value; }
         }
 
-        public bool AddAdmin(string email)
+        public bool AddAdmin(byte[] emailBytes, string emailHash)
         {
             bool retVal = false;
             try
@@ -90,7 +90,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool BlockGroupChat(string blockEmai)
+        public bool BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
         {
             bool retVal = false;
             try
@@ -106,7 +106,7 @@ namespace ClientApp
             return retVal;
         }
     
-        public bool BlockUser(string requestEmail, string blockEmail)
+        public bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)
         {
             bool retVal = false;
             try
@@ -121,7 +121,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool BlockUserFromRoom(string blockEmail, string roomName)
+        public bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash)
         {
             bool retVal = false;
             try
@@ -137,7 +137,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool ChangePassword(string email, string oldPassowrd, string newPassword)
+        public bool ChangePassword(byte[] emailBytes, byte[] oldPasswordBytes, byte[] newPasswordBytes, string emailHash, string oldPassowrdHash, string newPasswordHash)
         {
             bool retVal = false;
             try
@@ -152,7 +152,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool CloseRoom(string roomName)
+        public bool CloseRoom(byte[] roomNameBytes, string roomNameHash)
         {
             bool retVal = false;
             try
@@ -167,7 +167,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public PrivateChat CreatePrivateChat(string firstEmail, string secondEmail)
+        public PrivateChat CreatePrivateChat(byte[] firstEmailBytes, byte[] secondEmailBytes, string firstEmailHash, string secondEmailHash)
         {
             PrivateChat retVal = null;
             try
@@ -182,7 +182,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public void CreateRoom(string roomName)
+        public void CreateRoom(byte[] roomNameBytes, string roomNameHash)
         {
            
             try
@@ -197,7 +197,7 @@ namespace ClientApp
            
         }
 
-        public bool DeleteAdmin(string email)
+        public bool DeleteAdmin(byte[] emailBytes, string emailHash)
         {
             bool retVal = false;
             try
@@ -232,7 +232,7 @@ namespace ClientApp
 
         }
 
-        public Room GetThemeRoom(string roomName,string email)
+        public Room GetThemeRoom(byte[] roomNameBytes, byte[] emailBytes, string roomNameHash,string emailHash)
         {
             Room room = new Room("");
             try
@@ -261,12 +261,12 @@ namespace ClientApp
             }
         }
 
-        public int LogIn(string email, string password)
+        public int LogIn(byte[] email, byte[] password, string emailHash, string passwordHash)
         {
             int i = 0;
             try
             {
-                i = factory.LogIn(email, password);
+                i = factory.LogIn(email, password, emailHash, passwordHash);
                 Console.WriteLine("LogIn executed");
             }
             catch (Exception e)
@@ -277,7 +277,7 @@ namespace ClientApp
             return i;
         }
 
-        public bool LogOut(string email)
+        public bool LogOut(byte[] emailBytes, string emailHash)
         {
             bool retVal = false;
             try
@@ -307,7 +307,7 @@ namespace ClientApp
             }
         }
 
-        public bool RemoveBlockGroupChat(string unblockEmail)
+        public bool RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash)
         {
             bool retVal = false;
 
@@ -324,7 +324,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool RemoveBlockUser(string requestEmail, string unblockEmail)
+        public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash)
         {
             bool retVal = false;
             try
@@ -339,7 +339,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool RemoveBlockUserFromRoom(string unblockEmail, string roomName)
+        public bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash)
         {
             bool retVal = false;
             try
@@ -355,7 +355,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public int ResetPassword(string email)
+        public int ResetPassword(byte[] emailBytes, string emailHash)
         {
             int ret = -1;
             try
@@ -371,7 +371,7 @@ namespace ClientApp
             return ret;
         }
 
-        public void SendGroupMessage(string userName, string message)
+        public void SendGroupMessage(byte[] userNameBytes, byte[] messageBytes, string userNameHash, string messageHash)
         {
             try
             {
@@ -385,7 +385,7 @@ namespace ClientApp
 
         }
 
-        public bool SendPrivateMessage(string sendEmail, string reciveEmail, string message)
+        public bool SendPrivateMessage(byte[] sendEmailBytes, byte[] reciveEmailBytes, byte[] messageBytes, string sendEmailHash, string reciveEmailHash, string messageHash)
         {
             bool retVal = false;
             try
@@ -401,7 +401,7 @@ namespace ClientApp
             return retVal;
         }
 
-        public void SendRoomMessage(string userName, string roomName, string message)
+        public void SendRoomMessage(byte[] userNameBytes, byte[] roomNameBytes, byte[] messageBytes, string userNameHash, string roomNameHash, string messageHash)
         {
             
             try
@@ -417,7 +417,7 @@ namespace ClientApp
             
         }
 
-        public bool SendVerificationKey(string key)
+        public bool SendVerificationKey(byte[] keyBytes, string keyHash)
         {
             bool ok = false;
             try
@@ -433,7 +433,7 @@ namespace ClientApp
             return ok;
         }
 
-        public void Subscribe(string email)
+        public void Subscribe(byte[] emailBytes, string emailHash)
         {
             try
             {
@@ -446,7 +446,7 @@ namespace ClientApp
             }
         }
 
-        public void SubscribeAllUsers(string email)
+        public void SubscribeAllUsers(byte[] emailBytes, string emailHash)
         {
             try
             {
@@ -459,7 +459,7 @@ namespace ClientApp
             }
         }
 
-        public ObservableCollection<User> GetAllUsers(string email)
+        public ObservableCollection<User> GetAllUsers(byte[] emailBytes, string emailHash)
         {
             try
             {
@@ -472,7 +472,7 @@ namespace ClientApp
             }
         }
 
-        public PrivateChat GetPrivateChat(Guid code)
+        public PrivateChat GetPrivateChat(byte[] codeByte, string codeHash)
         {
             try
             {
@@ -485,7 +485,7 @@ namespace ClientApp
             }
         }
 
-        public void Unsubscribe(string email)
+        public void Unsubscribe(byte[] emailBytes, string emailHash)
         {
             try
             {
@@ -498,7 +498,7 @@ namespace ClientApp
             }
         }
 
-        public void SubscribeUserTheme(string email, string theme)
+        public void SubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
         {
             try
             {
@@ -511,7 +511,7 @@ namespace ClientApp
             }
         }
 
-        public void UnsubscribeUserTheme(string email, string theme)
+        public void UnsubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
         {
             try
             {
@@ -524,7 +524,7 @@ namespace ClientApp
             }
         }
 
-        public void UnsubscribeAllUsers(string email)
+        public void UnsubscribeAllUsers(byte[] emailBytes, string emailHash)
         {
             try
             {
@@ -537,7 +537,7 @@ namespace ClientApp
             }
         }
 
-        public void LeaveRoom(string theme)
+        public void LeaveRoom(byte[] themeBytes, string themeHash)
         {
             try
             {
@@ -550,7 +550,7 @@ namespace ClientApp
             }
         }
 
-        public void LeavePrivateChat(Guid code)
+        public void LeavePrivateChat(byte[] codeByte, string codeHash)
         {
             try
             {
@@ -563,7 +563,7 @@ namespace ClientApp
             }
         }
 
-        public void LogInTheme(string theme,string email)
+        public void LogInTheme(byte[] themeBytes, byte[] emailBytes, string themeHash, string emailHash)
         {
             try
             {
@@ -576,7 +576,7 @@ namespace ClientApp
             }
         }
 
-        public void LogInPrivateChat(Guid code)
+        public void LogInPrivateChat(byte[] codeByte, string codeHash)
         {
             try
             {
@@ -588,6 +588,7 @@ namespace ClientApp
 
             }
         }
+
         public RSAParameters GetPublicKey(Guid code)
         {
             RSAParameters a = new RSAParameters();

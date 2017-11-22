@@ -10,6 +10,8 @@ namespace SecurityManager
 {
     public class EncryptDecrypt
     {
+        public EncryptDecrypt() { }
+
         public byte[] EncryptData(byte[] key, string data)
         {
             using (Aes aes = Aes.Create())

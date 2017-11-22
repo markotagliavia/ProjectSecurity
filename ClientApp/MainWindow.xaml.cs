@@ -24,7 +24,7 @@ namespace ClientApp
     public partial class MainWindow : Window
     {
         private WCFClient proxy;
-
+        private EncryptDecrypt aesCommander = new EncryptDecrypt();
 
         public MainWindow()
         {
@@ -106,28 +106,38 @@ namespace ClientApp
                     return;
                 }
 
-                //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unes
-                int i = proxy.LogIn(user, cryptedPass);
-                if (i == 0)
-                {
-                    //prvi put se loguje i mora da se unese i kod
-                    var r = new VerificationKey(proxy, user);
-                    r.Show();
-                    this.Close();
-                }
-                else if (i == -1)
-                {
-                    MessageBox.Show("Email and password are incorrect! Try again or reset your password.");
-                }
-                else if (i == 1)
-                {
-                    //uspesan login
-                    //Send data to server
-                    var s1 = new GroupChat(proxy, user);    //Forum starting if data is ok
-                    SystemSounds.Asterisk.Play();
-                    s1.Show();
-                    this.Close();
-                }
+            //treba izmeniti login da radi bez verifikacionog koda i da server vrati odgovor(int {-1 lose, 1 odma login, 0 unesi kod}) da li je potrebno da se unese
+            byte[] userInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, user);
+            byte[] passwordInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, cryptedPass);
+            string userHash = Sha256encrypt(user);
+            string passwordHash = Sha256encrypt(cryptedPass);
+
+            int i = proxy.LogIn(userInBytes, passwordInBytes, userHash, passwordHash);
+            if (i == 0)
+            {
+                //prvi put se loguje i mora da se unese i kod
+                var r = new VerificationKey(proxy, user);
+                r.Show();
+                this.Close();
+            }
+            else if (i == -1)
+            {
+                MessageBox.Show("Email and password are incorrect! Try again or reset your password.");
+            }
+            else if (i == 1)
+            {
+                //uspesan login
+                //Send data to server
+                var s1 = new GroupChat(proxy, user);    //Forum starting if data is ok
+                SystemSounds.Asterisk.Play();
+                s1.Show();
+                this.Close();
+            }
+            else if (i == -3)
+            {
+                MessageBox.Show("Someone modified your messages, for your security, we will prevent further program execution.");
+                this.Close();
+            }
             
         }
 

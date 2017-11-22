@@ -43,9 +43,7 @@ namespace ClientApp
             label.Content = room.Theme;
             blockUserButton.IsEnabled = false;
             removeUserButton.IsEnabled = false;
-            loggedAsLabel1.Content = $"You are logged as {email}";
-
-            
+            loggedAsLabel1.Content = $"You are logged as {email}";           
         }
 
         public ObservableCollection<User> Logged
@@ -186,6 +184,12 @@ namespace ClientApp
                     removeUserButton.Visibility = Visibility.Hidden;
                     closeRoomButton.Visibility = Visibility.Hidden;
                 }
+
+                if (room.Code.Equals(new Guid("00000000-0000-0000-0000-000000000000")))
+                {
+                    this.Close();
+                }
+
             }
 
         }
@@ -200,11 +204,8 @@ namespace ClientApp
             NetTcpBinding tcp = this.proxy.Binding;
             this.proxy.InstanceContext = instanceContext;
             this.proxy.Abort();
-
             this.proxy = new WCFClient(instanceContext, tcp, adr);
-            
-            
-
+                     
             try
             {
                 this.proxy.SubscribeUserTheme(email, room.Theme);
@@ -213,7 +214,6 @@ namespace ClientApp
             {
                 // TODO: Handle exception.
             }
-
             
             this.room = this.proxy.GetThemeRoom(room.Theme, email);
             this.proxy.LogInTheme(room.Theme, this.email);

@@ -26,7 +26,7 @@ namespace Contracts
         int ResetPassword(string email);
 
         [OperationContract]
-        int LogIn(string email, string password);
+        int LogIn(byte[] email, byte[] password, string emailHash, string passwordHash);
 
         [OperationContract]
         bool LogOut(string email);
@@ -127,6 +127,9 @@ namespace Contracts
 
         [OperationContract]
         bool SendSessionKey(byte[] crypted);
+
+        [OperationContract(IsOneWay = true)]
+        void SendSessionKey(Guid code);
     }
 
    
