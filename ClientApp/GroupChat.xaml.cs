@@ -140,7 +140,7 @@ namespace ClientApp
                     if (pc != null)
                     {
                         //proveri da li imaju jedan drugog u blokiranim?
-                            this.i = 2;
+                            this.i = 3;
                             pcpom = pc;
                             this.Close();
                     }

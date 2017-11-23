@@ -1111,6 +1111,8 @@ namespace ServiceApp
                             PrivateChat pc = new PrivateChat(user.Email, user2.Email);
                             SerializePrivateChat(pc);  // kreiraj fajl
                             SerializeFileChats(pc);
+                            if(!ServiceModel.Instance.GroupChat.PrivateChatsNames.Contains(pc.Uid.ToString())) ServiceModel.Instance.GroupChat.PrivateChatsNames.Add(pc.Uid.ToString());
+                            SerializeGroupChat(ServiceModel.Instance.GroupChat);
                             ServiceModel.Instance.PrivateChatList.Add(pc);
                             Audit.CreatePrivateChatSuccess(firstEmail, secondEmail);
                             return pc;
@@ -1502,11 +1504,11 @@ namespace ServiceApp
             List<User> lista = new List<User>();
 
             User u1 = new User(name, sname, date, email, password, Roles.User, gender);
-            User u2 = new User("Adminko", "Adminic", DateTime.Now, "forumblok@gmail.com", Sha256encrypt("sifra123"), Roles.Admin, "Male");
-            User u3 = new User("Adminica", "Adminska", DateTime.Now, "forumblok1@gmail.com", Sha256encrypt("sifra1234"), Roles.Admin, "Female");
+            //User u2 = new User("Adminko", "Adminic", DateTime.Now, "forumblok@gmail.com", Sha256encrypt("sifra123"), Roles.Admin, "Male");
+            //User u3 = new User("Adminica", "Adminska", DateTime.Now, "forumblok1@gmail.com", Sha256encrypt("sifra1234"), Roles.Admin, "Female");
             lista.Add(u1);
-            lista.Add(u2);
-            lista.Add(u3);
+            //lista.Add(u2);
+            //lista.Add(u3);
 
             BinaryFormatter bf = new BinaryFormatter();
 

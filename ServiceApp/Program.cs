@@ -66,6 +66,14 @@ namespace ServiceApp
                 lista.Add(u1);
                 lista.Add(u2);
 
+                //izbrisati posle
+                User u3 = new User("Adminko1", "Adminic1", DateTime.Now, "user1@gmail.com", p.Sha256encrypt("sifra123"), Roles.User, "Male");
+                u3.Verify = true;
+                User u4 = new User("Adminica1", "Adminska1", DateTime.Now, "user2@gmail.com", p.Sha256encrypt("sifra123"), Roles.User, "Female");
+                u4.Verify = true;
+                lista.Add(u3);
+                lista.Add(u4);
+
 
                 BinaryFormatter bf = new BinaryFormatter();
 

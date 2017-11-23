@@ -60,11 +60,7 @@ namespace ClientApp
                 removeUserButton.Visibility = Visibility.Hidden;
                 closeRoomButton.Visibility = Visibility.Hidden;
                 leaveRoomButton.Content = "Leave private chat";
-                if (pc == null)
-                {
-                    MessageBox.Show("You are blocked from private chat.");
-                    this.Close();
-                }
+               
             }
             
             loggedAsLabel1.Content = $"You are logged as {email}";           
