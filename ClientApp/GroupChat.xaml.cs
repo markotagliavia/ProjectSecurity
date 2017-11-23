@@ -244,7 +244,7 @@ namespace ClientApp
             {
                 if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                 {
-                    if (((Button)sender).Content.Equals("Block"))
+                    if (((Button)sender).Content.Equals("Block user"))
                     {
                         proxy.BlockUser(emailInBytes,userInBytes,emailHash,userHash);
                     }

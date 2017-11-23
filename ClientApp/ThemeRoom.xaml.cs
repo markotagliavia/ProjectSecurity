@@ -195,7 +195,7 @@ namespace ClientApp
                 {
                     if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                     {
-                        if (((Button)sender).Content.Equals("Block"))
+                        if (((Button)sender).Content.Equals("Block user"))
                         {
                             proxy.BlockUser(emailRequestInBytes,userToBlockInBytes,emailRequestHash, userToBlockHash);
                         }
@@ -277,6 +277,7 @@ namespace ClientApp
                 {
                     removeUserButton.Visibility = Visibility.Visible;
                     closeRoomButton.Visibility = Visibility.Visible;
+                    closeRoomButton.IsEnabled = true;
                 }
                 else
                 {
@@ -344,6 +345,7 @@ namespace ClientApp
                 {
                     removeUserButton.Visibility = Visibility.Visible;
                     closeRoomButton.Visibility = Visibility.Visible;
+                    closeRoomButton.IsEnabled = true;
                 }
                 else
                 {
@@ -371,24 +373,31 @@ namespace ClientApp
                 this.pc = this.proxy.GetPrivateChat(guidInBytes,guidHash);
                 this.proxy.LogInPrivateChat(emailInBytes, emailHash, guidInBytes, guidHash);
 
-                
-                if (this.pc.User2logged)
+                if (this.pc != null)
                 {
-                    Logged.Add(this.pc.User2);
-                }
-               
-                    
-                if (this.pc.User1logged)
-                {
-                    Logged.Add(this.pc.User1);
-                }
-                
+                    if (this.pc.User2logged)
+                    {
+                        Logged.Add(this.pc.User2);
+                    }
 
-                foreach (Message m in this.pc.Messages)
-                {
-                    Msg.Add(m);
+
+                    if (this.pc.User1logged)
+                    {
+                        Logged.Add(this.pc.User1);
+                    }
+
+
+                    foreach (Message m in this.pc.Messages)
+                    {
+                        Msg.Add(m);
+                    }
+                    allMessagesScrollViewer.ScrollToBottom();
                 }
-                allMessagesScrollViewer.ScrollToBottom();
+                else
+                {
+                    MessageBox.Show("You are blocked from this user and cannot chat with him!");
+                    this.Close();
+                }
 
             }
 
@@ -584,13 +593,13 @@ namespace ClientApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void loggedUsersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void loggedUsersListBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             if (loggedUsersListBox.SelectedIndex == -1)
             {
                 blockUserButton.IsEnabled = false;
                 removeUserButton.IsEnabled = false;
-                closeRoomButton.IsEnabled = false;
+                //closeRoomButton.IsEnabled = false;
             }
             else
             {
@@ -598,26 +607,44 @@ namespace ClientApp
                 {
                     blockUserButton.IsEnabled = false;
                     removeUserButton.IsEnabled = false;
-                    closeRoomButton.IsEnabled = false;
+                    //closeRoomButton.IsEnabled = false;
                 }
                 else
                 {
-                    if (room.Blocked.Any(x => x.Email.Equals(email)))
+                    if (i == 1)
                     {
-                        removeUserButton.Content = "Unban user";
-                    }
-
-                    if (room.Logged.Any(x => x.Email.Equals(email)))
-                    {
-                        if (room.Logged.Single(x => x.Email.Equals(email)).Blocked.Any(x => x.Email.Equals(loggedUsersListBox.SelectedItem.ToString())))
+                        if (room.Blocked.Any(x => x.Email.Equals(email)))
                         {
-                            blockUserButton.Content = "Unblock";
-                            closeRoomButton.IsEnabled = false;
+                            removeUserButton.Content = "Unban user";
+                        }
+
+                        if (room.Logged.Any(x => x.Email.Equals(email)))
+                        {
+                            if (room.Logged.Single(x => x.Email.Equals(email)).Blocked.Any(x => x.Email.Equals(loggedUsersListBox.SelectedItem.ToString())))
+                            {
+                                blockUserButton.Content = "Unblock";
+                                //closeRoomButton.IsEnabled = false;
+                            }
+                        }
+                        blockUserButton.IsEnabled = true;
+                        removeUserButton.IsEnabled = true;
+                        //closeRoomButton.IsEnabled = true;
+                    }
+                    else
+                    {
+                        if (pc.User1.Equals(email) && email.Equals(loggedUsersListBox.SelectedItem.ToString()))
+                        {
+                            blockUserButton.IsEnabled = false;
+                        }
+                        else if (pc.User2.Equals(email) && email.Equals(loggedUsersListBox.SelectedItem.ToString()))
+                        {
+                            blockUserButton.IsEnabled = false;
+                        }
+                        else
+                        {
+                            blockUserButton.IsEnabled = true;
                         }
                     }
-                    blockUserButton.IsEnabled = true;
-                    removeUserButton.IsEnabled = true;
-                    closeRoomButton.IsEnabled = true;
                 }
             }
         }

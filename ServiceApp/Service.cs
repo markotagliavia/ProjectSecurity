@@ -111,10 +111,7 @@ namespace ServiceApp
                             {
                                 try
                                 {
-
-                                        client.Value.GetRoom(r);
-
-                                    
+                                        client.Value.GetRoom(r);                                  
                                 }
                                 catch (Exception)
                                 {
@@ -799,6 +796,7 @@ namespace ServiceApp
                         {
                             ServiceModel.Instance.GroupChat.Blocked.Add(u);
                             SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
+                            NotifyAll();
                             retVal = true;
                         }
                     }
@@ -866,8 +864,8 @@ namespace ServiceApp
                         {
 
                             List<User> lista = DeserializeUsers();  // deser user
-                            User blokator = new User(null, null, DateTime.Now, null, null, Roles.User, null);
-                            User blokirani = new User(null, null, DateTime.Now, null, null, Roles.User, null);
+                            User blokator = new User();
+                            User blokirani = new User();
 
                             foreach (User u in lista)
                             {
@@ -1675,6 +1673,7 @@ namespace ServiceApp
                             {
                                 ServiceModel.Instance.GroupChat.Blocked.RemoveAt(index);
                                 SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
+                                NotifyAll();
                                 retVal = true;
                             }
                             else

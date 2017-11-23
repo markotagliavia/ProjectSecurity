@@ -73,45 +73,46 @@ namespace ClientApp
                     }
                 }
             } while (exit == false);
+            
             RSAParameters pom = new RSAParameters();
-           
-            do
-            {
-                try
-                {
-                    pom = this.proxy.GetPublicKey(this.proxy.Guid);
-                    
-                    exit = true;
-                }
-                catch (Exception e)
-                {
-                    var result = MessageBox.Show("Do you want to try to establish connection again?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+               do
+               {
+                   try
+                   {
+                        this.proxy.Guid = Guid.NewGuid();
+                        pom = this.proxy.GetPublicKey(this.proxy.Guid);
+                       exit = true;
+                   }
+                   catch (Exception e)
+                   {
+                       var result = MessageBox.Show("Do you want to try to establish connection again?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                       if (result == MessageBoxResult.Yes)
+                       {
+                           exit = false;
+                       }
+                       else if (result == MessageBoxResult.No)
+                       {
+                           exit = true;
+                       }
+                   }
+                   if (pom.Exponent == null && pom.D == null && pom.DP == null && pom.DQ == null && pom.InverseQ == null && pom.Modulus == null && pom.P == null && pom.Q == null && exit == true)
+                   {
+                       var result = MessageBox.Show("Do you want to try to establish connection again?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        exit = false;
-                    }
-                    else if (result == MessageBoxResult.No)
-                    {
-                        exit = true;
-                    }
-                }
-                if (pom.Exponent == null && exit == true)
-                {
-                    var result = MessageBox.Show("Do you want to try to establish connection again?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                       if (result == MessageBoxResult.Yes)
+                       {
+                           exit = false;
+                            this.proxy.Abort();
+                            this.proxy = new WCFClient(instanceContext, binding, new EndpointAddress(new Uri(address)));                      
+                       }
+                       else if (result == MessageBoxResult.No)
+                       {
+                           exit = true;
+                       }
+                   }
+               } while (exit == false);
 
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        exit = false;
-                    }
-                    else if (result == MessageBoxResult.No)
-                    {
-                        exit = true;
-                    }
-                }
-            } while (pom.Exponent == null && exit == false);
-
-            this.proxy.Guid = Guid.NewGuid();
+            
             this.proxy.Aes = new GenerateAesKey(pom, 2048);
 
             if (this.proxy.SendSessionKey(this.proxy.Aes.AesEncryptedSessionKey))
