@@ -567,8 +567,11 @@ namespace ClientApp
             else if (i == 3)
             {
                 proxy.Unsubscribe(emailInBytes, emailHash);
-                var window = new ThemeRoom(this.proxy, pcpom.Uid.ToString(), this.email, 2);    
+
+                var window = new ThemeRoom(this.proxy, pcpom.Uid.ToString(), this.email, 2);
                 window.Show();
+                
+                
             }
             
         }

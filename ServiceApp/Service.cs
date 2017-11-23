@@ -2506,7 +2506,12 @@ namespace ServiceApp
                     lock (ServiceModel.Instance.Clients)
                     {
                         ServiceModel.Instance.Clients.Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
-                        userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                        List<User> lista = DeserializeUsers();
+                        if (lista.Any(i => i.Email.Equals(email)))
+                        {
+                            userOnSession = lista.Single(i => i.Email.Equals(email));
+                            userOnSession.Logged = true;
+                        }
                     }
                 }
 
@@ -2625,7 +2630,7 @@ namespace ServiceApp
 
         public PrivateChat GetPrivateChat(byte[] codeByte, string codeHash)
         {
-            if (userOnSession == null)//aj bezi, pusti me da izdebagujem
+            if (userOnSession == null)
             {
                 return null;
             }
@@ -2814,7 +2819,12 @@ namespace ServiceApp
                     lock (ServiceModel.Instance.ClientsForThemeRoom)
                     {
                         ServiceModel.Instance.ClientsForThemeRoom[theme].Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
-                        userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                        List<User> lista = DeserializeUsers();
+                        if (lista.Any(i => i.Email.Equals(email)))
+                        {
+                            userOnSession = lista.Single(i => i.Email.Equals(email));
+                            userOnSession.Logged = true;
+                        }
                     }
                 }
 
@@ -3029,7 +3039,7 @@ namespace ServiceApp
           
                 if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
                 {
-                    userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                    
                     
                     if (userOnSession.IsInRole(Permissions.GetPrivateChat.ToString()))
                     {
@@ -3138,7 +3148,12 @@ namespace ServiceApp
                     lock (ServiceModel.Instance.ClientsForPrivateChat)
                     {
                         ServiceModel.Instance.ClientsForPrivateChat[code].Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
-                        userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                        List<User> lista = DeserializeUsers();
+                        if (lista.Any(i => i.Email.Equals(email)))
+                        {
+                            userOnSession = lista.Single(i => i.Email.Equals(email));
+                            userOnSession.Logged = true;
+                        }
                     }
                 }
 

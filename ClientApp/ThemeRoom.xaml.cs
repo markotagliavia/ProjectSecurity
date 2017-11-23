@@ -64,7 +64,9 @@ namespace ClientApp
                
             }
             
-            loggedAsLabel1.Content = $"You are logged as {email}";           
+            loggedAsLabel1.Content = $"You are logged as {email}";
+           
+            
         }
 
         public ObservableCollection<string> Logged
@@ -378,35 +380,41 @@ namespace ClientApp
                 else
                 {
                     MessageBox.Show("You are blocked from this user and cannot chat with him!");
-                    this.Close();
+                    
+                        this.Close();
+                    
+            
                 }
 
             }
 
-
-            Timer timer = new Timer(300000);
-            timer.Elapsed +=
-            (
-                (object o, ElapsedEventArgs args) =>
-                {
-                    try
+            if (pc != null)
+            {
+                Timer timer = new Timer(300000);
+                timer.Elapsed +=
+                (
+                    (object o, ElapsedEventArgs args) =>
                     {
-                        if (this.proxy.State == CommunicationState.Faulted)
+                        try
                         {
-                            NetTcpBinding tb = this.proxy.Binding;
-                            EndpointAddress ad = this.proxy.Address;
-                            this.proxy.Abort();
-                            this.proxy = new WCFClient(instanceContext, tb, ad);
-                        }
+                            if (this.proxy.State == CommunicationState.Faulted)
+                            {
+                                NetTcpBinding tb = this.proxy.Binding;
+                                EndpointAddress ad = this.proxy.Address;
+                                this.proxy.Abort();
+                                this.proxy = new WCFClient(instanceContext, tb, ad);
+                            }
 
-                        this.proxy.KeepConnection();
-                    }
-                    catch
-                    {
+                            this.proxy.KeepConnection();
+                        }
+                        catch
+                        {
                         // TODO: Handle exception.
                     }
-                }
-            );
+                    }
+                );
+            }
+            
         }
 
         private void ChatServiceCallback_PrivateChatNotified(object sender, PrivateChatEventArgs e)
@@ -479,10 +487,21 @@ namespace ClientApp
                     string guidHash = Sha256encrypt(pc.Uid.ToString());
                     this.proxy.LeavePrivateChat(guidInBytes, guidHash);
                     this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
+                    var s = new GroupChat(proxy, email);
+                    s.Show();
+                }
+                else
+                {
+                    byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                    string emailHash = Sha256encrypt(this.email);
+                    byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.theme);
+                    string guidHash = Sha256encrypt(this.theme);
+                    this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
+                    var s = new GroupChat(proxy, email);
+                    s.Show();
                 }
                 
-                var s = new GroupChat(proxy, email);
-                s.Show();
+                
             }
             
         }
