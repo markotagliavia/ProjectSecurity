@@ -20,6 +20,8 @@ namespace ForumModels
 
         private ObservableCollection<string> themeRooms;
 
+        private ObservableCollection<string> privateChatsNames;
+
 
         public GroupChat()
         {
@@ -27,6 +29,7 @@ namespace ForumModels
             Logged = new ObservableCollection<User>();
             allMessages = new ObservableCollection<Message>();
             themeRooms = new ObservableCollection<string>();
+            privateChatsNames = new ObservableCollection<string>();
         }
 
         public ObservableCollection<User> Blocked
@@ -78,6 +81,19 @@ namespace ForumModels
             set
             {
                 themeRooms = value;
+            }
+        }
+
+        public ObservableCollection<string> PrivateChatsNames
+        {
+            get
+            {
+                return privateChatsNames;
+            }
+
+            set
+            {
+                privateChatsNames = value;
             }
         }
     }

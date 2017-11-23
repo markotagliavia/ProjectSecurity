@@ -25,6 +25,7 @@ namespace ClientApp
         private ObservableCollection<User> logged;
         private ObservableCollection<Message> msg;
         private ObservableCollection<string> themeRooms;
+        private ObservableCollection<string> privateRooms;
         private EncryptDecrypt aesCommander = new EncryptDecrypt();
         Room roompom;
         PrivateChat pcpom;
@@ -37,6 +38,7 @@ namespace ClientApp
             logged = new ObservableCollection<User>();
             msg = new ObservableCollection<Message>();
             themeRooms = new ObservableCollection<string>();
+            privateRooms = new ObservableCollection<string>();
             this.proxy = proxy;
             proxy.Abort();
             this.email = email;
@@ -73,15 +75,26 @@ namespace ClientApp
                 roomsMenuItem.Items.Add(mi);
             }
 
+            privateChatsMenuItem.Items.Clear();
+            foreach (string s in groupChat.PrivateChatsNames)
+            {
+                MenuItem mi = new MenuItem();
+                mi.Header = s;
+                mi.Click += new RoutedEventHandler(menuItemPrivateRoomsClick);
+                privateChatsMenuItem.Items.Add(mi);
+            }
+
             if (groupChat.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
             {
                 removeUserButton.Visibility = Visibility.Visible;
                 changePrivsMenuItem.Visibility = Visibility.Visible;
+                privateChatsMenuItem.Visibility = Visibility.Visible;
             }
             else
             {
                 removeUserButton.Visibility = Visibility.Hidden;
                 changePrivsMenuItem.Visibility = Visibility.Hidden;
+                privateChatsMenuItem.Visibility = Visibility.Hidden;
             }
         }
 
@@ -114,6 +127,27 @@ namespace ClientApp
             }
         }
 
+        protected void menuItemPrivateRoomsClick(object sender, EventArgs e)
+        {
+            if (Logged.Any(x => x.Email.Equals(email)))
+            {
+                if (Logged.Single(x => x.Email.Equals(email)).Logged)
+                {
+                    Console.WriteLine(((MenuItem)sender).Header.ToString());
+                    byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, ((MenuItem)sender).Header.ToString());
+                    string roomHash = Sha256encrypt(((MenuItem)sender).Header.ToString());
+                    PrivateChat pc = proxy.GetPrivateChat(roomInBytes, roomHash);
+                    if (pc != null)
+                    {
+                        //proveri da li imaju jedan drugog u blokiranim?
+                            this.i = 2;
+                            pcpom = pc;
+                            this.Close();
+                    }
+                }
+            }
+        }
+
         public ObservableCollection<User> Logged
         {
             get{ return logged; }
@@ -130,6 +164,12 @@ namespace ClientApp
         {
             get { return themeRooms; }
             set { themeRooms = value; }
+        }
+
+        public ObservableCollection<string> PrivateRooms
+        {
+            get { return privateRooms; }
+            set { privateRooms = value; }
         }
 
         /// <summary>
@@ -418,10 +458,20 @@ namespace ClientApp
                 roomsMenuItem.Items.Add(mi);
             }
 
+            privateChatsMenuItem.Items.Clear();
+            foreach (string s in groupChat.PrivateChatsNames)
+            {
+                MenuItem mi = new MenuItem();
+                mi.Header = s;
+                mi.Click += new RoutedEventHandler(menuItemPrivateRoomsClick);
+                privateChatsMenuItem.Items.Add(mi);
+            }
+
             if (groupChat.Logged.Single(x => x.Email.Equals(email)).Role == Roles.Admin)
             {
                 removeUserButton.Visibility = Visibility.Visible;
                 changePrivsMenuItem.Visibility = Visibility.Visible;
+                privateChatsMenuItem.Visibility = Visibility.Visible;
             }
 
 

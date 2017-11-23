@@ -45,6 +45,7 @@ namespace ClientApp
             logged = new ObservableCollection<string>();
             msg = new ObservableCollection<Message>();
             InitializeComponent();
+
             if (i == 1)
             {
                 label.Content = theme;
@@ -53,11 +54,17 @@ namespace ClientApp
             }
             else
             {
+                
                 label.Content = "Private chat";
                 blockUserButton.IsEnabled = false;
                 removeUserButton.Visibility = Visibility.Hidden;
                 closeRoomButton.Visibility = Visibility.Hidden;
                 leaveRoomButton.Content = "Leave private chat";
+                if (pc == null)
+                {
+                    MessageBox.Show("You are blocked from private chat.");
+                    this.Close();
+                }
             }
             
             loggedAsLabel1.Content = $"You are logged as {email}";           
@@ -182,33 +189,46 @@ namespace ClientApp
         /// <param name="e"></param>
         private void blockUserButton_Click(object sender, RoutedEventArgs e)
         {
-            byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
-            string emailHash = Sha256encrypt(this.email);
-            byte[] userInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, loggedUsersListBox.SelectedItem.ToString());
-            string userHash = Sha256encrypt(loggedUsersListBox.SelectedItem.ToString());
-            if (i == 1)
-            {
-                byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
-                string roomHash = Sha256encrypt(room.Theme);
+            byte[] emailRequestInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+            string emailRequestHash = Sha256encrypt(this.email);
+            byte[] userToBlockInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, loggedUsersListBox.SelectedItem.ToString());
+            string userToBlockHash = Sha256encrypt(loggedUsersListBox.SelectedItem.ToString());
+            //if (i == 1)
+           // {
                 if (loggedUsersListBox.SelectedIndex != -1)
                 {
                     if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                     {
                         if (((Button)sender).Content.Equals("Block"))
                         {
-                            proxy.BlockUserFromRoom(userInBytes,roomInBytes,userHash,roomHash);
+                            proxy.BlockUser(emailRequestInBytes,userToBlockInBytes,emailRequestHash, userToBlockHash);
                         }
                         else
                         {
-                            proxy.RemoveBlockUserFromRoom(userInBytes, roomInBytes, userHash, roomHash);
+                            proxy.RemoveBlockUser(emailRequestInBytes, userToBlockInBytes, emailRequestHash, userToBlockHash);
                         }
                     }
                 }
-            }
+          /*  }
             else
             {
-                //TO DO
-            }
+                byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.Uid.ToString());
+                string roomHash = Sha256encrypt(pc.Uid.ToString());
+                if (loggedUsersListBox.SelectedIndex != -1)
+                {
+                    if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
+                    {
+                        if (((Button)sender).Content.Equals("Block"))
+                        {
+                            proxy.BlockUser(emailRequestInBytes, userToBlockInBytes, emailRequestHash, userToBlockHash);
+                        }
+                        else
+                        {
+                            proxy.RemoveBlockUser(emailRequestInBytes, userToBlockInBytes, emailRequestHash, userToBlockHash);
+                        }
+                    }
+                }
+            }*/
             
         }
 
