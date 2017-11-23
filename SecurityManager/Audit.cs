@@ -60,7 +60,7 @@ namespace SecurityManager
     {
         private static EventLog customLog = null;
         const string SourceName = "SecurityManager.Audit";
-        const string LogName = "MySecTest";
+        const string LogName = "MySecTest5";
 
         static Audit()
         {

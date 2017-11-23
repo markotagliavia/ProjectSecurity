@@ -16,6 +16,7 @@ using System.IO;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.Xml;
+using System.Security.Cryptography;
 
 namespace ClientApp
 {
@@ -72,8 +73,46 @@ namespace ClientApp
                     }
                 }
             } while (exit == false);
+            RSAParameters pom = new RSAParameters();
+           
+            do
+            {
+                try
+                {
+                    pom = this.proxy.GetPublicKey(this.proxy.Guid);
+                    
+                    exit = true;
+                }
+                catch (Exception e)
+                {
+                    var result = MessageBox.Show("Do you want to try to establish connection again?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        exit = false;
+                    }
+                    else if (result == MessageBoxResult.No)
+                    {
+                        exit = true;
+                    }
+                }
+                if (pom.Exponent == null && exit == true)
+                {
+                    var result = MessageBox.Show("Do you want to try to establish connection again?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        exit = false;
+                    }
+                    else if (result == MessageBoxResult.No)
+                    {
+                        exit = true;
+                    }
+                }
+            } while (pom.Exponent == null && exit == false);
+
             this.proxy.Guid = Guid.NewGuid();
-            this.proxy.Aes = new GenerateAesKey(this.proxy.GetPublicKey(this.proxy.Guid), 2048);
+            this.proxy.Aes = new GenerateAesKey(pom, 2048);
 
             if (this.proxy.SendSessionKey(this.proxy.Aes.AesEncryptedSessionKey))
             {
