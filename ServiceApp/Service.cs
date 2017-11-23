@@ -87,6 +87,7 @@ namespace ServiceApp
                 }
             );
         }
+       
         //0 za kad nije close
         //1 kad treba null
         public void NotifyViewforRoom(Room room,int close)
@@ -312,17 +313,18 @@ namespace ServiceApp
                 Stream s = File.Open("Rooms.dat", FileMode.Create);
                 try
                 {
+                   
                     if (lista != null)
                     {
+                        int index = -1;
                         foreach (Room r in lista)
                         {
                             if (r.Code == room.Code)
                             {
-                                lista.Remove(r); // izbaci staru i ubaci nove parametre sobe
-
+                                index = lista.IndexOf(r);
                             }
                         }
-
+                        if(index != -1) lista.RemoveAt(index); // izbaci staru i ubaci nove parametre sobe
                     }
                     else
                     {
@@ -650,14 +652,14 @@ namespace ServiceApp
 
                 }
                 else
-                {
+                {                   
                     Console.WriteLine("User {0} is not logged in!", user.Name);
                     retVal = false;
                 }
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(email, "AddAdmin", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
                 retVal = false;
             }
@@ -666,6 +668,7 @@ namespace ServiceApp
             {
                 Audit.AddAdminSuccess(user.Email, email);
             }
+            else
             {
                 Audit.AddAdminFailed(user.Email, email);
             }
@@ -737,7 +740,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(email, "DeleteAdmin", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -753,7 +756,7 @@ namespace ServiceApp
             return retVal;
         } // DONE
 
-        public bool BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
+        public void BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
         {
            
             string blockEmail = "";
@@ -763,15 +766,15 @@ namespace ServiceApp
                 if (!blockEmailHash.Equals(Sha256encrypt(blockEmail)))
                 {
                     Audit.ModifiedMessageDanger();
-                    return false;
+                    return;
                 }
             }
             
-            catch (Exception e) { Audit.BadAesKey(); return false; }
+            catch (Exception e) { Audit.BadAesKey(); return; }
             if (userOnSession == null)
             {
                 Audit.BlockGroupChatFailed(blockEmail);
-                return false;
+                return;
             }
 
             //User user = Thread.CurrentPrincipal as User;
@@ -788,7 +791,7 @@ namespace ServiceApp
                         if (list.Any(i => i.Email == blockEmail) == false)
                         {
                             Audit.BlockGroupChatFailed(blockEmail);
-                            return false;
+                            return;
                         }
                         User u = list.Single(i => i.Email == blockEmail);
                         ServiceModel.Instance.GroupChat = DeserializeGroupChat();// deser
@@ -814,6 +817,7 @@ namespace ServiceApp
             else
             {
                 //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Block on Group chat", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -821,11 +825,10 @@ namespace ServiceApp
             {
                 Audit.BlockGroupChatSuccess(blockEmail);
             }
+            else
             {
                 Audit.BlockGroupChatFailed(blockEmail);
             }
-
-            return retVal;
         } // DONE
 
         public bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)
@@ -911,9 +914,8 @@ namespace ServiceApp
             }
             else
             {
-               
-                Console.WriteLine("User {0} don't have permission!", user.Name);
-                
+                Audit.AuthorizationFailed(user.Email, "Block user", "Authorization failed");
+                Console.WriteLine("User {0} don't have permission!", user.Name);                
                 retVal = false;
             }
 
@@ -921,6 +923,7 @@ namespace ServiceApp
             {
                 Audit.BlockUserSuccess(requestEmail, blockEmail);
             }
+            else
             {
                 Audit.BlockUserFailed(requestEmail, blockEmail);
             }
@@ -928,7 +931,7 @@ namespace ServiceApp
             return retVal;
         } // DONE
 
-        public bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash) // DONE
+        public void BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash) // DONE
         {
             string roomName = "";
             string blockEmail = "";
@@ -939,15 +942,15 @@ namespace ServiceApp
                 if (!blockEmailHash.Equals(Sha256encrypt(blockEmail)) || !roomNameHash.Equals(Sha256encrypt(roomName)))
                 {
                     Audit.ModifiedMessageDanger();
-                    return false;
+                    return;
                 }
             }
-            catch (Exception e) { Audit.BadAesKey(); return false; }
+            catch (Exception e) { Audit.BadAesKey(); return; }
 
             if (userOnSession == null)
             {
                 Audit.BlockUserFromRoomFailed(blockEmail, roomName);
-                return false;
+                return;
             }
 
             //User user = Thread.CurrentPrincipal as User;
@@ -1008,7 +1011,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Remove from room", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -1016,11 +1019,10 @@ namespace ServiceApp
             {
                 Audit.BlockUserFromRoomSuccess(blockEmail, roomName);
             }
+            else
             {
                 Audit.BlockUserFromRoomFailed(blockEmail, roomName);
             }
-
-            return retVal;
         }
 
         public bool ChangePassword(byte[] emailBytes, byte[] oldPasswordBytes, byte[] newPasswordBytes, string emailHash, string oldPassowrdHash, string newPasswordHash)
@@ -1084,7 +1086,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(email, "Change password", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -1092,6 +1094,7 @@ namespace ServiceApp
             {
                 Audit.ChangePasswordSuccess(email);
             }
+            else
             {
                 Audit.ChangePasswordFailed(email);
             }
@@ -1144,7 +1147,7 @@ namespace ServiceApp
                         }
                         else
                         {
-                            Console.WriteLine("Chat already exists!");
+                            //Console.WriteLine("Chat already exists!");
                             Audit.CreatePrivateChatSuccess(firstEmail, secondEmail);
                             if (ServiceModel.Instance.PrivateChatList.Any(i => (i.User1.Equals(user.Email) && i.User2.Equals(user2.Email))))
                             {
@@ -1173,7 +1176,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Get private chat", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -1230,7 +1233,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Create room", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -1492,7 +1495,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(email, "Log out", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
             Audit.LogOutFailed(email);
@@ -1627,7 +1630,7 @@ namespace ServiceApp
             return exists;
         }   //DONE
 
-        public bool RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash)
+        public void RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash)
         {
             string unblockEmail = "";
             try
@@ -1636,15 +1639,15 @@ namespace ServiceApp
                 if (!unblockEmailHash.Equals(Sha256encrypt(unblockEmail)))
                 {
                     Audit.ModifiedMessageDanger();
-                    return false;
+                    return;
                 }
             }
-            catch (Exception e) { Audit.BadAesKey(); return false; }
+            catch (Exception e) { Audit.BadAesKey(); return; }
 
             if (userOnSession == null)
             {
                 Audit.RemoveBlockGroupChatFailed(unblockEmail);
-                return false;
+                return;
             }
 
             User user = userOnSession;
@@ -1662,7 +1665,7 @@ namespace ServiceApp
                         if (list.Any(i => i.Email == unblockEmail) == false)
                         {
                             Audit.RemoveBlockGroupChatFailed(unblockEmail);
-                            return false;
+                            return;
                         }
                         ServiceModel.Instance.GroupChat = DeserializeGroupChat();  // deser
                         if(ServiceModel.Instance.GroupChat.Blocked.Any(x => x.Email.Equals(unblockEmail)))
@@ -1698,7 +1701,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Remove block gorup chat", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -1710,8 +1713,6 @@ namespace ServiceApp
             {
                 Audit.RemoveBlockGroupChatFailed(unblockEmail);
             }
-
-            return retVal;
         } // DONE
 
         public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash) // DONE
@@ -1798,7 +1799,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(userOnSession.Email, "Unblock", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", userOnSession.Name);
             }
 
@@ -1814,7 +1815,7 @@ namespace ServiceApp
             return retVal;
         }
 
-        public bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash) // DONE
+        public void RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash) // DONE
         {
             string unblockEmail = "";
             string roomName = "";
@@ -1825,15 +1826,15 @@ namespace ServiceApp
                 if (!unblockEmailHash.Equals(Sha256encrypt(unblockEmail)) || !roomNameHash.Equals(Sha256encrypt(roomName)))
                 {
                     Audit.ModifiedMessageDanger();
-                    return false;
+                    return;
                 }
             }
-            catch (Exception e) { Audit.BadAesKey(); return false; }
+            catch (Exception e) { Audit.BadAesKey(); return; }
 
             if (userOnSession == null)
             {
                 Audit.RemoveBlockUserFromRoomFailed(unblockEmail, roomName);
-                return false;
+                return;
             }
 
             User user = userOnSession;
@@ -1878,7 +1879,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "removeBlockUserFromRoom", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -1890,8 +1891,6 @@ namespace ServiceApp
             {
                 Audit.RemoveBlockUserFromRoomFailed(unblockEmail, roomName);
             }
-
-            return retval;
         }
 
         public int ResetPassword(byte[] emailBytes, string emailHash) // DONE
@@ -2015,7 +2014,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Send verification key", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -2103,7 +2102,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Sending private msg", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -2163,7 +2162,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Sending msg to group chat", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -2232,7 +2231,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Sending room msg", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -2261,6 +2260,10 @@ namespace ServiceApp
                     if (userOnSession.IsInRole(Permissions.GetGroupChat.ToString()))
                     {
                         return DeserializeGroupChat();
+                    }
+                    else
+                    {
+                        Audit.AuthorizationFailed(userOnSession.Email, "GetGroupChat", "Authorization failed");
                     }
                 }
 
@@ -2355,7 +2358,7 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+                Audit.AuthorizationFailed(user.Email, "Close room", "Authorization failed");
                 Console.WriteLine("User {0} don't have permission!", user.Name);
             }
 
@@ -2477,6 +2480,10 @@ namespace ServiceApp
                     }
                 }
             }
+            else
+            {
+                Audit.AuthorizationFailed(email, "GetAllusers", "Authorization failed");
+            }
 
             return null;
         }
@@ -2568,6 +2575,7 @@ namespace ServiceApp
                     }
                     else
                     {
+                        Audit.AuthorizationFailed(userOnSession.Email, "GetPrivateChat", "Authorization failed");
                         return null;
                     }
 
@@ -2762,7 +2770,7 @@ namespace ServiceApp
                             int index = ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.IndexOf(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Single(i => i.Email.Equals(userOnSession.Email)));
                             ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.RemoveAt(index);
                             SerializeRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)));
-                            NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)),0);
+                            NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)), 0);
                         }
 
                     }
@@ -2773,6 +2781,10 @@ namespace ServiceApp
                     Console.WriteLine("User {0} is already logged out!", userOnSession.Name);
                 }
 
+            }
+            else
+            {
+                Audit.AuthorizationFailed(userOnSession.Email, "LeaveRoom", "Authorization failed");
             }
         }
 
@@ -2820,6 +2832,10 @@ namespace ServiceApp
                     Console.WriteLine("User {0} is already logged out!", userOnSession.Name);
                 }
 
+            }
+            else
+            {
+                Audit.AuthorizationFailed(userOnSession.Email, "Leave private chat", "Authorization failed");
             }
         }
 

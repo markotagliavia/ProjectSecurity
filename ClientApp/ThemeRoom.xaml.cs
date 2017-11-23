@@ -613,9 +613,13 @@ namespace ClientApp
                 {
                     if (i == 1)
                     {
-                        if (room.Blocked.Any(x => x.Email.Equals(email)))
+                        if (room.Blocked.Any(x => x.Email.Equals(loggedUsersListBox.SelectedItem.ToString())))
                         {
                             removeUserButton.Content = "Unban user";
+                        }
+                        else
+                        {
+                            removeUserButton.Content = "Ban user from chat";
                         }
 
                         if (room.Logged.Any(x => x.Email.Equals(email)))
@@ -624,6 +628,10 @@ namespace ClientApp
                             {
                                 blockUserButton.Content = "Unblock";
                                 //closeRoomButton.IsEnabled = false;
+                            }
+                            else
+                            {
+                                blockUserButton.Content = "Block";
                             }
                         }
                         blockUserButton.IsEnabled = true;

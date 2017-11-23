@@ -43,17 +43,17 @@ namespace Contracts
         [OperationContract]
         bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash);
 
-        [OperationContract]
-        bool BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash);
+        [OperationContract(IsOneWay = true)]
+        void BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash);
 
-        [OperationContract]
-        bool RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash);
+        [OperationContract(IsOneWay = true)]
+        void RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash);
 
-        [OperationContract]
-        bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash);
+        [OperationContract(IsOneWay = true)]
+        void BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash);
 
-        [OperationContract]
-        bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash);
+        [OperationContract(IsOneWay = true)]
+        void RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash);
 
         [OperationContract]
         PrivateChat CreatePrivateChat(byte[] firstEmailBytes, byte[] secondEmailBytes, string firstEmailHash, string secondEmailHash);

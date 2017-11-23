@@ -90,20 +90,17 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
+        public void BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
         {
-            bool retVal = false;
             try
             {
-                retVal = factory.BlockGroupChat(blockEmailBytes, blockEmailHash);
+                factory.BlockGroupChat(blockEmailBytes, blockEmailHash);
                 Console.WriteLine("BlockGroupChat executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to BlockGroupChat(). {0}", e.Message);
             }
-
-            return retVal;
         }
     
         public bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)
@@ -121,20 +118,17 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash)
+        public void BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash)
         {
-            bool retVal = false;
             try
             {
-                retVal = factory.BlockUserFromRoom(blokEmailBytes, roomNameBytes, blockEmailHash, roomNameHash);
+                factory.BlockUserFromRoom(blokEmailBytes, roomNameBytes, blockEmailHash, roomNameHash);
                 Console.WriteLine("BlockUserFromRoom executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to BlockUserFromRoom(). {0}", e.Message);
             }
-
-            return retVal;
         }
 
         public bool ChangePassword(byte[] emailBytes, byte[] oldPasswordBytes, byte[] newPasswordBytes, string emailHash, string oldPassowrdHash, string newPasswordHash)
@@ -307,13 +301,11 @@ namespace ClientApp
             }
         }
 
-        public bool RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash)
+        public void RemoveBlockGroupChat(byte[] unblockEmailBytes, string unblockEmailHash)
         {
-            bool retVal = false;
-
             try
             {
-                retVal = factory.RemoveBlockGroupChat(unblockEmailBytes, unblockEmailHash);
+                factory.RemoveBlockGroupChat(unblockEmailBytes, unblockEmailHash);
                 Console.WriteLine("RemoveBlockGroupChat executed");
             }
             catch (Exception e)
@@ -321,7 +313,6 @@ namespace ClientApp
                 Console.WriteLine("Error while trying to RemoveBlockGroupChat(). {0}", e.Message);
             }
 
-            return retVal;
         }
 
         public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash)
@@ -339,12 +330,11 @@ namespace ClientApp
             return retVal;
         }
 
-        public bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash)
+        public void RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash)
         {
-            bool retVal = false;
             try
             {
-                retVal = factory.RemoveBlockUserFromRoom(unblockEmailBytes, roomNameBytes, unblockEmailHash, roomNameHash);
+                factory.RemoveBlockUserFromRoom(unblockEmailBytes, roomNameBytes, unblockEmailHash, roomNameHash);
                 Console.WriteLine("RemoveBlockUserFromRoom executed");
             }
             catch (Exception e)
@@ -352,7 +342,6 @@ namespace ClientApp
                 Console.WriteLine("Error while trying to RemoveBlockUserFromRoom(). {0}", e.Message);
             }
 
-            return retVal;
         }
 
         public int ResetPassword(byte[] emailBytes, string emailHash)

@@ -297,6 +297,11 @@ namespace ClientApp
                         var s = new NewRoomWindow(this.proxy, email);
                         s.Show();
                     }
+                    else
+                    {
+                        MessageBox.Show("Forbbidden! Only admins can create new rooms!");
+                        Audit.AuthorizationFailed(email, "New room", "Authorization failed");
+                    }
                 }
             }
         }
@@ -372,9 +377,13 @@ namespace ClientApp
                 }
                 else
                 {
-                    if (groupChat.Blocked.Any(x => x.Email.Equals(email)))
+                    if (groupChat.Blocked.Any(x => x.Email.Equals(loggedUsersListBox.SelectedItem.ToString())))
                     {
                         removeUserButton.Content = "Unban user";
+                    }
+                    else
+                    {
+                        removeUserButton.Content = "Ban user from chat";
                     }
 
                     if (groupChat.Logged.Any(x => x.Email.Equals(email)))
@@ -383,6 +392,10 @@ namespace ClientApp
                         {
                             blockUserButton.Content = "Unblock";
                             openPrivateChatButton.IsEnabled = false;
+                        }
+                        else
+                        {
+                            blockUserButton.Content = "Block";
                         }
                     }
                     blockUserButton.IsEnabled = true;
