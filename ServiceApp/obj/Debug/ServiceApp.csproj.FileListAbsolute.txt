@@ -314,3 +314,16 @@ D:\cetvrta godina\blok2\Projekat6\ServiceApp\bin\Debug\SecurityManager.pdb
 D:\cetvrta godina\blok2\Projekat6\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
 D:\cetvrta godina\blok2\Projekat6\ServiceApp\obj\Debug\ServiceApp.exe
 D:\cetvrta godina\blok2\Projekat6\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\NetworkConfig.xml
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.pdb

@@ -466,10 +466,9 @@ namespace ClientApp
                 byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
                 string emailHash = Sha256encrypt(this.email);
                 byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.Uid.ToString());
-                string guidHash = Sha256encrypt(pc.Uid.ToString());
-                this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
+                string guidHash = Sha256encrypt(pc.Uid.ToString());                
                 this.proxy.LeavePrivateChat(guidInBytes, guidHash);
-                
+                this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
                 var s = new GroupChat(proxy, email);
                 s.Show();
             }

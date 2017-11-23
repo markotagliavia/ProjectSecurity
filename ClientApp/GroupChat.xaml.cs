@@ -184,10 +184,8 @@ namespace ClientApp
         {
             byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
             string emailHash = Sha256encrypt(this.email);
-            proxy.LogOut(emailInBytes,emailHash);
-            proxy.Unsubscribe(emailInBytes, emailHash);
-            var s = new MainWindow();
-            s.Show();
+            //proxy.LogOut(emailInBytes,emailHash);
+            //proxy.Unsubscribe(emailInBytes, emailHash);
             this.Close();
         }
 
@@ -308,9 +306,6 @@ namespace ClientApp
         /// <param name="e"></param>
         private void logOutMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            //proxy.LogOut(email);
-            //proxy.Unsubscribe(email);
-            
             this.Close();
         }
 
@@ -480,11 +475,10 @@ namespace ClientApp
             string emailHash = Sha256encrypt(this.email);
             if (i == 0)
             {
-                var s = new MainWindow();
-                s.Show();
                 proxy.LogOut(emailInBytes, emailHash);
                 proxy.Unsubscribe(emailInBytes, emailHash);
-
+                var s = new MainWindow();
+                s.Show();
                 //unsubscribe
             }
             else if (i == 1)

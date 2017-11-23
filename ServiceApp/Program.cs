@@ -45,9 +45,16 @@ namespace ServiceApp
 
             ServiceHost host = new ServiceHost(typeof(Service));
             host.AddServiceEndpoint(typeof(IService), binding, address);
-
-            host.Open();
-
+            try
+            {
+                host.Open();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Address or port is already in use. Please configure your network different.");
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
             List<User> lista = new List<User>();
             if (!File.Exists("Users.dat"))
             {

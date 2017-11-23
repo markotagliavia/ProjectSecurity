@@ -179,3 +179,10 @@ D:\cetvrta godina\blok2\Projekat6\ForumModels\bin\Debug\SecurityManager.pdb
 D:\cetvrta godina\blok2\Projekat6\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
 D:\cetvrta godina\blok2\Projekat6\ForumModels\obj\Debug\ForumModels.dll
 D:\cetvrta godina\blok2\Projekat6\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoCetvrtak\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoCetvrtak\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\repoCetvrtak\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\repoCetvrtak\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\repoCetvrtak\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\repoCetvrtak\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\repoCetvrtak\ForumModels\obj\Debug\ForumModels.pdb

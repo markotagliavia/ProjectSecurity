@@ -2372,7 +2372,7 @@ namespace ServiceApp
 
                             foreach (string clientGuid in disconnectedClientGuids)
                             {
-                                ServiceModel.Instance.ClientsForThemeRoom.Single(i => i.Key.Equals(uid)).Value.Remove(clientGuid);
+                                ServiceModel.Instance.ClientsForPrivateChat.Single(i => i.Key.Equals(uid)).Value.Remove(clientGuid);
                             }
                         }
 
