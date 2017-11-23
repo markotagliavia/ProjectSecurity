@@ -54,7 +54,7 @@ namespace ClientApp
             }
             else
             {
-                
+                this.Title = "Private chat";
                 label.Content = "Private chat";
                 blockUserButton.IsEnabled = false;
                 removeUserButton.Visibility = Visibility.Hidden;
@@ -254,6 +254,7 @@ namespace ClientApp
         {
             if (e.Room == null)
             {
+                MessageBox.Show("You are blocked from rooms");
                 this.Close();
             }
             else

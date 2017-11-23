@@ -87,7 +87,8 @@ namespace ServiceApp
                 }
             );
         }
-
+        //0 za kad nije close
+        //1 kad treba null
         public void NotifyViewforRoom(Room room,int close)
         {
             Room r = null;
@@ -110,7 +111,10 @@ namespace ServiceApp
                             {
                                 try
                                 {
-                                    client.Value.GetRoom(r);
+
+                                        client.Value.GetRoom(r);
+
+                                    
                                 }
                                 catch (Exception)
                                 {
@@ -978,6 +982,7 @@ namespace ServiceApp
                                 SerializeRoom(room);
 
                                 SerializeFileRooms(room);
+                                NotifyViewforRoom(room,1);
 
                                 retVal = true;
                             }
@@ -1856,6 +1861,7 @@ namespace ServiceApp
                                     room.Blocked.RemoveAt(index);
                                     SerializeRoom(room);
                                     SerializeFileRooms(room);
+                                    NotifyViewforRoom(room,0);
                                     retval = true;
                                 }
                             }

@@ -328,3 +328,4 @@ C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.csprojResolv
 C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.pdb
 C:\Users\Kristijan\Desktop\repo\ServiceApp\bin\Debug\NetworkConfig.xml
+C:\Users\Tijana\Desktop\Projekat\ServiceApp\bin\Debug\NetworkConfig.xml
