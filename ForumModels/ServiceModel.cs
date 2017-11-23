@@ -37,6 +37,8 @@ namespace ForumModels
 
         private object lockUsers;
 
+        private object themeChatLock;
+
         private GennerateRsaKey rsa;
 
         private ServiceModel()
@@ -64,6 +66,8 @@ namespace ForumModels
             lockPrivateChat = new object();
 
             lockUsers = new object();
+
+            themeChatLock = new object();
 
             rsa = new GennerateRsaKey(2048);
         }
@@ -93,6 +97,14 @@ namespace ForumModels
             get { return lockPrivateChat; }
             set { lockPrivateChat = value; }
         }
+
+        [DataMember]
+        public object ThemeChatLock
+        {
+            get { return themeChatLock; }
+            set { themeChatLock = value; }
+        }
+
         [DataMember]
         public Dictionary<string, Dictionary<string, IChatServiceCallback>> ClientsForThemeRoom
         {

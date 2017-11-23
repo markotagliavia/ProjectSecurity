@@ -327,3 +327,4 @@ C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\bin\Debug\SecurityManager.pdb
 C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
 C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\Kristijan\Desktop\repo\ServiceApp\bin\Debug\NetworkConfig.xml

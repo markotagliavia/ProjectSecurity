@@ -184,173 +184,188 @@ namespace ServiceApp
         public void SerializeFileChats(PrivateChat pc)
         {
             List<PrivateChat> lista = DeserializeChats();
-            Stream s = File.Open("Chats.dat", FileMode.Create);
-            try
+            lock (ServiceModel.Instance.LockPrivateChat)
             {
-                if (lista != null)
+                Stream s = File.Open("Chats.dat", FileMode.Create);
+                try
                 {
-                    foreach (PrivateChat r in lista)
+                    if (lista != null)
                     {
-                        if (r.Uid == pc.Uid)
+                        foreach (PrivateChat r in lista)
                         {
-                            lista.Remove(r); // izbaci staru i ubaci nove parametre sobe
+                            if (r.Uid == pc.Uid)
+                            {
+                                lista.Remove(r); // izbaci staru i ubaci nove parametre sobe
+                            }
                         }
                     }
+                    else
+                    {
+                        lista = new List<PrivateChat>();
+                    }
+
+
+                    lista.Add(pc);
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(s, lista);
+
                 }
-                else
+                catch (SerializationException e)
                 {
-                    lista = new List<PrivateChat>();
+                    //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
                 }
-
-
-                lista.Add(pc);
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(s, lista);
-
+                finally
+                {
+                    s.Close();
+                }
             }
-            catch (SerializationException e)
-            {
-                //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-            }
-            finally
-            {
-                s.Close();
-            }
-
         }     // serijalizacija fajla sa privatnim chatovima
 
         //funkcija koja gazi fajl kad mu posaljes obesvable coleection
 
         public void SerializeObservableChats(ObservableCollection<PrivateChat> pc)
         {
-            List<PrivateChat> lista = new List<PrivateChat>();
-            foreach(PrivateChat p in pc)
+            lock (ServiceModel.Instance.LockPrivateChat)
             {
-                lista.Add(p);
-            }
+                List<PrivateChat> lista = new List<PrivateChat>();
+                foreach (PrivateChat p in pc)
+                {
+                    lista.Add(p);
+                }
 
-            Stream s = File.Open("Chats.dat", FileMode.Create);
-            try
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(s, lista);
+                Stream s = File.Open("Chats.dat", FileMode.Create);
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(s, lista);
 
+                }
+                catch (SerializationException e)
+                {
+                    //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                }
+                finally
+                {
+                    s.Close();
+                }
             }
-            catch (SerializationException e)
-            {
-                //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-            }
-            finally
-            {
-                s.Close();
-            }
-
         }
 
         public void SerializeObservableRooms(ObservableCollection<Room> pc)
         {
-            List<Room> lista = new List<Room>();
-            foreach (Room p in pc)
+            lock (ServiceModel.Instance.ThemeChatLock)
             {
-                lista.Add(p);
-            }
+                List<Room> lista = new List<Room>();
+                foreach (Room p in pc)
+                {
+                    lista.Add(p);
+                }
 
-            Stream s = File.Open("Rooms.dat", FileMode.Create);
-            try
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(s, lista);
+                Stream s = File.Open("Rooms.dat", FileMode.Create);
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(s, lista);
 
+                }
+                catch (SerializationException e)
+                {
+                    //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                }
+                finally
+                {
+                    s.Close();
+                }
             }
-            catch (SerializationException e)
-            {
-                //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-            }
-            finally
-            {
-                s.Close();
-            }
-
         }
 
         public List<PrivateChat> DeserializeChats()  // vraca observable listu
         {
-            List<PrivateChat> pc = null;
-            FileStream fs = new FileStream("Chats.dat", FileMode.OpenOrCreate);
-            try
+            lock (ServiceModel.Instance.LockPrivateChat)
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                pc = (List<PrivateChat>)formatter.Deserialize(fs);
+                List<PrivateChat> pc = null;
+                FileStream fs = new FileStream("Chats.dat", FileMode.OpenOrCreate);
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    pc = (List<PrivateChat>)formatter.Deserialize(fs);
 
+                }
+                catch (SerializationException e)
+                {
+                    // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                }
+                finally
+                {
+                    fs.Close();
+                }
+                return pc;
             }
-            catch (SerializationException e)
-            {
-                // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-            }
-            finally
-            {
-                fs.Close();
-            }
-            return pc;
         }
 
         public void SerializeFileRooms(Room room) // ako ima izmene ibrise i ubaci novu
         {
             List<Room> lista = DeserializeFileRooms();
-            Stream s = File.Open("Rooms.dat", FileMode.Create);
-            try
+            lock (ServiceModel.Instance.ThemeChatLock)
             {
-                if (lista != null)
+                Stream s = File.Open("Rooms.dat", FileMode.Create);
+                try
                 {
-                    foreach (Room r in lista)
+                    if (lista != null)
                     {
-                        if (r.Code == room.Code)
+                        foreach (Room r in lista)
                         {
-                            lista.Remove(r); // izbaci staru i ubaci nove parametre sobe
+                            if (r.Code == room.Code)
+                            {
+                                lista.Remove(r); // izbaci staru i ubaci nove parametre sobe
 
+                            }
                         }
+
+                    }
+                    else
+                    {
+                        lista = new List<Room>();
                     }
 
+                    lista.Add(room);
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(s, lista);
+
                 }
-                else
+                catch (SerializationException e)
                 {
-                    lista = new List<Room>();
+                    //   Console.WriteLine("Failed to serialize. Reason: " + e.Message);    
                 }
-
-                lista.Add(room);
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(s, lista);
-
-            }
-            catch (SerializationException e)
-            {
-                //   Console.WriteLine("Failed to serialize. Reason: " + e.Message);    
-            }
-            finally
-            {
-                s.Close();
+                finally
+                {
+                    s.Close();
+                }
             }
         }       //  serijalizacija fajla sa sobama
 
         public List<Room> DeserializeFileRooms()
         {
-            List<Room> rooms = null;
-            FileStream fs = new FileStream("Rooms.dat", FileMode.OpenOrCreate);
-            try
+            lock (ServiceModel.Instance.ThemeChatLock)
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                rooms = (List<Room>)formatter.Deserialize(fs);
+                List<Room> rooms = null;
+                FileStream fs = new FileStream("Rooms.dat", FileMode.OpenOrCreate);
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    rooms = (List<Room>)formatter.Deserialize(fs);
 
+                }
+                catch (SerializationException e)
+                {
+                    // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);        
+                }
+                finally
+                {
+                    fs.Close();
+                }
+                return rooms;
             }
-            catch (SerializationException e)
-            {
-                // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);        
-            }
-            finally
-            {
-                fs.Close();
-            }
-            return rooms;
         }       // treba da vraca observable listu
 
         public void SerializeGroupChat(GroupChat gc)
@@ -403,70 +418,76 @@ namespace ServiceApp
 
         public void CloseupRoom(Room room)
         {
-            // AppRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            if (ServiceModel.Instance.RoomList.Any(x => x.Theme.Equals(room.Theme)))
-            {
-                int index = ServiceModel.Instance.RoomList.IndexOf(ServiceModel.Instance.RoomList.Single(x => x.Theme.Equals(room.Theme)));
-                ServiceModel.Instance.RoomList[index].Code = new Guid("00000000-0000-0000-0000-000000000000");
-                index = -1;
-                for (int i = 0; i < ServiceModel.Instance.GroupChat.ThemeRooms.Count; i++)
+                // AppRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                if (ServiceModel.Instance.RoomList.Any(x => x.Theme.Equals(room.Theme)))
                 {
-                    if (ServiceModel.Instance.GroupChat.ThemeRooms[i].Equals(room.Theme)) index = i;
+                    int index = ServiceModel.Instance.RoomList.IndexOf(ServiceModel.Instance.RoomList.Single(x => x.Theme.Equals(room.Theme)));
+                    ServiceModel.Instance.RoomList[index].Code = new Guid("00000000-0000-0000-0000-000000000000");
+                    index = -1;
+                    for (int i = 0; i < ServiceModel.Instance.GroupChat.ThemeRooms.Count; i++)
+                    {
+                        if (ServiceModel.Instance.GroupChat.ThemeRooms[i].Equals(room.Theme)) index = i;
+                    }
+                    if (index != -1)
+                    {
+                        ServiceModel.Instance.GroupChat.ThemeRooms.RemoveAt(index);
+                    }
+                    SerializeObservableRooms(ServiceModel.Instance.RoomList);
+                    SerializeGroupChat(ServiceModel.Instance.GroupChat);
                 }
-                if (index != -1)
+                else
                 {
-                    ServiceModel.Instance.GroupChat.ThemeRooms.RemoveAt(index);
+                    return;
                 }
-                SerializeObservableRooms(ServiceModel.Instance.RoomList);
-                SerializeGroupChat(ServiceModel.Instance.GroupChat);
-            }
-            else
-            {
-                return;
-            }
             
         }
 
         public void SerializeRoom(Room room)     // Serialize Room
         {
-            Stream s = File.Open(room.Code.ToString() + ".dat", FileMode.Create);
-            try
+            lock (ServiceModel.Instance.ThemeChatLock)
             {
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(s, room);
-            }
-            catch (SerializationException e)
-            {
-                //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);               
-            }
-            finally
-            {
-                s.Close();
+                Stream s = File.Open(room.Code.ToString() + ".dat", FileMode.Create);
+                try
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(s, room);
+                }
+                catch (SerializationException e)
+                {
+                    //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);               
+                }
+                finally
+                {
+                    s.Close();
+                }
             }
         }
 
         public Room DeserializeRoom(Room room)   // DEserialize Room
         {
-            Room pc1 = null;
-
-            FileStream fs = new FileStream(room.Code.ToString() + ".dat", FileMode.OpenOrCreate);
-
-            try
+            lock (ServiceModel.Instance.ThemeChatLock)
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                pc1 = (Room)formatter.Deserialize(fs);
+                Room pc1 = null;
 
-            }
-            catch (SerializationException e)
-            {
-                // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);                
-            }
-            finally
-            {
-                fs.Close();
-            }
+                FileStream fs = new FileStream(room.Code.ToString() + ".dat", FileMode.OpenOrCreate);
 
-            return pc1;
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    pc1 = (Room)formatter.Deserialize(fs);
+
+                }
+                catch (SerializationException e)
+                {
+                    // Console.WriteLine("Failed to deserialize. Reason: " + e.Message);                
+                }
+                finally
+                {
+                    fs.Close();
+                }
+
+                return pc1;
+            }
         }
 
         public void SerializePrivateChat(PrivateChat pc)
@@ -1115,6 +1136,7 @@ namespace ServiceApp
                             SerializeGroupChat(ServiceModel.Instance.GroupChat);
                             ServiceModel.Instance.PrivateChatList.Add(pc);
                             Audit.CreatePrivateChatSuccess(firstEmail, secondEmail);
+                            NotifyAll();
                             return pc;
                         }
                         else

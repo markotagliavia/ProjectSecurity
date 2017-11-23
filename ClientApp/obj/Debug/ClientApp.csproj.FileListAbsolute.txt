@@ -809,3 +809,5 @@ C:\Users\Marko\Desktop\repoCetvrtak\ClientApp\obj\Debug\ClientApp.Properties.Res
 C:\Users\Marko\Desktop\repoCetvrtak\ClientApp\obj\Debug\ClientApp.csproj.GenerateResource.Cache
 C:\Users\Marko\Desktop\repoCetvrtak\ClientApp\obj\Debug\ClientApp.exe
 C:\Users\Marko\Desktop\repoCetvrtak\ClientApp\obj\Debug\ClientApp.pdb
+C:\Users\Kristijan\Desktop\repo\ClientApp\bin\Debug\NetworkConfig.xml
+C:\Users\Kristijan\Desktop\repo\ClientApp\obj\Debug\ClientApp_Content.g.cs

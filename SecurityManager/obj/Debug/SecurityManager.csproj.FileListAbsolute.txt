@@ -83,7 +83,6 @@ C:\Users\Marko\Desktop\repoPonedeljak\SecurityManager\obj\Debug\SecurityManager.
 C:\Users\Marko\Desktop\repoPonedeljak\SecurityManager\obj\Debug\SecurityManager.pdb
 C:\Users\Kristijan\Desktop\Repo\SecurityManager\bin\Debug\SecurityManager.dll
 C:\Users\Kristijan\Desktop\Repo\SecurityManager\bin\Debug\SecurityManager.pdb
-C:\Users\Kristijan\Desktop\Repo\SecurityManager\obj\Debug\SecurityManager.csprojResolveAssemblyReference.cache
 C:\Users\Kristijan\Desktop\Repo\SecurityManager\obj\Debug\SecurityManager.dll
 C:\Users\Kristijan\Desktop\Repo\SecurityManager\obj\Debug\SecurityManager.pdb
 C:\Users\Tijana\Desktop\Projekat2\SecurityManager\bin\Debug\SecurityManager.dll
