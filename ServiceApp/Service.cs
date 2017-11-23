@@ -219,7 +219,61 @@ namespace ServiceApp
 
         }     // serijalizacija fajla sa privatnim chatovima
 
-        public List<PrivateChat> DeserializeChats()
+        //funkcija koja gazi fajl kad mu posaljes obesvable coleection
+
+        public void SerializeObservableChats(ObservableCollection<PrivateChat> pc)
+        {
+            List<PrivateChat> lista = new List<PrivateChat>();
+            foreach(PrivateChat p in pc)
+            {
+                lista.Add(p);
+            }
+
+            Stream s = File.Open("Chats.dat", FileMode.Create);
+            try
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(s, lista);
+
+            }
+            catch (SerializationException e)
+            {
+                //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+            }
+            finally
+            {
+                s.Close();
+            }
+
+        }
+
+        public void SerializeObservableRooms(ObservableCollection<Room> pc)
+        {
+            List<Room> lista = new List<Room>();
+            foreach (Room p in pc)
+            {
+                lista.Add(p);
+            }
+
+            Stream s = File.Open("Rooms.dat", FileMode.Create);
+            try
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(s, lista);
+
+            }
+            catch (SerializationException e)
+            {
+                //  Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+            }
+            finally
+            {
+                s.Close();
+            }
+
+        }
+
+        public List<PrivateChat> DeserializeChats()  // vraca observable listu
         {
             List<PrivateChat> pc = null;
             FileStream fs = new FileStream("Chats.dat", FileMode.OpenOrCreate);
@@ -240,7 +294,7 @@ namespace ServiceApp
             return pc;
         }
 
-        public void SerializeFileRooms(Room room)
+        public void SerializeFileRooms(Room room) // ako ima izmene ibrise i ubaci novu
         {
             List<Room> lista = DeserializeFileRooms();
             Stream s = File.Open("Rooms.dat", FileMode.Create);
@@ -297,7 +351,7 @@ namespace ServiceApp
                 fs.Close();
             }
             return rooms;
-        }
+        }       // treba da vraca observable listu
 
         public void SerializeGroupChat(GroupChat gc)
         {
@@ -363,24 +417,13 @@ namespace ServiceApp
                 {
                     ServiceModel.Instance.GroupChat.ThemeRooms.RemoveAt(index);
                 }
+                SerializeObservableRooms(ServiceModel.Instance.RoomList);
+                SerializeGroupChat(ServiceModel.Instance.GroupChat);
             }
             else
             {
                 return;
             }
-
-            /* if (File.Exists(room.Code.ToString() + ".dat"))
-             {
-                 try
-                 {
-                     System.IO.File.Delete(AppRoot + room.Code.ToString() + ".dat");
-                 }
-                 catch (System.IO.IOException e)
-                 {
-                     Console.WriteLine(e.Message);
-                     return;
-                 }
-             }*/
             
         }
 
@@ -527,8 +570,10 @@ namespace ServiceApp
 
         //-----------------------------------------------------------------------------------------------------------------
 
-        public bool AddAdmin(byte[] emailBytes, string emailHash)
+        public bool AddAdmin(byte[] emailBytes, string emailHash) // DONE
         {
+  
+
             string email = "";
             try
             {
@@ -541,8 +586,16 @@ namespace ServiceApp
             }
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
-            //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
+
+            if (userOnSession == null)
+            {
+                Audit.AddAdminFailed(user.Email, email);
+                return false;
+            }
+
+            //User user = Thread.CurrentPrincipal as User;
+           
             bool retVal = false;
 
             /// audit both successfull and failed authorization checks
@@ -596,7 +649,7 @@ namespace ServiceApp
             }
 
             return retVal;
-        }
+        } //
 
         public bool DeleteAdmin(byte[] emailBytes, string emailHash)
         {
@@ -613,6 +666,13 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey(); return false; }
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
+
+            if (userOnSession == null)
+            {
+                Audit.DeleteAdminfailed(user.Email, email);
+                return false;
+            }
+
             bool retVal = true;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.DeleteAdmin.ToString()))
@@ -669,10 +729,11 @@ namespace ServiceApp
             }
 
             return retVal;
-        }
+        } // DONE
 
         public bool BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
         {
+           
             string blockEmail = "";
             try
             {
@@ -683,7 +744,13 @@ namespace ServiceApp
                     return false;
                 }
             }
+            
             catch (Exception e) { Audit.BadAesKey(); return false; }
+            if (userOnSession == null)
+            {
+                Audit.BlockGroupChatFailed(blockEmail);
+                return false;
+            }
 
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
@@ -695,10 +762,16 @@ namespace ServiceApp
                 {
                     if (user.Email != blockEmail)
                     {
-                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
+                        List<User> list = DeserializeUsers();
+                        if (list.Any(i => i.Email == blockEmail) == false)
+                        {
+                            Audit.BlockGroupChatFailed(blockEmail);
+                            return false;
+                        }
+                        User u = list.Single(i => i.Email == blockEmail);
+                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();// deser
                         if (ServiceModel.Instance.GroupChat.Blocked.Any(i => i.Email == blockEmail) == false)
                         {
-                            ServiceModel.Instance.GroupChat = DeserializeGroupChat();// deser
                             ServiceModel.Instance.GroupChat.Blocked.Add(u);
                             SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
                             retVal = true;
@@ -730,7 +803,7 @@ namespace ServiceApp
             }
 
             return retVal;
-        }
+        } // DONE
 
         public bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)
         {
@@ -748,6 +821,12 @@ namespace ServiceApp
             }
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
+            if (userOnSession == null)
+            {
+                Audit.BlockUserFailed(requestEmail, blockEmail);
+                return false;
+            }
+
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
             bool retVal = false;
@@ -758,7 +837,7 @@ namespace ServiceApp
                 {
                     if (requestEmail != blockEmail)
                     {
-                        if (user.Blocked.Single(i => i.Email == blockEmail) == null)
+                        if (user.Blocked.Any(i => i.Email == blockEmail) == false)
                         {
 
                             List<User> lista = DeserializeUsers();  // deser user
@@ -778,13 +857,19 @@ namespace ServiceApp
                                 }
                             }
 
+                            if (blokator.Email == null || blokirani.Email == null)
+                            {
+                                Audit.BlockUserFailed(requestEmail, blockEmail);
+                                return false;
+                            }
+
                             if (blokirani.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
                             {
                                 blokator.Blocked.Add(blokirani);
                                 ServiceModel.Instance.GroupChat = DeserializeGroupChat(); //deser group chat
-                                if (ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)) != null)
+                                if (ServiceModel.Instance.GroupChat.Logged.Any(i => i.Email.Equals(user.Email)))
                                 {   // ovde blokira iz liste logovanih a ne mora da bude logovan da bi blokirao??
-                                    ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)).Blocked.Add(ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(blockEmail)));
+                                    ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)).Blocked.Add(blokirani);
                                     SerializeGroupChat(ServiceModel.Instance.GroupChat);  //ser group chat
                                 }
                                 SerializeUsers(lista); // dodaj u fajl ser user
@@ -803,8 +888,9 @@ namespace ServiceApp
             }
             else
             {
-                //TODO greske
+               
                 Console.WriteLine("User {0} don't have permission!", user.Name);
+                
                 retVal = false;
             }
 
@@ -817,9 +903,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        }
+        } // DONE
 
-        public bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash)
+        public bool BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash) // DONE
         {
             string roomName = "";
             string blockEmail = "";
@@ -835,6 +921,12 @@ namespace ServiceApp
             }
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
+            if (userOnSession == null)
+            {
+                Audit.BlockUserFromRoomFailed(blockEmail, roomName);
+                return false;
+            }
+
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
             bool retVal = false;
@@ -843,19 +935,42 @@ namespace ServiceApp
             if (user.IsInRole(Permissions.BlockUserFromRoom.ToString()))
             {
                 //TODO fje
-                if (user.Logged)
+                if (user.Logged && ServiceModel.Instance.LoggedIn.Any(i => i.Email == userOnSession.Email))
                 {
                     if (user.Email != blockEmail)
                     {
-                        Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
-                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == blockEmail);
-                        room.Blocked.Add(u);
+                        //List<Room> roomList = DeserializeFileRooms();
+                        //foreach(var r in roomList)
+                        //{
+                        //    ServiceModel.Instance.RoomList.Add(r);
+                        //}
 
-                        SerializeRoom(room);
+                        if (ServiceModel.Instance.RoomList.Any(r => r.Theme == roomName))
+                        {
+                            Room room = DeserializeRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName));
+                            List<User> userList = DeserializeUsers();
+                            if (userList.Any(i => i.Email == blockEmail))
+                            {
+                                User u = userList.Single(i => i.Email == blockEmail);
+                                room.Blocked.Add(u);
 
-                        SerializeFileRooms(room);
+                                SerializeRoom(room);
 
-                        retVal = true;
+                                SerializeFileRooms(room);
+
+                                retVal = true;
+                            }
+                            else
+                            {
+                                retVal = false;
+                            }
+                            
+                        }
+                        else
+                        {
+                            retVal = false;
+                        }
+                        
                     }
                     else
                     {
@@ -902,8 +1017,17 @@ namespace ServiceApp
             }
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
+           
+
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
+
+            if (userOnSession == null)
+            {
+                Audit.ChangePasswordFailed(email);
+                return false;
+            }
+
             bool retVal = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.ChangePassword.ToString()))
@@ -949,9 +1073,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        }
+        } // DONE
 
-        public PrivateChat CreatePrivateChat(byte[] firstEmailBytes, byte[] secondEmailBytes, string firstEmailHash, string secondEmailHash)
+        public PrivateChat CreatePrivateChat(byte[] firstEmailBytes, byte[] secondEmailBytes, string firstEmailHash, string secondEmailHash) // DONE
         {
             string firstEmail = "";
             string secondEmail = "";
@@ -968,6 +1092,12 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey(); return null; }
 
             User user = userOnSession;
+
+            if (userOnSession == null)
+            {
+                Audit.CreatePrivateChatFailed(firstEmail, secondEmail);
+                return null;
+            }
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.CreatePrivateChat.ToString()))
             {
@@ -1024,7 +1154,7 @@ namespace ServiceApp
             return null;
         }
 
-        public void CreateRoom(byte[] roomNameBytes, string roomNameHash)
+        public void CreateRoom(byte[] roomNameBytes, string roomNameHash) // DONE
         {
             string roomName = "";
             try
@@ -1039,6 +1169,12 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey(); return; }
 
             User user = userOnSession;
+
+            if(userOnSession == null)
+            {
+                Audit.CreateRoomFailed(roomName);
+                return;
+            }
             bool retVal = false;
 
             /// audit both successfull and failed authorization checks
@@ -1082,7 +1218,7 @@ namespace ServiceApp
 
         }
 
-        public int LogIn(byte[] cipherEmail, byte[] cipherPassword, string emailHash, string passwordHash)
+        public int LogIn(byte[] cipherEmail, byte[] cipherPassword, string emailHash, string passwordHash) // DONE
         {
             List<User> lista = DeserializeUsers();
             string email = "";
@@ -1102,13 +1238,13 @@ namespace ServiceApp
             if (lista == null)
             {
                 Audit.LogInFailed(email);
-                return -2;
+                return -1;
             }
 
             if (lista.Any(p => p.Email == email) == false)
             {
                 Audit.LogInFailed(email);
-                return -2;
+                return -1;
             }
             User u = lista.Single(i => i.Email == email);
 
@@ -1263,7 +1399,7 @@ namespace ServiceApp
 
         }
 
-        public bool LogOut(byte[] emailBytes, string emailHash)
+        public bool LogOut(byte[] emailBytes, string emailHash) // DONE
         {
             string email = "";
             try
@@ -1278,6 +1414,13 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
             User user = userOnSession;
+
+            if (userOnSession == null)
+            {
+                Audit.LogOutFailed(email);
+                return false;
+            }
+
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.LogOut.ToString()))
             {
@@ -1471,6 +1614,12 @@ namespace ServiceApp
             }
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
+            if (userOnSession == null)
+            {
+                Audit.RemoveBlockGroupChatFailed(unblockEmail);
+                return false;
+            }
+
             User user = userOnSession;
             bool retVal = false;
 
@@ -1482,14 +1631,31 @@ namespace ServiceApp
                 {
                     if (user.Email != unblockEmail)
                     {
-                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();  // deser
-                        //User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
-                        int index = ServiceModel.Instance.GroupChat.Blocked.IndexOf(ServiceModel.Instance.GroupChat.Blocked.Single(x => x.Email.Equals(unblockEmail)));
-                        if (index > -1)
+                        List<User> list = DeserializeUsers();
+                        if (list.Any(i => i.Email == unblockEmail) == false)
                         {
-                            ServiceModel.Instance.GroupChat.Blocked.RemoveAt(index);
-                            SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
-                            retVal = true;
+                            Audit.RemoveBlockGroupChatFailed(unblockEmail);
+                            return false;
+                        }
+                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();  // deser
+                        if(ServiceModel.Instance.GroupChat.Blocked.Any(x => x.Email.Equals(unblockEmail)))
+                        {
+                            //User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
+                            int index = ServiceModel.Instance.GroupChat.Blocked.IndexOf(ServiceModel.Instance.GroupChat.Blocked.Single(x => x.Email.Equals(unblockEmail)));
+                            if (index > -1)
+                            {
+                                ServiceModel.Instance.GroupChat.Blocked.RemoveAt(index);
+                                SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser
+                                retVal = true;
+                            }
+                            else
+                            {
+                                retVal = false;
+                            }
+                        }
+                        else
+                        {
+                            retVal = false;
                         }
                     }
                     else
@@ -1518,9 +1684,9 @@ namespace ServiceApp
             }
 
             return retVal;
-        }
+        } // DONE
 
-        public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash)
+        public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash) // DONE
         {
             string requestEmail = "";
             string unblockEmail = "";
@@ -1536,51 +1702,63 @@ namespace ServiceApp
             }
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
-            User user = userOnSession;
+            if (userOnSession == null)
+            {
+                Audit.RemoveBlockGroupChatFailed(unblockEmail);
+                return false;
+            }
+
+           // User user = userOnSession;
             bool retVal = false;
             /// audit both successfull and failed authorization checks
-            if (user.IsInRole(Permissions.RemoveBlockUser.ToString()))
+            if (userOnSession.IsInRole(Permissions.RemoveBlockUser.ToString()))
             {
                 //TODO fje
-                if (user.Logged)
+                if (userOnSession.Logged)
                 {
                     if (requestEmail != unblockEmail)
                     {
-                        User blocked = user.Blocked.Single(i => i.Email == unblockEmail);
-                        if (blocked != null)
+                        if (userOnSession.Blocked.Any(i => i.Email == unblockEmail))
                         {
-                            List<User> lista = DeserializeUsers();
-                            User blokator = new User(null, null, DateTime.Now, null, null, Roles.User, null);
-                            User blokirani = new User(null, null, DateTime.Now, null, null, Roles.User, null);
-
-                            foreach (User u in lista)
+                            User blocked = userOnSession.Blocked.Single(i => i.Email == unblockEmail);
+                            if (blocked != null)
                             {
-                                if (u.Email == requestEmail)
+                                List<User> lista = DeserializeUsers();
+                                User user = new User();
+
+                                if(lista.Any(i => i.Email.Equals(userOnSession.Email))==false)
                                 {
-                                    blokator = u;
-
+                                    Audit.RemoveBlockUserFailed(requestEmail, unblockEmail);
+                                    return false;
                                 }
-                                if (u.Email == unblockEmail)
+                                else
                                 {
-                                    blokirani = u;
-                                }
-                            }
-
-                            if (blokirani.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
-                            {
-                                blokator.Blocked.Remove(blokirani);
-
-                                ServiceModel.Instance.GroupChat = DeserializeGroupChat(); //deser group chat
-                                if (ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)) != null)
-                                {                                                                                                                                //Logged???? zasto logged valjda blocked               
-                                    ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(user.Email)).Blocked.Remove(ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(unblockEmail)));
-                                    SerializeGroupChat(ServiceModel.Instance.GroupChat);  //ser group chat
+                                    user = lista.Single(i => i.Email.Equals(userOnSession.Email));
+                                    user.Logged = true;
                                 }
 
+                                if (user.Email == null || blocked.Email == null)
+                                {
+                                    Audit.RemoveBlockUserFailed(requestEmail, unblockEmail);
+                                    return false;
+                                }
 
-                                SerializeUsers(lista); // dodaj u fajl promene
-                                retVal = true;
+                                if (blocked.Email != null)      // ako je pronasao blokiranog u tom fajlu tj zna da postoji i ima ga
+                                {
+                                    user.Blocked.Remove(blocked);
 
+                                    ServiceModel.Instance.GroupChat = DeserializeGroupChat(); //deser group chat
+                                    if (ServiceModel.Instance.GroupChat.Logged.Any(i => i.Email.Equals(userOnSession.Email)))
+                                    {                                                                                                                                //Logged???? zasto logged valjda blocked               
+                                        ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(userOnSession.Email)).Blocked.Remove(blocked);
+                                        SerializeGroupChat(ServiceModel.Instance.GroupChat);  //ser group chat
+                                    }
+
+                                    userOnSession = user;
+                                    SerializeUsers(lista); // dodaj u fajl promene
+                                    retVal = true;
+
+                                }
                             }
                         }
                     }
@@ -1593,7 +1771,7 @@ namespace ServiceApp
             else
             {
                 //TODO greske
-                Console.WriteLine("User {0} don't have permission!", user.Name);
+                Console.WriteLine("User {0} don't have permission!", userOnSession.Name);
             }
 
             if (retVal)
@@ -1608,7 +1786,7 @@ namespace ServiceApp
             return retVal;
         }
 
-        public bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash)
+        public bool RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash) // DONE
         {
             string unblockEmail = "";
             string roomName = "";
@@ -1624,6 +1802,12 @@ namespace ServiceApp
             }
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
+            if (userOnSession == null)
+            {
+                Audit.RemoveBlockUserFromRoomFailed(unblockEmail, roomName);
+                return false;
+            }
+
             User user = userOnSession;
             bool retval = false;
 
@@ -1635,12 +1819,23 @@ namespace ServiceApp
                 {
                     if (user.Email != unblockEmail)
                     {
-                        Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
-                        User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
-                        room.Blocked.Remove(u);
-                        SerializeRoom(room);
-                        SerializeFileRooms(room);
-                        retval = true;
+                        if (ServiceModel.Instance.RoomList.Any(r => r.Theme == roomName))
+                        {
+                            Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
+                            List<User> lista = DeserializeUsers();
+                            if (lista.Any(i => i.Email == unblockEmail))
+                            {
+                                User u = ServiceModel.Instance.LoggedIn.Single(i => i.Email == unblockEmail);
+                                if (room.Blocked.Any(i => i.Email == user.Email))
+                                {
+                                    int index = room.Blocked.IndexOf(room.Blocked.Single(i => i.Email == user.Email));
+                                    room.Blocked.RemoveAt(index);
+                                    SerializeRoom(room);
+                                    SerializeFileRooms(room);
+                                    retval = true;
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -1670,7 +1865,7 @@ namespace ServiceApp
             return retval;
         }
 
-        public int ResetPassword(byte[] emailBytes, string emailHash)
+        public int ResetPassword(byte[] emailBytes, string emailHash) // DONE
         {
             string email = "";
             try
@@ -1731,7 +1926,7 @@ namespace ServiceApp
 
         }
 
-        public bool SendVerificationKey(byte[] keyBytes, string keyHash)
+        public bool SendVerificationKey(byte[] keyBytes, string keyHash) // DONE
         {
             string key = "";
             try
@@ -1746,6 +1941,12 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey(); return false; }
 
             User user = userOnSession;
+
+            if(userOnSession == null)
+            {
+                Audit.SendVerificationKeyFailed();
+            }
+
             bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendVerificationKey.ToString()))
@@ -1887,7 +2088,7 @@ namespace ServiceApp
             }
         }
 
-        public void SendGroupMessage(byte[] userNameBytes, byte[] messageBytes, string userNameHash, string messageHash)
+        public void SendGroupMessage(byte[] userNameBytes, byte[] messageBytes, string userNameHash, string messageHash) // DONE
         {
             string userName = "";
             string message = "";
@@ -1904,6 +2105,12 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey(); return; }
 
             User user = userOnSession;
+
+            if (userOnSession == null)
+            {
+                Audit.SendGroupMessageFailed(userName);
+                return;
+            }
             bool sendSuccess = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendGroupMessage.ToString()))
@@ -1961,6 +2168,12 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey(); return; }
 
             User user = userOnSession;
+
+            if (userOnSession == null)
+            {
+                Audit.SendRoomMessageFailed(userName, roomName);
+                return;
+            }
             bool sendSuccess = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.SendRoomMessage.ToString()))
@@ -2077,6 +2290,12 @@ namespace ServiceApp
             catch (Exception e) { Audit.BadAesKey();  }
 
             User user = userOnSession;
+            if(userOnSession == null)
+            {
+                Audit.CloseRoomFailed(roomName);
+                return;
+            }
+
             bool ok = false;
             /// audit both successfull and failed authorization checks
             if (user.IsInRole(Permissions.CloseRoom.ToString()))
