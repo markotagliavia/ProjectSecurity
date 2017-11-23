@@ -246,6 +246,10 @@ namespace ClientApp
                 {
                     MessageBox.Show("Please provide correct email address.");
                 }
+                else
+                {
+                    MessageBox.Show("Please check your email. We sent you a brand new password there.");
+                }
             }
         }
     }

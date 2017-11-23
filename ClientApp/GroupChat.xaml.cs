@@ -131,7 +131,7 @@ namespace ClientApp
             }
         }
 
-        protected void menuItemPrivateRoomsClick(object sender, EventArgs e)
+        protected void menuItemPrivateRoomsClick(object sender, EventArgs e) 
         {
             if (Logged.Any(x => x.Email.Equals(email)))
             {
@@ -144,9 +144,13 @@ namespace ClientApp
                     if (pc != null)
                     {
                         //proveri da li imaju jedan drugog u blokiranim?
-                            this.i = 3;
-                            pcpom = pc;
-                            this.Close();
+                        this.i = 3;
+                        pcpom = pc;
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("You are block from this private chat");
                     }
                 }
             }
@@ -218,7 +222,7 @@ namespace ClientApp
                 MessageBox.Show("You are banned from group chat and cannot write messages!");
             }
         }
-
+        
         /// <summary>
         /// Log out from Forum
         /// </summary>
@@ -399,7 +403,7 @@ namespace ClientApp
                         }
                         else
                         {
-                            blockUserButton.Content = "Block";
+                            blockUserButton.Content = "Block user";
                         }
                     }
                     blockUserButton.IsEnabled = true;
@@ -563,7 +567,7 @@ namespace ClientApp
             else if (i == 3)
             {
                 proxy.Unsubscribe(emailInBytes, emailHash);
-                var window = new ThemeRoom(this.proxy, pcpom.Uid.ToString(), this.email, 2);
+                var window = new ThemeRoom(this.proxy, pcpom.Uid.ToString(), this.email, 2);    
                 window.Show();
             }
             
@@ -583,16 +587,18 @@ namespace ClientApp
                 string firstHAsh = Sha256encrypt(this.email);
                 byte[] secondInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, userToChat);
                 string secondHAsh = Sha256encrypt(userToChat);
-                pcpom = this.proxy.CreatePrivateChat(firstInBytes,secondInBytes,firstHAsh,secondHAsh);
+                pcpom = this.proxy.CreatePrivateChat(firstInBytes, secondInBytes, firstHAsh, secondHAsh);//stavi u watch
                 this.i = 3;
                 this.Close();
+                
+                
             }
             else
             {
                 MessageBox.Show("Cannot talk to itself.");
             }
-            
-            
+
+
         }
 
         /// <summary>

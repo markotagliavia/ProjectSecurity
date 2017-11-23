@@ -67,7 +67,7 @@ namespace ClientApp
                 bool retVal = proxy.ChangePassword(emailInBytes, oldpasswordInBytes, newpasswordInBytes,emailHash,oldPassHash,newPassHash);
                 if (retVal == false)
                 {
-                    MessageBox.Show("Something went wrong! Password is not changed.");
+                    MessageBox.Show("Something went wrong! Password is not changed. Please make sure that you entered correct old password.");
                 }
                 else
                 {

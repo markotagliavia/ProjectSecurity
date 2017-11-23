@@ -103,19 +103,19 @@ namespace ClientApp
             }
         }
     
-        public bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)
+        public void BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash)
         {
-            bool retVal = false;
+            
             try
             {
-                retVal = factory.BlockUser(requestEmailBytes, blokEmailBytes, requestEmailHash, blockEmailHash);
+                factory.BlockUser(requestEmailBytes, blokEmailBytes, requestEmailHash, blockEmailHash);
                 Console.WriteLine("BlockUser executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to BlockUser(). {0}", e.Message);
             }
-            return retVal;
+            
         }
 
         public void BlockUserFromRoom(byte[] blokEmailBytes, byte[] roomNameBytes, string blockEmailHash, string roomNameHash)
@@ -315,19 +315,17 @@ namespace ClientApp
 
         }
 
-        public bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash)
+        public void RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash)
         {
-            bool retVal = false;
             try
             {
-                retVal = factory.RemoveBlockUser(requestEmailBytes, unblockEmailBytes, requestEmailHash, unblockEmailHash);
+                factory.RemoveBlockUser(requestEmailBytes, unblockEmailBytes, requestEmailHash, unblockEmailHash);
                 Console.WriteLine("RemoveBlockUser executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to RemoveBlockUser(). {0}", e.Message);
             }
-            return retVal;
         }
 
         public void RemoveBlockUserFromRoom(byte[] unblockEmailBytes, byte[] roomNameBytes, string unblockEmailHash, string roomNameHash)

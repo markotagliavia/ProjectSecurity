@@ -281,7 +281,7 @@ namespace ClientApp
             chatServiceCallback.ThemeNotified += ChatServiceCallback_ThemeNotified;
             chatServiceCallback.PrivateChatNotified += ChatServiceCallback_PrivateChatNotified;
             instanceContext = new InstanceContext(chatServiceCallback);
-
+            
             EndpointAddress adr = this.proxy.Address;
             NetTcpBinding tcp = this.proxy.Binding;
             Guid guid = this.proxy.Guid;
@@ -351,11 +351,12 @@ namespace ClientApp
              
                 
 
-                this.pc = this.proxy.GetPrivateChat(guidInBytes,guidHash);
-                this.proxy.LogInPrivateChat(emailInBytes, emailHash, guidInBytes, guidHash);
+                this.pc = this.proxy.GetPrivateChat(guidInBytes,guidHash); 
+                
 
                 if (this.pc != null)
                 {
+                    this.proxy.LogInPrivateChat(emailInBytes, emailHash, guidInBytes, guidHash);
                     if (this.pc.User2logged)
                     {
                         Logged.Add(this.pc.User2);
@@ -470,12 +471,16 @@ namespace ClientApp
             }
             else
             {
-                byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
-                string emailHash = Sha256encrypt(this.email);
-                byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.Uid.ToString());
-                string guidHash = Sha256encrypt(pc.Uid.ToString());                
-                this.proxy.LeavePrivateChat(guidInBytes, guidHash);
-                this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
+                if (this.pc != null)
+                {
+                    byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.email);
+                    string emailHash = Sha256encrypt(this.email);
+                    byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.Uid.ToString());
+                    string guidHash = Sha256encrypt(pc.Uid.ToString());
+                    this.proxy.LeavePrivateChat(guidInBytes, guidHash);
+                    this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
+                }
+                
                 var s = new GroupChat(proxy, email);
                 s.Show();
             }

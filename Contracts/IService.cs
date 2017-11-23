@@ -37,11 +37,11 @@ namespace Contracts
         [OperationContract]
         bool DeleteAdmin(byte[] emailBytes, string emailHash);
 
-        [OperationContract]
-        bool BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash);
+        [OperationContract(IsOneWay = true)]
+        void BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash);
 
-        [OperationContract]
-        bool RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash);
+        [OperationContract(IsOneWay =true)]
+        void RemoveBlockUser(byte[] requestEmailBytes, byte[] unblockEmailBytes, string requestEmailHash, string unblockEmailHash);
 
         [OperationContract(IsOneWay = true)]
         void BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash);

@@ -63,6 +63,19 @@ namespace ClientApp
             AllUsers = e.AllUsers;
             Admins.Clear();
             Users.Clear();
+
+            if (!AllUsers.Any(i => i.Email.Equals(this.email)))
+            {
+                this.Close();
+            }
+            else
+            {
+                if (AllUsers.Single(i => i.Email.Equals(this.email)).Role == Roles.User)
+                {
+                    MessageBox.Show("You are not Admin anymore.");
+                    this.Close();
+                }
+            }
             foreach (User u in AllUsers)
             {
                 if (u.Role == Roles.Admin)
