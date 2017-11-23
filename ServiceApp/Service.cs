@@ -95,7 +95,7 @@ namespace ServiceApp
             Room r = null;
             if (close == 0)
             {
-                r = DeserializeRoom(room);
+                r = DeserializeRoom(room); 
             }
              
             ThreadPool.QueueUserWorkItem
@@ -112,7 +112,23 @@ namespace ServiceApp
                             {
                                 try
                                 {
-                                        client.Value.GetRoom(r);                                  
+                                    if(r != null)
+                                    {
+                                        if (r.Blocked.Any(i => i.Email.Equals(client.Key)))
+                                        {
+                                            client.Value.GetRoom(null);
+                                        }
+                                        else
+                                        {
+                                          
+                                            client.Value.GetRoom(r);
+                                        }
+                                    }
+                                    else
+	                                {
+                                        client.Value.GetRoom(r);
+                                    }
+                                                                         
                                 }
                                 catch (Exception)
                                 {
@@ -317,11 +333,11 @@ namespace ServiceApp
                     if (lista != null)
                     {
                         int index = -1;
-                        foreach (Room r in lista)
+                        for (int i =0; i < lista.Count; i++)
                         {
-                            if (r.Code == room.Code)
+                            if (lista[i].Code.ToString().Equals(room.Code.ToString()))
                             {
-                                index = lista.IndexOf(r);
+                                index = i;   
                             }
                         }
                         if(index != -1) lista.RemoveAt(index); // izbaci staru i ubaci nove parametre sobe
@@ -979,11 +995,11 @@ namespace ServiceApp
                             {
                                 User u = userList.Single(i => i.Email == blockEmail);
                                 room.Blocked.Add(u);
-
+                                ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName).Blocked.Add(u); 
                                 SerializeRoom(room);
 
-                                SerializeFileRooms(room);
-                                NotifyViewforRoom(room,1);
+                                SerializeFileRooms(room); 
+                                NotifyViewforRoom(room,0);
 
                                 retVal = true;
                             }
@@ -1068,7 +1084,7 @@ namespace ServiceApp
                     List<User> lista = DeserializeUsers();
                     foreach (User ur in lista)
                     {
-                        if (ur.Email == email && ur.Password == oldPassowrd)
+                        if (ur.Email == email && ur.Password == oldPassowrd) 
                         {
                             ur.Password = newPassword;
 
@@ -1341,7 +1357,11 @@ namespace ServiceApp
                                     }
                                     if (blocked != true)
                                     {
-                                        ServiceModel.Instance.RoomList.Add(item);
+                                        if (!ServiceModel.Instance.RoomList.Any(i => i.Code == item.Code))
+                                        {
+                                            ServiceModel.Instance.RoomList.Add(item);
+                                        }
+                                        
                                     }
                                 }
                             }
@@ -1358,6 +1378,7 @@ namespace ServiceApp
                         if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(u.Email)) == false)
                         {
                             ServiceModel.Instance.GroupChat = DeserializeGroupChat();
+                            //ServiceModel.Instance.GroupChat.Logged = ServiceModel.Instance.LoggedIn;
                             u.Logged = true;
                             Audit.LogInSuccess(email);
                             ServiceModel.Instance.LoggedIn.Add(u);
@@ -1366,6 +1387,8 @@ namespace ServiceApp
 
                             //popuni observable liste
                             SerializeGroupChat(ServiceModel.Instance.GroupChat);
+                          
+                            
 
                             List<PrivateChat> pc = DeserializeChats();
                             if (pc != null)
@@ -1985,25 +2008,52 @@ namespace ServiceApp
                     if (!user.Logged)
                     {
                         ServiceModel.Instance.GroupChat = DeserializeGroupChat();
-                        ok = true;
+                        //ServiceModel.Instance.GroupChat.Logged = ServiceModel.Instance.LoggedIn;
                         user.Logged = true;
-                        user.Verify = true;
+                        Audit.LogInSuccess(user.Email);
                         ServiceModel.Instance.LoggedIn.Add(user);
                         ServiceModel.Instance.GroupChat.Logged.Add(user);
+                        userOnSession = user;
 
-                        List<User> lista = new List<User>();
-                        lista = DeserializeUsers();
-                        foreach (User u in lista)
-                        {
-                            if (u.Email == user.Email)
-                            {
-                                u.Verify = true;
-                                u.SecureCode = user.SecureCode;
-                            }
-
-                        }
+                        //popuni observable liste
                         SerializeGroupChat(ServiceModel.Instance.GroupChat);
-                        SerializeUsers(lista);
+
+
+
+                        List<PrivateChat> pc = DeserializeChats();
+                        if (pc != null)
+                        {
+                            foreach (PrivateChat item in pc)
+                            {
+                                if (item.User1 == user.Email || item.User2 == user.Email)
+                                {
+                                    ServiceModel.Instance.PrivateChatList.Add(item);
+                                }
+                            }
+                        }
+
+
+
+                        List<Room> rooms = DeserializeFileRooms();
+                        if (rooms != null)
+                        {
+                            foreach (Room item in rooms)
+                            {
+                                bool blocked = false;
+                                foreach (User u in item.Blocked)
+                                {
+                                    if (user.Email == u.Email)
+                                    {
+                                        blocked = true;
+
+                                    }
+                                }
+                                if (blocked != true)
+                                {
+                                    ServiceModel.Instance.RoomList.Add(item);
+                                }
+                            }
+                        }
 
                         NotifyAll();
 
@@ -2287,18 +2337,33 @@ namespace ServiceApp
                 }
             }
             catch (Exception e) { Audit.BadAesKey(); return null; }
+            Room room = null;
+            if (ServiceModel.Instance.RoomList.Any(r => r.Theme == roomName) == false)
+            {
+                return null;
+            }
+          
 
-            Room room = ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
+            room = DeserializeRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName));  
             if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
             {
                 userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
                 if (room.Logged.Any(i => i.Email.Equals(email)) == false)
                 {
-                    ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName).Logged.Add(userOnSession);
+                    if (!room.Blocked.Any(i => i.Email.Equals(email)))
+                    {
+                        ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName).Logged.Add(userOnSession);
+                        room.Logged.Add(userOnSession); 
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
 
-                SerializeRoom(ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName));
-                return ServiceModel.Instance.RoomList.Single(r => r.Theme == roomName);
+                SerializeRoom(room);
+
+                return room; 
             }
             else
             {
@@ -2764,13 +2829,19 @@ namespace ServiceApp
                 {
                     if (ServiceModel.Instance.RoomList.Any(i => i.Theme.Equals(theme)))
                     {
-
-                        if (ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Any(i => i.Email.Equals(userOnSession.Email)))
+                        if(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Any(i => i.Email.Equals(userOnSession.Email)))
                         {
-                            int index = ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.IndexOf(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Single(i => i.Email.Equals(userOnSession.Email)));
-                            ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.RemoveAt(index);
-                            SerializeRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)));
-                            NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)), 0);
+                            int ind = ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.IndexOf(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.Single(i => i.Email.Equals(userOnSession.Email)));
+                            ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)).Logged.RemoveAt(ind);
+                        }
+                        Room r = DeserializeRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)));
+                        if (r.Logged.Any(i => i.Email.Equals(userOnSession.Email)))
+                        {
+                            int index = r.Logged.IndexOf(r.Logged.Single(i => i.Email.Equals(userOnSession.Email)));
+                            r.Logged.RemoveAt(index);
+                            SerializeRoom(r);
+                            //NotifyViewforRoom(ServiceModel.Instance.RoomList.Single(i => i.Theme.Equals(theme)), 0);
+                            NotifyViewforRoom(r, 0);//ne
                         }
 
                     }

@@ -60,10 +60,10 @@ namespace ClientApp
             {
                 byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, email);
                 string emailHash = Sha256encrypt(email);
-                byte[] oldpasswordInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, oldPass);
-                string oldPassHash = Sha256encrypt(oldPass);
-                byte[] newpasswordInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, newPass);
-                string newPassHash = Sha256encrypt(newPass);
+                byte[] oldpasswordInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, Sha256encrypt(oldPass));
+                string oldPassHash = Sha256encrypt(Sha256encrypt(oldPass));
+                byte[] newpasswordInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, Sha256encrypt(newPass));
+                string newPassHash = Sha256encrypt(Sha256encrypt(newPass));
                 bool retVal = proxy.ChangePassword(emailInBytes, oldpasswordInBytes, newpasswordInBytes,emailHash,oldPassHash,newPassHash);
                 if (retVal == false)
                 {

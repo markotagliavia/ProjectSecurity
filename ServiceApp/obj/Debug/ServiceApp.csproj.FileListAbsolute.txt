@@ -329,3 +329,16 @@ C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\Marko\Desktop\repoCetvrtak\ServiceApp\obj\Debug\ServiceApp.pdb
 C:\Users\Kristijan\Desktop\repo\ServiceApp\bin\Debug\NetworkConfig.xml
 C:\Users\Tijana\Desktop\Projekat\ServiceApp\bin\Debug\NetworkConfig.xml
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\NetworkConfig.xml
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\ServiceApp.exe.config
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\ServiceApp.exe
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\ServiceApp.pdb
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\Contracts.dll
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\Contracts.pdb
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\obj\Debug\ServiceApp.exe
+D:\cetvrta godina\blok2\Projekat7\ServiceApp\obj\Debug\ServiceApp.pdb

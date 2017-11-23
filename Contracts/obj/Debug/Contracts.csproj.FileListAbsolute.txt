@@ -226,3 +226,12 @@ C:\Users\Marko\Desktop\repoCetvrtak\Contracts\bin\Debug\SecurityManager.pdb
 C:\Users\Marko\Desktop\repoCetvrtak\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
 C:\Users\Marko\Desktop\repoCetvrtak\Contracts\obj\Debug\Contracts.dll
 C:\Users\Marko\Desktop\repoCetvrtak\Contracts\obj\Debug\Contracts.pdb
+D:\cetvrta godina\blok2\Projekat7\Contracts\bin\Debug\Contracts.dll
+D:\cetvrta godina\blok2\Projekat7\Contracts\bin\Debug\Contracts.pdb
+D:\cetvrta godina\blok2\Projekat7\Contracts\bin\Debug\ForumModels.dll
+D:\cetvrta godina\blok2\Projekat7\Contracts\bin\Debug\SecurityManager.dll
+D:\cetvrta godina\blok2\Projekat7\Contracts\bin\Debug\ForumModels.pdb
+D:\cetvrta godina\blok2\Projekat7\Contracts\bin\Debug\SecurityManager.pdb
+D:\cetvrta godina\blok2\Projekat7\Contracts\obj\Debug\Contracts.csprojResolveAssemblyReference.cache
+D:\cetvrta godina\blok2\Projekat7\Contracts\obj\Debug\Contracts.dll
+D:\cetvrta godina\blok2\Projekat7\Contracts\obj\Debug\Contracts.pdb

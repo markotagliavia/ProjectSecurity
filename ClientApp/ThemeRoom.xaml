@@ -25,7 +25,7 @@
         <!-->****************Button cntrl**********<-->
         <Button x:Name="enterMsgButton" Content="Enter message" HorizontalAlignment="Left" Margin="632,518,0,0" VerticalAlignment="Top" Width="132" Height="30" Click="enterMsgButton_Click"/>
         <Button x:Name="leaveRoomButton" Content="Leave room" HorizontalAlignment="Left" Margin="10,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="leaveRoomButton_Click"/>
-        <Button x:Name="blockUserButton" Content="Block user" HorizontalAlignment="Left" Margin="155,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="blockUserButton_Click"/>
+        <Button x:Name="blockUserButton" Content="Block user" Visibility="Hidden" HorizontalAlignment="Left" Margin="155,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Click="blockUserButton_Click"/>
         <Button x:Name="closeRoomButton" Content="Close room" HorizontalAlignment="Left" Margin="446,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Hidden" Click="closeRoomButton_Click"/>
         <Button x:Name="removeUserButton" Content="Ban user from chat" HorizontalAlignment="Left" Margin="301,518,0,0" VerticalAlignment="Top" Width="110" Height="30" Visibility="Hidden" Click="removeUserButton_Click"/>
 

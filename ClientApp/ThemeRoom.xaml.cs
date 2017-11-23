@@ -49,13 +49,14 @@ namespace ClientApp
             if (i == 1)
             {
                 label.Content = theme;
-                blockUserButton.IsEnabled = false;
+                //blockUserButton.IsEnabled = false;
                 removeUserButton.IsEnabled = false;
             }
             else
             {
                 this.Title = "Private chat";
                 label.Content = "Private chat";
+                blockUserButton.Visibility = Visibility.Visible;
                 blockUserButton.IsEnabled = false;
                 removeUserButton.Visibility = Visibility.Hidden;
                 closeRoomButton.Visibility = Visibility.Hidden;
@@ -205,26 +206,6 @@ namespace ClientApp
                         }
                     }
                 }
-          /*  }
-            else
-            {
-                byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.Uid.ToString());
-                string roomHash = Sha256encrypt(pc.Uid.ToString());
-                if (loggedUsersListBox.SelectedIndex != -1)
-                {
-                    if (!email.Equals(loggedUsersListBox.SelectedItem.ToString()))
-                    {
-                        if (((Button)sender).Content.Equals("Block"))
-                        {
-                            proxy.BlockUser(emailRequestInBytes, userToBlockInBytes, emailRequestHash, userToBlockHash);
-                        }
-                        else
-                        {
-                            proxy.RemoveBlockUser(emailRequestInBytes, userToBlockInBytes, emailRequestHash, userToBlockHash);
-                        }
-                    }
-                }
-            }*/
             
         }
 
@@ -597,7 +578,7 @@ namespace ClientApp
         {
             if (loggedUsersListBox.SelectedIndex == -1)
             {
-                blockUserButton.IsEnabled = false;
+                //blockUserButton.IsEnabled = false;
                 removeUserButton.IsEnabled = false;
                 //closeRoomButton.IsEnabled = false;
             }
@@ -605,7 +586,7 @@ namespace ClientApp
             {
                 if (loggedUsersListBox.SelectedItem.ToString().Equals(email))
                 {
-                    blockUserButton.IsEnabled = false;
+                    //blockUserButton.IsEnabled = false;
                     removeUserButton.IsEnabled = false;
                     //closeRoomButton.IsEnabled = false;
                 }
@@ -634,7 +615,7 @@ namespace ClientApp
                                 blockUserButton.Content = "Block";
                             }
                         }
-                        blockUserButton.IsEnabled = true;
+                        //blockUserButton.IsEnabled = true;
                         removeUserButton.IsEnabled = true;
                         //closeRoomButton.IsEnabled = true;
                     }
@@ -642,15 +623,15 @@ namespace ClientApp
                     {
                         if (pc.User1.Equals(email) && email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                         {
-                            blockUserButton.IsEnabled = false;
+                           blockUserButton.IsEnabled = false;
                         }
                         else if (pc.User2.Equals(email) && email.Equals(loggedUsersListBox.SelectedItem.ToString()))
                         {
-                            blockUserButton.IsEnabled = false;
+                           blockUserButton.IsEnabled = false;
                         }
                         else
                         {
-                            blockUserButton.IsEnabled = true;
+                           blockUserButton.IsEnabled = true; 
                         }
                     }
                 }

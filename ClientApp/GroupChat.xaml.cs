@@ -123,6 +123,10 @@ namespace ClientApp
                             MessageBox.Show("You are removed from this room!");
                         }
                     }
+                    else
+                    {
+                        MessageBox.Show("You are removed from this room!");
+                    }
                 }
             }
         }
