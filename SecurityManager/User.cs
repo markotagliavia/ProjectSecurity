@@ -38,7 +38,7 @@ namespace SecurityManager
 
         private bool verify;
 
-
+        public User() { }
         public User(string firstname, string lastname, DateTime birthDate, string email, string password, Roles role, string gender)
         {
             this.Logged = false;
