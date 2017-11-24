@@ -547,7 +547,7 @@ namespace ClientApp
             if (i == 0)
             {
                 proxy.LogOut(emailInBytes, emailHash);
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(500);
                 proxy.Unsubscribe(emailInBytes, emailHash);
                 var s = new MainWindow();
                 s.Show();
@@ -555,21 +555,21 @@ namespace ClientApp
             }
             else if (i == 1)
             {
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(500);
                 proxy.Unsubscribe(emailInBytes, emailHash);
                 var s = new ChangeRole(this.proxy, email);
                 s.Show();
             }
             else if (i == 2)
             {
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(500);
                 proxy.Unsubscribe(emailInBytes, emailHash);
                 var window = new ThemeRoom(this.proxy, this.roompom.Theme, this.email, 1);
                 window.Show();
             }
             else if (i == 3)
             {
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(500);
                 proxy.Unsubscribe(emailInBytes, emailHash);
                 var window = new ThemeRoom(this.proxy, pcpom.Uid.ToString(), this.email, 2);
                 window.Show();

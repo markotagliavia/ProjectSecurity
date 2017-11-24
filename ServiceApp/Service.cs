@@ -664,6 +664,7 @@ namespace ServiceApp
                             SerializeUsers(lista); // ser user
                             SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser group
                             NotifyViewforAdmins();
+                            System.Threading.Thread.Sleep(2000);
                             NotifyAll();
                             retVal = true;
                             break;
@@ -756,6 +757,7 @@ namespace ServiceApp
                         }
                         SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser group
                         NotifyViewforAdmins();
+                        System.Threading.Thread.Sleep(2000);
                         NotifyAll();                        
                         retVal = true;
                     }

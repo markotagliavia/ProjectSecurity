@@ -355,7 +355,7 @@ namespace ClientApp
 
 
                 this.pc = this.proxy.GetPrivateChat(guidInBytes,guidHash);
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(100);
 
                 if (this.pc != null)
                 {
@@ -476,7 +476,7 @@ namespace ClientApp
                 byte[] roomInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, room.Theme);
                 string roomHash = Sha256encrypt(room.Theme);
                 proxy.LeaveRoom(roomInBytes, roomHash);
-                System.Threading.Thread.Sleep(3000);
+                System.Threading.Thread.Sleep(500);
                 proxy.UnsubscribeUserTheme(emailInBytes, roomInBytes, emailHash, roomHash);
                 var s = new GroupChat(proxy, email);
                 s.Show();
@@ -490,7 +490,7 @@ namespace ClientApp
                     byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, pc.Uid.ToString());
                     string guidHash = Sha256encrypt(pc.Uid.ToString());
                     this.proxy.LeavePrivateChat(guidInBytes, guidHash);
-                    System.Threading.Thread.Sleep(3000);
+                    System.Threading.Thread.Sleep(500);
                     this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
                     var s = new GroupChat(proxy, email);
                     s.Show();
@@ -504,7 +504,7 @@ namespace ClientApp
                     if (exit == 1)
                     {
                         this.proxy.LeavePrivateChat(guidInBytes, guidHash);
-                        System.Threading.Thread.Sleep(3000);
+                        System.Threading.Thread.Sleep(500);
                     }
                     this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
                     var s = new GroupChat(proxy, email);
