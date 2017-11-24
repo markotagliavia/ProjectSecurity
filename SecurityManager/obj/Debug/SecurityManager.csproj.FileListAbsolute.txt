@@ -131,3 +131,7 @@ D:\cetvrta godina\blok2\Projekat7\SecurityManager\bin\Debug\SecurityManager.dll
 D:\cetvrta godina\blok2\Projekat7\SecurityManager\bin\Debug\SecurityManager.pdb
 D:\cetvrta godina\blok2\Projekat7\SecurityManager\obj\Debug\SecurityManager.dll
 D:\cetvrta godina\blok2\Projekat7\SecurityManager\obj\Debug\SecurityManager.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\SecurityManager\bin\Debug\SecurityManager.dll
+C:\Users\Administrator.P05-04\Desktop\Projekat\SecurityManager\bin\Debug\SecurityManager.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\SecurityManager\obj\Debug\SecurityManager.dll
+C:\Users\Administrator.P05-04\Desktop\Projekat\SecurityManager\obj\Debug\SecurityManager.pdb

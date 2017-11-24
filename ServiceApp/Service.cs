@@ -209,13 +209,15 @@ namespace ServiceApp
                 {
                     if (lista != null)
                     {
-                        foreach (PrivateChat r in lista)
+                        int index = -1;
+                        for(int i = 0; i < lista.Count; i++)
                         {
-                            if (r.Uid == pc.Uid)
+                            if (lista[i].Uid.ToString().Equals(pc.Uid.ToString()))
                             {
-                                lista.Remove(r); // izbaci staru i ubaci nove parametre sobe
+                                index = i; // izbaci staru i ubaci nove parametre sobe
                             }
                         }
+                        if (index != -1) lista.RemoveAt(index);
                     }
                     else
                     {
@@ -610,7 +612,7 @@ namespace ServiceApp
 
         //-----------------------------------------------------------------------------------------------------------------
 
-        public bool AddAdmin(byte[] emailBytes, string emailHash) // DONE
+        public void AddAdmin(byte[] emailBytes, string emailHash) // DONE
         {
   
 
@@ -621,17 +623,17 @@ namespace ServiceApp
                 if (!emailHash.Equals(Sha256encrypt(email)))
                 {
                     Audit.ModifiedMessageDanger();
-                    return false;
+                    return;
                 }
             }
-            catch (Exception e) { Audit.BadAesKey(); return false; }
+            catch (Exception e) { Audit.BadAesKey(); return; }
 
             User user = userOnSession;
 
             if (userOnSession == null)
             {
                 Audit.AddAdminFailed(user.Email, email);
-                return false;
+                return;
             }
 
             //User user = Thread.CurrentPrincipal as User;
@@ -660,6 +662,7 @@ namespace ServiceApp
                             }
                             SerializeUsers(lista); // ser user
                             SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser group
+                            NotifyViewforAdmins();
                             NotifyAll();
                             retVal = true;
                             break;
@@ -689,10 +692,10 @@ namespace ServiceApp
                 Audit.AddAdminFailed(user.Email, email);
             }
 
-            return retVal;
+            return;
         } //
 
-        public bool DeleteAdmin(byte[] emailBytes, string emailHash)
+        public void DeleteAdmin(byte[] emailBytes, string emailHash)
         {
             string email = "";
             try
@@ -701,17 +704,17 @@ namespace ServiceApp
                 if (!emailHash.Equals(Sha256encrypt(email)))
                 {
                     Audit.ModifiedMessageDanger();
-                    return false;
+                    return;
                 }
             }
-            catch (Exception e) { Audit.BadAesKey(); return false; }
+            catch (Exception e) { Audit.BadAesKey(); return; }
             //User user = Thread.CurrentPrincipal as User;
             User user = userOnSession;
 
             if (userOnSession == null)
             {
                 Audit.DeleteAdminfailed(user.Email, email);
-                return false;
+                return;
             }
 
             bool retVal = true;
@@ -740,12 +743,24 @@ namespace ServiceApp
                             }
 
                         }
-                        NotifyAll();
+
+                        ServiceModel.Instance.GroupChat = DeserializeGroupChat();  //deserialize group
+                        if (ServiceModel.Instance.LoggedIn.Any(i => i.Email.Equals(email)))
+                        {
+                            ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Role = Roles.User;
+                        }
+                        if (ServiceModel.Instance.GroupChat.Logged.Any(i => i.Email.Equals(email)))
+                        {
+                            ServiceModel.Instance.GroupChat.Logged.Single(i => i.Email.Equals(email)).Role = Roles.User;
+                        }
+                        SerializeGroupChat(ServiceModel.Instance.GroupChat); // ser group
+                        NotifyViewforAdmins();
+                        NotifyAll();                        
                         retVal = true;
                     }
                     else
                     {
-                        return false;
+                        return;
                     }
 
                 }
@@ -769,7 +784,7 @@ namespace ServiceApp
                 Audit.DeleteAdminfailed(user.Email, email);
             }
 
-            return retVal;
+            return;
         } // DONE
 
         public void BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
@@ -1414,7 +1429,7 @@ namespace ServiceApp
                             {
                                 foreach (PrivateChat item in pc)
                                 {
-                                    if (item.User1 == email || item.User2 == email)
+                                    if (!ServiceModel.Instance.PrivateChatList.Any(i => i.Uid.ToString().Equals(item.Uid.ToString())))
                                     {
                                         ServiceModel.Instance.PrivateChatList.Add(item);
                                     }
@@ -2064,7 +2079,7 @@ namespace ServiceApp
                         {
                             foreach (PrivateChat item in pc)
                             {
-                                if (item.User1 == user.Email || item.User2 == user.Email)
+                                if (!ServiceModel.Instance.PrivateChatList.Any(i => i.Uid.ToString().Equals(item.Uid.ToString())))
                                 {
                                     ServiceModel.Instance.PrivateChatList.Add(item);
                                 }
@@ -2542,7 +2557,12 @@ namespace ServiceApp
                     lock (ServiceModel.Instance.ClientsForViewAdmins)
                     {
                         ServiceModel.Instance.ClientsForViewAdmins.Add(ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email)).Email, callback);
-                        userOnSession = ServiceModel.Instance.LoggedIn.Single(i => i.Email.Equals(email));
+                        List<User> lista = DeserializeUsers();
+                        if (lista.Any(i => i.Email.Equals(email)))
+                        {
+                            userOnSession = lista.Single(i => i.Email.Equals(email));
+                            userOnSession.Logged = true;
+                        }
                     }
                 }
 

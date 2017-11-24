@@ -193,3 +193,10 @@ D:\cetvrta godina\blok2\Projekat7\ForumModels\bin\Debug\SecurityManager.pdb
 D:\cetvrta godina\blok2\Projekat7\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
 D:\cetvrta godina\blok2\Projekat7\ForumModels\obj\Debug\ForumModels.dll
 D:\cetvrta godina\blok2\Projekat7\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.pdb

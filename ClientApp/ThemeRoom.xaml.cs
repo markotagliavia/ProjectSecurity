@@ -34,6 +34,7 @@ namespace ClientApp
         private InstanceContext instanceContext;
         private EncryptDecrypt aesCommander = new EncryptDecrypt();
         private int i;
+        private int exit = 0;
 
         public ThemeRoom(WCFClient proxy, string theme, string email,int i)
         {
@@ -421,6 +422,7 @@ namespace ClientApp
         {
             if (e.PC == null)
             {
+                exit = 1;
                 this.Close();
             }
             else
@@ -496,6 +498,10 @@ namespace ClientApp
                     string emailHash = Sha256encrypt(this.email);
                     byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.theme);
                     string guidHash = Sha256encrypt(this.theme);
+                    if (exit == 1)
+                    {
+                        this.proxy.LeavePrivateChat(guidInBytes, guidHash);
+                    }
                     this.proxy.UnsubscribeUserChat(emailInBytes, guidInBytes, emailHash, guidHash);
                     var s = new GroupChat(proxy, email);
                     s.Show();

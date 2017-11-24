@@ -31,11 +31,11 @@ namespace Contracts
         [OperationContract]
         bool LogOut(byte[] emailBytes, string emailHash);
 
-        [OperationContract]
-        bool AddAdmin(byte[] emailBytes, string emailHash);
+        [OperationContract(IsOneWay = true)]
+        void AddAdmin(byte[] emailBytes, string emailHash);
 
-        [OperationContract]
-        bool DeleteAdmin(byte[] emailBytes, string emailHash);
+        [OperationContract(IsOneWay = true)]
+        void DeleteAdmin(byte[] emailBytes, string emailHash);
 
         [OperationContract(IsOneWay = true)]
         void BlockUser(byte[] requestEmailBytes, byte[] blokEmailBytes, string requestEmailHash, string blockEmailHash);

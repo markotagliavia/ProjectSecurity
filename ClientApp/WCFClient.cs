@@ -75,19 +75,18 @@ namespace ClientApp
             set { this.instanceContext = value; }
         }
 
-        public bool AddAdmin(byte[] emailBytes, string emailHash)
+        public void AddAdmin(byte[] emailBytes, string emailHash)
         {
-            bool retVal = false;
             try
             {
-                retVal = factory.AddAdmin(emailBytes, emailHash);
+                factory.AddAdmin(emailBytes, emailHash);
                 Console.WriteLine("AddAdmin executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to AddAdmin(). {0}", e.Message);
             }
-            return retVal;
+         
         }
 
         public void BlockGroupChat(byte[] blockEmailBytes, string blockEmailHash)
@@ -191,20 +190,17 @@ namespace ClientApp
            
         }
 
-        public bool DeleteAdmin(byte[] emailBytes, string emailHash)
+        public void DeleteAdmin(byte[] emailBytes, string emailHash)
         {
-            bool retVal = false;
             try
             {
-                retVal = factory.DeleteAdmin(emailBytes, emailHash);
+                factory.DeleteAdmin(emailBytes, emailHash);
                 Console.WriteLine("DeleteAdmin executed");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error while trying to DeleteAdmin(). {0}", e.Message);
             }
-
-            return retVal;
         }
 
         public ForumModels.GroupChat GetGroupChat()

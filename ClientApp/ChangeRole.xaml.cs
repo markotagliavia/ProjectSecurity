@@ -163,18 +163,8 @@ namespace ClientApp
             {
                 byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, UsersListBox.SelectedItem.ToString());
                 string emailHash = Sha256encrypt(UsersListBox.SelectedItem.ToString());
-                bool ret = this.proxy.AddAdmin(emailInBytes,emailHash);
-                if (ret)
-                {
-                    Admins.Add((User)UsersListBox.SelectedItem);
-                    Users.Remove((User)UsersListBox.SelectedItem);
-                }
-                else
-                {
-                    MessageBox.Show("Cannot move this user to admin");
-                }
-               
-                
+                this.proxy.AddAdmin(emailInBytes,emailHash);
+                               
             }
             
             AddADMIN.IsEnabled = false;
@@ -188,18 +178,7 @@ namespace ClientApp
             {
                 byte[] emailInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, AdminsListBox.SelectedItem.ToString());
                 string emailHash = Sha256encrypt(AdminsListBox.SelectedItem.ToString());
-                bool ret = this.proxy.DeleteAdmin(emailInBytes, emailHash);
-                if (ret)
-                {
-                    Users.Add((User)AdminsListBox.SelectedItem);
-                    Admins.Remove((User)AdminsListBox.SelectedItem);
-                }
-                else
-                {
-                    MessageBox.Show("Cannot move this user to users");
-                }
-                
-                
+                this.proxy.DeleteAdmin(emailInBytes, emailHash);          
             }
             
             AddADMIN.IsEnabled = false;

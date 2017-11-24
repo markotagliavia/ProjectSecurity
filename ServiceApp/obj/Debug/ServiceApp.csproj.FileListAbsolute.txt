@@ -342,3 +342,16 @@ D:\cetvrta godina\blok2\Projekat7\ServiceApp\bin\Debug\SecurityManager.pdb
 D:\cetvrta godina\blok2\Projekat7\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
 D:\cetvrta godina\blok2\Projekat7\ServiceApp\obj\Debug\ServiceApp.exe
 D:\cetvrta godina\blok2\Projekat7\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\NetworkConfig.xml
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\ForumModels.dll
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\SecurityManager.dll
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\ForumModels.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\SecurityManager.pdb
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\obj\Debug\ServiceApp.pdb
