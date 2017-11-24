@@ -343,6 +343,7 @@ namespace ClientApp
                 string emailHash = Sha256encrypt(this.email);
                 byte[] guidInBytes = aesCommander.EncryptData(this.proxy.Aes.MySessionkey, this.theme);
                 string guidHash = Sha256encrypt(this.theme);
+
                 try
                 {
                     this.proxy.SubscribeUserChat(emailInBytes,guidInBytes,emailHash,guidHash);
@@ -351,11 +352,10 @@ namespace ClientApp
                 {
                     // TODO: Handle exception.
                 }
-             
-                
 
-                this.pc = this.proxy.GetPrivateChat(guidInBytes,guidHash); 
-                
+
+                this.pc = this.proxy.GetPrivateChat(guidInBytes,guidHash);
+                System.Threading.Thread.Sleep(1000);
 
                 if (this.pc != null)
                 {
@@ -423,6 +423,7 @@ namespace ClientApp
             if (e.PC == null)
             {
                 exit = 1;
+                this.pc = null;
                 this.Close();
             }
             else
