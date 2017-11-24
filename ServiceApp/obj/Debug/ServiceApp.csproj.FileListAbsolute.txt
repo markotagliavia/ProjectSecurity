@@ -355,3 +355,16 @@ C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\bin\Debug\SecurityMana
 C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
 C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\obj\Debug\ServiceApp.exe
 C:\Users\Administrator.P05-04\Desktop\Projekat\ServiceApp\obj\Debug\ServiceApp.pdb
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\NetworkConfig.xml
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\ServiceApp.exe.config
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\ServiceApp.exe
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\ServiceApp.pdb
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\Contracts.dll
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\Contracts.pdb
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\obj\Debug\ServiceApp.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\obj\Debug\ServiceApp.exe
+C:\Users\Marko\Desktop\New folder (2)\ServiceApp\obj\Debug\ServiceApp.pdb

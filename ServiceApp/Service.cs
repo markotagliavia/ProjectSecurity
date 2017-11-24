@@ -92,12 +92,7 @@ namespace ServiceApp
         //1 kad treba null
         public void NotifyViewforRoom(Room room,int close)
         {
-            Room r = null;
-            if (close == 0)
-            {
-                r = DeserializeRoom(room); 
-            }
-             
+          
             ThreadPool.QueueUserWorkItem
             (
                 delegate
@@ -112,7 +107,13 @@ namespace ServiceApp
                             {
                                 try
                                 {
-                                    if(r != null)
+                                    Room r = null;
+                                    if (close == 0)
+                                    {
+                                        r = DeserializeRoom(room);
+                                    }
+
+                                    if (r != null)
                                     {
                                         if (r.Blocked.Any(i => i.Email.Equals(client.Key)))
                                         {
@@ -936,6 +937,7 @@ namespace ServiceApp
                                 foreach (PrivateChat pc in ServiceModel.Instance.PrivateChatList)
                                 {
                                     NotifyViewforPC(pc.Uid);
+                                    Thread.Sleep(100);
                                 }
                                 retVal = true;
 
@@ -2725,19 +2727,8 @@ namespace ServiceApp
         private void NotifyViewforPC(Guid uid)
         {
 
-            PrivateChat pc = DeserializePrivateChat(uid);
 
-            if (pc == null)
-            {
-                return;
-            }
-
-
-            ThreadPool.QueueUserWorkItem
-            (
-                delegate
-                {
-                    lock (ServiceModel.Instance.ClientsForPrivateChat)
+             lock (ServiceModel.Instance.ClientsForPrivateChat)
                     {
                         List<string> disconnectedClientGuids = new List<string>();
 
@@ -2747,6 +2738,14 @@ namespace ServiceApp
                             {
                                 try
                                 {
+
+                                    PrivateChat pc = DeserializePrivateChat(uid);
+
+                                    if (pc == null)
+                                    {
+                                        return;
+                                    }
+
                                     string emailblock = null;
                                     if (pc.User1.Equals(client.Key))
                                     {
@@ -2799,8 +2798,7 @@ namespace ServiceApp
 
                     }
                 }
-            );
-        }
+     
 
         public void SubscribeUserTheme(byte[] emailBytes, byte[] themeBytes, string emailHash, string themeHash)
         {
@@ -2915,6 +2913,7 @@ namespace ServiceApp
 
         public void LeaveRoom(byte[] themeBytes, string themeHash)
         {
+            //Thread.Sleep(2000);
             string theme = "";
             try
             {
@@ -2991,12 +2990,14 @@ namespace ServiceApp
                             pc.User1logged = false;
                             SerializePrivateChat(pc);
                             NotifyViewforPC(pc.Uid);
+                            //Thread.Sleep(100);
                         }
                         else if (pc.User2.Equals(userOnSession.Email))
                         {
                             pc.User2logged = false;
                             SerializePrivateChat(pc);
                             NotifyViewforPC(pc.Uid);
+                            //Thread.Sleep(100);
                         }
 
                     }
@@ -3204,6 +3205,7 @@ namespace ServiceApp
                 {
                     lock (ServiceModel.Instance.ClientsForPrivateChat)
                     {
+
                         if (ServiceModel.Instance.ClientsForPrivateChat[code].ContainsKey(email))
                         {
                             ServiceModel.Instance.ClientsForPrivateChat[code].Remove(email);

@@ -200,3 +200,10 @@ C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\bin\Debug\SecurityMan
 C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
 C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.dll
 C:\Users\Administrator.P05-04\Desktop\Projekat\ForumModels\obj\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\New folder (2)\ForumModels\bin\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\New folder (2)\ForumModels\bin\Debug\ForumModels.pdb
+C:\Users\Marko\Desktop\New folder (2)\ForumModels\bin\Debug\SecurityManager.dll
+C:\Users\Marko\Desktop\New folder (2)\ForumModels\bin\Debug\SecurityManager.pdb
+C:\Users\Marko\Desktop\New folder (2)\ForumModels\obj\Debug\ForumModels.csprojResolveAssemblyReference.cache
+C:\Users\Marko\Desktop\New folder (2)\ForumModels\obj\Debug\ForumModels.dll
+C:\Users\Marko\Desktop\New folder (2)\ForumModels\obj\Debug\ForumModels.pdb
